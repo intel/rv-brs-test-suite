@@ -1,0 +1,51 @@
+From e2ea316ad16a977d0b32957d5257e0a1196a00ab Mon Sep 17 00:00:00 2001
+From: edhay <edhaya.chandran@arm.com>
+Date: Mon, 17 May 2021 23:42:04 +0530
+Subject: [PATCH] Fix for dmicheck test crashes with Sig7  Signed-off-by: G
+ Edhaya Chandran <edhaya.chandran@arm.com>
+
+---
+ src/dmi/dmicheck/dmicheck.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/src/dmi/dmicheck/dmicheck.c b/src/dmi/dmicheck/dmicheck.c
+index 61c239f..db9a789 100644
+--- a/src/dmi/dmicheck/dmicheck.c
++++ b/src/dmi/dmicheck/dmicheck.c
+@@ -383,8 +383,14 @@ static void* dmi_table_smbios(fwts_framework *fw, fwts_smbios_entry *entry)
+ 			return NULL;
+ 		}
+ 		table = malloc(length);
+-		if (table)
+-			memcpy(table, mem, length);
++		if (table){
++			if (fwts_safe_memcpy(table, mem, length) != FWTS_OK) {
++				fwts_log_info(fw, "Could not copy to SMBIOS table from %p for length %lu", (void *)mem, length);
++				(void)fwts_munmap(mem, length);
++				free(table);
++				return(NULL);	
++			}
++		}
+ 		(void)fwts_munmap(mem, length);
+ 		return table;
+ 	}
+@@ -431,8 +437,14 @@ static void* dmi_table_smbios30(fwts_framework *fw, fwts_smbios30_entry *entry)
+ 			return NULL;
+ 		}
+ 		table = malloc(length);
+-		if (table)
+-			memcpy(table, mem, length);
++		if (table) {
++				if (fwts_safe_memcpy(table, mem, length) != FWTS_OK) {
++				fwts_log_info(fw, "Could not copy to SMBIOS30 table from %p for length %lu", (void *)mem, length);
++				(void)fwts_munmap(mem, length);
++				free(table);
++				return(NULL);	
++			}
++		}
+ 		(void)fwts_munmap(mem, length);
+ 		return table;
+ 	}
+-- 
+2.17.1
+
