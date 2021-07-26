@@ -1,18 +1,18 @@
-From e2ea316ad16a977d0b32957d5257e0a1196a00ab Mon Sep 17 00:00:00 2001
-From: edhay <edhaya.chandran@arm.com>
-Date: Mon, 17 May 2021 23:42:04 +0530
-Subject: [PATCH] Fix for dmicheck test crashes with Sig7  Signed-off-by: G
- Edhaya Chandran <edhaya.chandran@arm.com>
+From 9b80ec5c4afc0562eae7698b3c495b208b34cfdb Mon Sep 17 00:00:00 2001
+From: Jeff Booher-Kaeding <jeff.booher-kaeding@arm.com>
+Date: Thu, 8 Jul 2021 01:51:05 -0500
+Subject: [PATCH 1/1] [PATCH] Fix for dmicheck test crashes with Sig7
+ Signed-off-by: G Edhaya Chandran <edhaya.chandran@arm.com>
 
 ---
  src/dmi/dmicheck/dmicheck.c | 20 ++++++++++++++++----
  1 file changed, 16 insertions(+), 4 deletions(-)
 
 diff --git a/src/dmi/dmicheck/dmicheck.c b/src/dmi/dmicheck/dmicheck.c
-index 61c239f..db9a789 100644
+index 7f6a90c4..33290c41 100644
 --- a/src/dmi/dmicheck/dmicheck.c
 +++ b/src/dmi/dmicheck/dmicheck.c
-@@ -383,8 +383,14 @@ static void* dmi_table_smbios(fwts_framework *fw, fwts_smbios_entry *entry)
+@@ -390,8 +390,14 @@ static void* dmi_table_smbios(fwts_framework *fw, fwts_smbios_entry *entry)
  			return NULL;
  		}
  		table = malloc(length);
@@ -29,7 +29,7 @@ index 61c239f..db9a789 100644
  		(void)fwts_munmap(mem, length);
  		return table;
  	}
-@@ -431,8 +437,14 @@ static void* dmi_table_smbios30(fwts_framework *fw, fwts_smbios30_entry *entry)
+@@ -438,8 +444,14 @@ static void* dmi_table_smbios30(fwts_framework *fw, fwts_smbios30_entry *entry)
  			return NULL;
  		}
  		table = malloc(length);
@@ -47,5 +47,5 @@ index 61c239f..db9a789 100644
  		return table;
  	}
 -- 
-2.17.1
+2.25.1
 

@@ -18,10 +18,10 @@ index 779a6a44..23ae4e91 100755
 +    # *********************************************
 +  
 +    # StartupScript items.
-+    cp ../../../SctPkg/BBR/EBBRStartup.nsh           SctPackage$ProcessorType/ 2> /dev/null
-+    cp ../../../SctPkg/BBR/SBBRStartup.nsh           SctPackage$ProcessorType/ 2> /dev/null
-+    cp ../../../SctPkg/BBR/EBBR.seq                 $Framework/Sequence/ 2> /dev/null
-+    cp ../../../SctPkg/BBR/SBBR.seq                 $Framework/Sequence/ 2> /dev/null
++    cp ../../../SctPkg/BBR/EBBRStartup.nsh           SctPackage$ProcessorType/ > NUL
++    cp ../../../SctPkg/BBR/SBBRStartup.nsh           SctPackage$ProcessorType/ > NUL
++    cp ../../../SctPkg/BBR/EBBR.seq                 $Framework/Sequence/ > NUL
++    cp ../../../SctPkg/BBR/SBBR.seq                 $Framework/Sequence/ > NUL
 +
 +    mkdir -p $Framework/SCRT
 +    cp $ProcessorType/SCRTDRIVER.efi                           $Framework/SCRT  > NUL
