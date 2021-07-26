@@ -49,7 +49,6 @@
 
 TOP_DIR=`pwd`
 UEFI_PATH=edk2
-SCT_PATH=edk2-test
 UEFI_TOOLCHAIN=GCC5
 UEFI_BUILD_MODE=DEBUG
 TARGET_ARCH=AARCH64
@@ -59,18 +58,24 @@ CROSS_COMPILE=$TOP_DIR/$GCC
 BUILD_PLAT=$1
 BUILD_TYPE=$2
 
+#Currently the BUILD_PLAT flag is not used. For future use
 if ! [[ $BUILD_PLAT = IR ]] && ! [[ $BUILD_PLAT = ES ]] ; then
     echo "Please provide a target."
-    echo "Usage build-sct.sh <IR/ES> <BUILD_TYPE>"
+    echo "Usage $0 <IR/ES> <BUILD_TYPE>"
+    echo "S->Standalone BBR,F->Full systemready"
     exit
 fi
 
 if ! [[ $BUILD_TYPE = S ]] && ! [[  $BUILD_TYPE = F  ]] ; then
     echo "Please provide a Build type."
-    echo "Usage build-sct.sh <target> <S/F>"
+    echo "Usage $0 <target> <S/F>"
     echo "S->Standalone BBR,F->Full systemready"
     exit
 fi
+
+echo "Target: $BUILD_PLAT"
+echo "Build type: $BUILD_TYPE"
+
 
 if [[ $BUILD_TYPE = S ]]; then
     BBR_DIR=$TOP_DIR/../../
@@ -78,15 +83,10 @@ else
     BBR_DIR=$TOP_DIR/bbr-acs
 fi
 
-echo "Target: $BUILD_PLAT"
-echo "Build type: $BUILD_TYPE"
-
-SBBR_TEST_DIR=$BBR_DIR/common/sct-tests/sbbr-tests
-
 do_build()
 {
-   
-    pushd $TOP_DIR/$SCT_PATH
+
+    pushd $TOP_DIR/$UEFI_PATH
     CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
     PATH="$PATH:$CROSS_COMPILE_DIR"
 
@@ -95,57 +95,23 @@ do_build()
     local vars=
     export PACKAGES_PATH=$TOP_DIR/$UEFI_PATH
     export PYTHON_COMMAND=/usr/bin/python3
-    export WORKSPACE=$TOP_DIR/$SCT_PATH/uefi-sct
-    #export HOST_ARCH = `uname -m`
-    #MACHINE=`uname -m`
+    export WORKSPACE=$TOP_DIR/$UEFI_PATH
 
     #Build base tools
     source $TOP_DIR/$UEFI_PATH/edksetup.sh
     make -C $TOP_DIR/$UEFI_PATH/BaseTools
-    
-    #Copy over extra files needed for SBBR tests
-    cp -r $SBBR_TEST_DIR/SbbrBootServices uefi-sct/SctPkg/TestCase/UEFI/EFI/BootServices/
-    cp -r $SBBR_TEST_DIR/SbbrEfiSpecVerLvl $SBBR_TEST_DIR/SbbrRequiredUefiProtocols $SBBR_TEST_DIR/SbbrSmbios $SBBR_TEST_DIR/SbbrSysEnvConfig uefi-sct/SctPkg/TestCase/UEFI/EFI/Generic/
-    cp -r $SBBR_TEST_DIR/SBBRRuntimeServices uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/
-    cp $SBBR_TEST_DIR/BBR_SCT.dsc uefi-sct/SctPkg/UEFI/
-    cp $SBBR_TEST_DIR/build_bbr.sh uefi-sct/SctPkg/
-    
-    #Startup/runtime files.
-    mkdir -p uefi-sct/SctPkg/BBR
-    if [ $BUILD_PLAT = IR ]; then
-    #EBBR
-    cp $BBR_DIR/ebbr/config/EBBRStartup.nsh uefi-sct/SctPkg/BBR/
-    cp $BBR_DIR/ebbr/config/EBBR.seq uefi-sct/SctPkg/BBR/
-    cp $BBR_DIR/ebbr/config/EBBR_manual.seq uefi-sct/SctPkg/BBR/
-    cp $BBR_DIR/ebbr/config/EfiCompliant_EBBR.ini uefi-sct/SctPkg/BBR/
-    else
-    #SBBR
-    cp $BBR_DIR/sbbr/config/SBBRStartup.nsh uefi-sct/SctPkg/BBR/
-    cp $BBR_DIR/sbbr/config/SBBR.seq uefi-sct/SctPkg/BBR/
-    cp $BBR_DIR/sbbr/config/SBBR_manual.seq uefi-sct/SctPkg/BBR/
-    cp $BBR_DIR/sbbr/config/EfiCompliant_SBBR.ini  uefi-sct/SctPkg/BBR/
-    fi
 
-    if ! patch -R -p1 -s -f --dry-run < $BBR_DIR/common/patches/edk2-test-bbr.patch; then
-        echo "Applying SCT patch ..."
-        patch  -p1  < $BBR_DIR/common/patches/edk2-test-bbr.patch
-    fi
-
-    pushd uefi-sct
-    ./SctPkg/build_bbr.sh $TARGET_ARCH GCC $UEFI_BUILD_MODE
-    
+    build -a AARCH64 -t GCC5 -p MdeModulePkg/MdeModulePkg.dsc
     popd
 }
 
 do_clean()
 {
-    pushd $TOP_DIR/$SCT_PATH/uefi-sct
+    pushd $TOP_DIR/$UEFI_PATH
     CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
     PATH="$PATH:$CROSS_COMPILE_DIR"
     source $TOP_DIR/$UEFI_PATH/edksetup.sh
     make -C $TOP_DIR/$UEFI_PATH/BaseTools clean
-    rm -rf Build/bbrSct
-    rm -rf ${TARGET_ARCH}_SCT
 
     popd
 
@@ -153,28 +119,13 @@ do_clean()
 
 do_package ()
 {
-    echo "Packaging sct... $VARIANT";
-    # Copy binaries to output folder
-    pushd $TOP_DIR/$SCT_PATH/uefi-sct
+    echo "Packaging...";
 
-    mkdir -p ${TARGET_ARCH}_SCT/SCT
-    cp -r Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/${TARGET_ARCH}/* ${TARGET_ARCH}_SCT/SCT/
-
-    if [ $BUILD_PLAT = IR ]; then
-        #EBBR
-        cp Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/EBBRStartup.nsh ${TARGET_ARCH}_SCT/SctStartup.nsh
-        cp SctPkg/BBR/EfiCompliant_EBBR.ini ${TARGET_ARCH}_SCT/SCT/Dependency/EfiCompliantBBTest/EfiCompliant.ini
-        cp SctPkg/BBR/EBBR_manual.seq ${TARGET_ARCH}_SCT/SCT/Sequence/EBBR_manual.seq
-
+    if [ -f $TOP_DIR/$UEFI_PATH/Build/MdeModule/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/${TARGET_ARCH}/CapsuleApp.efi ]; then
+     echo "CapsuleApp.efi successfully generated at $TOP_DIR/$UEFI_PATH/Build/MdeModule/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/${TARGET_ARCH}/CapsuleApp.efi"
     else
-        #SBBR
-        cp Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/SBBRStartup.nsh ${TARGET_ARCH}_SCT/SctStartup.nsh
-        cp SctPkg/BBR/EfiCompliant_SBBR.ini ${TARGET_ARCH}_SCT/SCT/Dependency/EfiCompliantBBTest/EfiCompliant.ini
-        cp SctPkg/BBR/SBBR_manual.seq ${TARGET_ARCH}_SCT/SCT/Sequence/SBBR_manual.seq
-
+     echo "Error: CapsuleApp.efi could not be generated. Please check the logs"
     fi
-
-    pushd $TOP_DIR
 
 }
 

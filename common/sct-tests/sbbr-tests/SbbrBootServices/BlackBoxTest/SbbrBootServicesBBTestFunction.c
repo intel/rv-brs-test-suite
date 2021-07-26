@@ -166,6 +166,14 @@ BBTestMemoryMapTest (
                 );
     return EFI_SUCCESS;
   }
+
+  
+  // The memory size is incremented, as the call to
+  // SctAllocatePool() before the second GetMemoryMap() by itself may increase the MemoryMapSize
+  // Increasing by EFI_PAGE_SIZE is the standard practice in SCT code
+  
+  MemoryMapSize += EFI_PAGE_SIZE;
+
   MemoryMap = SctAllocatePool(MemoryMapSize);
   if (MemoryMap == 0) {
     return EFI_OUT_OF_RESOURCES;

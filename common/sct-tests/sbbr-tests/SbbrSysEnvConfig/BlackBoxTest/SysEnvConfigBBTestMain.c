@@ -81,15 +81,18 @@ EFI_BB_TEST_ENTRY_FIELD gBBTestEntryField[] = {
     EFI_TEST_CASE_AUTO,
     BBTestBootExcLevelTest
   },
-  {
-    SYSENVCONFIG_OS_DISK_FORMAT_GUID,
-    L"OsDiskFormat",
-    L"Checking that the operating system disk contains a GPT partition table with an EFI partition.",
-    EFI_TEST_LEVEL_DEFAULT,
-    gSupportProtocolGuid,
-    EFI_TEST_CASE_AUTO,
-    BBTestOsDiskFormatTest
-  },
+  //Disabling this test as according to BBR 1.0 (refers to UEFI specifications) it
+  //supports GPT, MBR, or El-Torito formats for boot partition. 
+  //This test was restricting only to GPT
+  //{
+  //  SYSENVCONFIG_OS_DISK_FORMAT_GUID,
+  //  L"OsDiskFormat",
+  //  L"Checking that the operating system disk contains a GPT partition table with an EFI partition.",
+  //  EFI_TEST_LEVEL_DEFAULT,
+  //  gSupportProtocolGuid,
+  //  EFI_TEST_CASE_AUTO,
+  //  BBTestOsDiskFormatTest
+  //},
  
   EFI_NULL_GUID
 };
