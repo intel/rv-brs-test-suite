@@ -82,7 +82,7 @@ Logs are stored in the results partition, which can be viewed on any machine aft
 BBR is automatically built and packaged into ACS, but it can also be built independently.
 
 #### 1.  Get BBR repository
-    `git clone ssh://ap-gerrit-1.ap01.arm.com:29418/avk/syscomp_bbr bbr-acs`
+`git clone https://github.com/ARM-software/bbr-acs.git`
 
 #### 2. Getting the required Source codes and Tools
 navigate to the `bbr-acs/<ebbr/sbbr>/scripts` directory
