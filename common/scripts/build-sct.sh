@@ -153,7 +153,7 @@ do_clean()
     PATH="$PATH:$CROSS_COMPILE_DIR"
     source $TOP_DIR/$UEFI_PATH/edksetup.sh
     make -C $TOP_DIR/$UEFI_PATH/BaseTools clean
-    rm -rf Build/bbrSct
+    rm -rf Build
     rm -rf ${TARGET_ARCH}_SCT
 
     popd
