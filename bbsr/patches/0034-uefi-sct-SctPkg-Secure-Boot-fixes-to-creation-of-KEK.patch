@@ -1,0 +1,40 @@
+From 5d7229960e992d89e0bde02b24b5b1d8e2c4d2e2 Mon Sep 17 00:00:00 2001
+From: Stuart Yoder <stuart.yoder@arm.com>
+Date: Fri, 20 Aug 2021 08:25:11 -0500
+Subject: [PATCH 34/37] uefi-sct/SctPkg: Secure Boot: fixes to creation of
+ KEKSigList3.auth
+
+-delete extra make target for KEKSigList3.auth
+-change timestamp used in signing KEKSigList3.auth so it can be deleted
+ by NullDBX.auth
+
+Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
+---
+ .../SecureBoot/BlackBoxTest/Dependency/Images/GNUmakefile   | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/GNUmakefile b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/GNUmakefile
+index 8f2aa0d2..f3208129 100644
+--- a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/GNUmakefile
++++ b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/GNUmakefile
+@@ -164,16 +164,12 @@ TestDBX1.auth:
+ 
+ KEKSigList3.auth: TestKEK3
+ 	cert-to-efi-sig-list $(BIN_DIR)/SecureBoot_TestKEK3.crt $(BIN_DIR)/SecureBoot_KEKSigList3.esl
+-	sign-efi-sig-list -a -t $(FUTURE_DATE) -c $(TEST_PK1_CRT) -k $(TEST_PK1_KEY) KEK $(BIN_DIR)/SecureBoot_KEKSigList3.esl $(BIN_DIR)/SecureBoot_KEKSigList3.auth
++	sign-efi-sig-list -a -t $(FUTURE_DATE2) -c $(TEST_PK1_CRT) -k $(TEST_PK1_KEY) KEK $(BIN_DIR)/SecureBoot_KEKSigList3.esl $(BIN_DIR)/SecureBoot_KEKSigList3.auth
+ 
+ dbSigList1.auth: SignCert1
+ 	cert-to-efi-sig-list $(BIN_DIR)/SecureBoot_SignCert1.crt $(BIN_DIR)/SecureBoot_TestDB1.esl
+ 	sign-efi-sig-list -c $(TEST_PK1_CRT) -k $(TEST_PK1_KEY) db $(BIN_DIR)/SecureBoot_TestDB1.esl $(BIN_DIR)/SecureBoot_DBSigList1.auth
+ 
+-KEKSigList3.auth: TestKEK3
+-	cert-to-efi-sig-list $(BIN_DIR)/SecureBoot_TestKEK3.crt $(BIN_DIR)/SecureBoot_TestKEK3.esl
+-	sign-efi-sig-list -c $(TEST_PK1_CRT) -k $(TEST_PK1_KEY) KEK $(BIN_DIR)/SecureBoot_KEKSigList1.esl $(BIN_DIR)/SecureBoot_KEKSigList1.auth
+-
+ dbSigListLong: SignCert2 SignCert3 RevokedCert1 RevokedCert2 RevokedCert3 RevokedCert4 TestImage5.bin
+ 	cert-to-efi-sig-list -g 11111111-2222-3333-4444-000000000002 $(BIN_DIR)/SecureBoot_SignCert2.crt $(BIN_DIR)/SecureBoot_TestDB2.esl
+ 	cert-to-efi-sig-list -g 11111111-2222-3333-4444-000000000003 $(BIN_DIR)/SecureBoot_SignCert3.crt $(BIN_DIR)/SecureBoot_TestDB3.esl
+-- 
+2.17.1
+

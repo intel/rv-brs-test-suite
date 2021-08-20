@@ -1,0 +1,93 @@
+From 39f5b2e4f3dcca3b24ff826f667625fbbef294ce Mon Sep 17 00:00:00 2001
+From: Joseph Hemann <Joseph.hemann@arm.com>
+Date: Thu, 19 Aug 2021 16:56:27 -0500
+Subject: [PATCH 37/37] uefi-sct/SctPkg: Secure Boot: fix unused variable
+ warnings
+
+Signed-off-by: Joseph Hemann <Joseph.hemann@arm.com>
+Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
+---
+ .../SecureBoot/BlackBoxTest/ImageLoadingBBTest.c               | 3 ---
+ .../SecureBoot/BlackBoxTest/SecureBootBBTestSupport.c          | 2 --
+ .../SecureBoot/BlackBoxTest/VariableUpdatesBBTest.c            | 3 ---
+ 3 files changed, 8 deletions(-)
+
+diff --git a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/ImageLoadingBBTest.c b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/ImageLoadingBBTest.c
+index 486e6ab9..ef3ae97f 100644
+--- a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/ImageLoadingBBTest.c
++++ b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/ImageLoadingBBTest.c
+@@ -219,7 +219,6 @@ ImageLoadingVariableInit  (
+   )
+ {
+   EFI_STATUS            Status;
+-  EFI_TEST_ASSERTION    Result;
+   UINTN                 DataSize;
+   UINT8                 Data[MAX_BUFFER_SIZE];
+   UINT32                Attributes;
+@@ -897,7 +896,6 @@ VerifyImageEntry (
+   IN  EFI_IMAGE_EXECUTION_ACTION Action
+   )
+ {
+-  EFI_STATUS          Status;
+   EFI_IMAGE_EXECUTION_INFO *InfoPtr;
+   VOID                     *ptr;
+   CHAR16                   *ImagePath;
+@@ -952,7 +950,6 @@ ImageLoadingTestCheckpoint3 (
+ {
+   EFI_STATUS               Status;
+   EFI_TEST_ASSERTION       Result;
+-  CHAR16                   *FileName;
+   VOID                     *ptr;
+ 
+   //
+diff --git a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/SecureBootBBTestSupport.c b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/SecureBootBBTestSupport.c
+index b01c846f..1e30e069 100644
+--- a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/SecureBootBBTestSupport.c
++++ b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/SecureBootBBTestSupport.c
+@@ -236,7 +236,6 @@ GetBaseName (
+   OUT CHAR16          **BaseName
+   )
+ {
+-  EFI_STATUS          Status;
+   UINT32              StrLen;
+   CHAR16              *StrTail;
+ 
+@@ -278,7 +277,6 @@ SecureBootVariableCleanup (
+   )
+ {
+   EFI_STATUS            Status;
+-  EFI_TEST_ASSERTION    Result;
+   EFI_FILE_HANDLE       KeyFHandle;
+   UINT32                KeyFileSize;
+   CHAR16                *FileName;
+diff --git a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/VariableUpdatesBBTest.c b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/VariableUpdatesBBTest.c
+index c36327b8..78e19afb 100644
+--- a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/VariableUpdatesBBTest.c
++++ b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/VariableUpdatesBBTest.c
+@@ -398,7 +398,6 @@ VariableUpdatesTestCheckpoint2 (
+   EFI_STATUS            Status;
+   EFI_TEST_ASSERTION    Result;
+   UINTN                 DataSize;
+-  UINT8                 Data[MAX_BUFFER_SIZE];
+   UINT32                Attributes;
+   EFI_FILE_HANDLE       KeyFHandle;
+   UINT32                KeyFileSize;
+@@ -732,7 +731,6 @@ VariableUpdatesTestCheckpoint3 (
+   EFI_STATUS            Status;
+   EFI_TEST_ASSERTION    Result;
+   UINTN                 DataSize;
+-  UINT8                 Data[MAX_BUFFER_SIZE];
+   UINT32                Attributes;
+   EFI_FILE_HANDLE       KeyFHandle;
+   UINT32                KeyFileSize;
+@@ -938,7 +936,6 @@ VariableUpdatesTestCheckpoint4 (
+   EFI_STATUS            Status;
+   EFI_TEST_ASSERTION    Result;
+   UINTN                 DataSize;
+-  UINT8                 Data[MAX_BUFFER_SIZE];
+   UINT32                Attributes;
+   EFI_FILE_HANDLE       KeyFHandle;
+   UINT32                KeyFileSize;
+-- 
+2.17.1
+

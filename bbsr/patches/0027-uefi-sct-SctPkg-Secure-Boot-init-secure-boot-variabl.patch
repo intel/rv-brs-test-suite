@@ -1,0 +1,36 @@
+From 81e2df798270d54782b0342cd8f0d68745716c90 Mon Sep 17 00:00:00 2001
+From: Stuart Yoder <stuart.yoder@arm.com>
+Date: Thu, 12 Aug 2021 14:28:20 -0500
+Subject: [PATCH 27/37] uefi-sct/SctPkg: Secure Boot: init secure boot
+ variables before update test
+
+The variables enrolled by the user via the UEFI menus are unreliable with
+respect to their timestamps.  So, delete and enroll our test KEK, db, dbx
+with known timestamps so we can actually do updates.
+
+Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
+---
+ .../SecureBoot/BlackBoxTest/VariableUpdatesBBTest.c        | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/VariableUpdatesBBTest.c b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/VariableUpdatesBBTest.c
+index 25c2ebf7..12852c4b 100644
+--- a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/VariableUpdatesBBTest.c
++++ b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/VariableUpdatesBBTest.c
+@@ -129,6 +129,13 @@ VariableUpdatesTest(
+   if (EFI_ERROR(Status)) {
+     return Status;
+   }
++
++  // invoke the cleanup routine to set KEK/db/dbx to known good values, 
++  // including known timestamps
++  Status = SecureBootVariableCleanup (RT, StandardLib, LoggingLib, ProfileLib);
++  if (EFI_ERROR(Status)) {
++    return Status;
++  }
+ 
+   Status = VariableUpdatesTestCheckpoint1 (RT, StandardLib, LoggingLib, ProfileLib);
+   if (EFI_ERROR(Status)) {
+-- 
+2.17.1
+

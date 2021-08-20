@@ -1,0 +1,200 @@
+From b904c9895ea48fac71fbee218f09e7888d66a14e Mon Sep 17 00:00:00 2001
+From: Joseph Hemann <Joseph.hemann@arm.com>
+Date: Mon, 26 Jul 2021 10:17:52 -0500
+Subject: [PATCH 26/37] uefi-sct/SctPkg: add additional Secure Boot variable
+ update test
+
+-add test assertion that verifies append of db signed by TestKEK3
+
+Signed-off-by: Joseph Hemann <Joseph.hemann@arm.com>
+Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
+---
+ .../BlackBoxTest/Dependency/Keys/GNUmakefile  | 10 ++-
+ .../SecureBoot/BlackBoxTest/Guid.c            |  3 +-
+ .../SecureBoot/BlackBoxTest/Guid.h            |  4 +
+ .../BlackBoxTest/VariableUpdatesBBTest.c      | 80 +++++++++++++++++++
+ 4 files changed, 95 insertions(+), 2 deletions(-)
+
+diff --git a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Keys/GNUmakefile b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Keys/GNUmakefile
+index 766f650f..9a9030d5 100644
+--- a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Keys/GNUmakefile
++++ b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Keys/GNUmakefile
+@@ -30,6 +30,7 @@ SOURCE_DIR=$(WORKSPACE)/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/Blac
+ FUTURE_DATE=$(shell date --rfc-3339=date -d "+1 year")
+ FUTURE_DATE2=$(shell date --rfc-3339=date -d "+1 day")
+ FUTURE_DATE3=$(shell date --rfc-3339=date -d "+2 day")
++FUTURE_DATE4=$(shell date --rfc-3339=date -d "+3 day")
+ PAST_DATE=$(shell date --rfc-3339=date -d "-1 year")
+ 
+ ifdef KEYS_DIR
+@@ -48,7 +49,7 @@ TEST_PK1_CRT=$(BIN_DIR)/SecureBoot_TestPK1.crt
+ TEST_PK1_KEY=$(BIN_DIR)/SecureBoot_TestPK1.key
+ endif
+ 
+-all: $(TEST_KEYS) TestKEK2 TestKEK3 KEKSigList1.auth KEKSigList3.auth TestImage1.bin TestImage2.bin TestImage3.bin TestImage4.bin TestImage5.bin TestImage6.bin TestImage7.bin TestImage8.bin TestImage9.bin TestImage10.bin NullKEK.auth NullDB.auth NullDBX.auth TestKEK1.auth TestDB1.auth TestDBX1.auth SignCert1 dbSigList1.auth SignCert2 SignCert3 SignCert4 RevokedCert1 RevokedCert2 RevokedCert3 RevokedCert4 dbSigList2.auth dbSigList3.auth dbSigList4.auth DBXRevokedList1.auth
++all: $(TEST_KEYS) TestKEK2 TestKEK3 KEKSigList1.auth KEKSigList3.auth TestImage1.bin TestImage2.bin TestImage3.bin TestImage4.bin TestImage5.bin TestImage6.bin TestImage7.bin TestImage8.bin TestImage9.bin TestImage10.bin NullKEK.auth NullDB.auth NullDBX.auth TestKEK1.auth TestDB1.auth TestDBX1.auth SignCert1 dbSigList1.auth SignCert2 SignCert3 SignCert4 RevokedCert1 RevokedCert2 RevokedCert3 RevokedCert4 dbSigList2.auth dbSigList3.auth dbSigList4.auth DBXRevokedList1.auth dbSigList5.auth
+ 
+ TestImage1.bin:
+ 	cp $(SOURCE_DIR)/Application1.efi $(TARGET)_$(@)
+@@ -123,6 +124,9 @@ SignCert3:
+ SignCert4:
+ 	openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=ACS_SignCert4/ -keyout $(TARGET)_$(@).key -out $(TARGET)_$(@).crt -nodes -days 4000
+ 
++Sign_Cert5:
++	openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=ACS_Sign_Cert3/ -keyout $(TARGET)_$(@).key -out $(TARGET)_$(@).crt -nodes -days 4000
++
+ RevokedCert1:
+ 	openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=ACS_RevokedCert1/ -keyout $(TARGET)_$(@).key -out $(TARGET)_$(@).crt -nodes -days 4000
+ 
+@@ -206,6 +210,10 @@ DBXRevokedList1.auth: RevokedCert1 RevokedCert2 RevokedCert3 RevokedCert4
+ 	cat $(BIN_DIR)/SecureBoot_RevokedCert1.esl $(BIN_DIR)/SecureBoot_RevokedCert2.esl $(BIN_DIR)/SecureBoot_RevokedCert3.esl  $(BIN_DIR)/SecureBoot_RevokedCert4.esl $(BIN_DIR)/SecureBoot_RevokedHash1.esl > $(BIN_DIR)/SecureBoot_DBXRevokedList1.esl
+ 	sign-efi-sig-list -c $(TEST_KEK1_CRT) -k $(TEST_KEK1_KEY) -t "$(FUTURE_DATE2)" dbx $(BIN_DIR)/SecureBoot_DBXRevokedList1.esl $(BIN_DIR)/SecureBoot_DBXRevokedList1.auth
+ 
++dbSigList5.auth: Sign_Cert5
++	cert-to-efi-sig-list $(BIN_DIR)/SecureBoot_Sign_Cert5.crt $(BIN_DIR)/SecureBoot_TestDB10.esl
++	sign-efi-sig-list -a -c $(BIN_DIR)/SecureBoot_TestKEK3.crt -k $(BIN_DIR)/SecureBoot_TestKEK3.key -t "$(FUTURE_DATE4)" db $(BIN_DIR)/SecureBoot_TestDB10.esl $(BIN_DIR)/SecureBoot_DBSigList5.auth
++
+ clean:
+ 	$(RM) $(BIN_DIR)/$(TARGET)_*.key
+ 	$(RM) $(BIN_DIR)/$(TARGET)_*.crt
+diff --git a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Guid.c b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Guid.c
+index 690fbdb7..c8c773b4 100644
+--- a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Guid.c
++++ b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Guid.c
+@@ -67,6 +67,8 @@ EFI_GUID gSecureBootVariableUpdatesBbTestAssertionGuid008 = EFI_TEST_SECUREBOOTV
+ 
+ EFI_GUID gSecureBootVariableUpdatesBbTestAssertionGuid009 = EFI_TEST_SECUREBOOTVARIABLEUPDATES_ASSERTION_009_GUID;
+ 
++EFI_GUID gSecureBootVariableUpdatesBbTestAssertionGuid010 = EFI_TEST_SECUREBOOTVARIABLEUPDATES_ASSERTION_010_GUID;
++
+ EFI_GUID gSecureBootImageLoadingBbTestAssertionGuid001 = EFI_TEST_SECUREBOOTIMAGELOADING_ASSERTION_001_GUID;
+ 
+ EFI_GUID gSecureBootImageLoadingBbTestAssertionGuid002 = EFI_TEST_SECUREBOOTIMAGELOADING_ASSERTION_002_GUID;
+@@ -100,4 +102,3 @@ EFI_GUID gSecureBootImageLoadingBbTestAssertionGuid015 = EFI_TEST_SECUREBOOTIMAG
+ EFI_GUID gSecureBootImageLoadingBbTestAssertionGuid016 = EFI_TEST_SECUREBOOTIMAGELOADING_ASSERTION_016_GUID;
+ 
+ EFI_GUID gSecureBootImageLoadingBbTestAssertionGuid017 = EFI_TEST_SECUREBOOTIMAGELOADING_ASSERTION_017_GUID;
+-
+diff --git a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Guid.h b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Guid.h
+index a11c6a2a..ebb450ae 100644
+--- a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Guid.h
++++ b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Guid.h
+@@ -115,6 +115,10 @@ extern EFI_GUID gSecureBootVariableUpdatesBbTestAssertionGuid008;
+ 
+ extern EFI_GUID gSecureBootVariableUpdatesBbTestAssertionGuid009;
+ 
++#define EFI_TEST_SECUREBOOTVARIABLEUPDATES_ASSERTION_010_GUID \
++{ 0x63ba72d3, 0x9089, 0xac63, {0xf0, 0x89, 0xad, 0x90, 0x24, 0x67, 0xdb, 0xd3 }}
++extern EFI_GUID gSecureBootVariableUpdatesBbTestAssertionGuid010;
++
+ #define EFI_TEST_SECUREBOOTIMAGELOADING_ASSERTION_001_GUID \
+ { 0x6c605b08, 0x2ab7, 0x4681, {0x9f, 0x2f, 0x74, 0xd0, 0x8d, 0x96, 0x4e, 0x35 }}
+ 
+diff --git a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/VariableUpdatesBBTest.c b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/VariableUpdatesBBTest.c
+index 3a93a209..25c2ebf7 100644
+--- a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/VariableUpdatesBBTest.c
++++ b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/VariableUpdatesBBTest.c
+@@ -938,6 +938,7 @@ VariableUpdatesTestCheckpoint4 (
+   CHAR16                *FileName;
+   VOID                  *Buffer;
+   UINTN                 BufferSize;
++  UINT32                DBAttributes;
+ 
+   //
+   // Trace ...
+@@ -950,6 +951,17 @@ VariableUpdatesTestCheckpoint4 (
+                   );
+   }
+ 
++  // get db variable attributes
++  DataSize = 0;
++  Attributes = 0;
++  Status = RT->GetVariable (
++                 L"db",                          // VariableName
++                 &gEfiImageSecurityDatabaseGuid, // VendorGuid
++                 &DBAttributes,                    // Attributes
++                 &DataSize,                      // DataSize
++                 NULL                            // Data
++                 );
++
+   //
+   //
+   // Test KEK append update with properly signed data
+@@ -1018,6 +1030,74 @@ VariableUpdatesTestCheckpoint4 (
+ 
+   gtBS->FreePool (Buffer);
+ 
++  //
++  // Test db append update with data Signed by TestKEK3
++  //
++
++  FileName = L"dbSigList5.auth";
++
++  //
++  //read the key file into memory.
++  //
++  Status = OpenFileAndGetSize (
++             FileName,
++             &KeyFHandle,
++             &KeyFileSize
++             );
++
++  if (EFI_ERROR(Status)) {
++    return EFI_NOT_FOUND;
++  }
++
++  Buffer = SctAllocatePool (KeyFileSize);
++
++  if (Buffer == NULL) {
++    KeyFHandle->Close (KeyFHandle);
++    return EFI_OUT_OF_RESOURCES;
++  }
++
++  BufferSize = KeyFileSize;
++
++  Status = KeyFHandle->Read (
++                      KeyFHandle,
++                      &BufferSize,
++                      Buffer
++                      );
++
++  if (EFI_ERROR(Status)) {
++    KeyFHandle->Close (KeyFHandle);
++    gtBS->FreePool (Buffer);
++    return EFI_LOAD_ERROR;
++  }
++
++  Status = RT->SetVariable (
++                     L"db",                    // VariableName
++                     &gEfiImageSecurityDatabaseGuid, // VendorGuid
++                     DBAttributes | EFI_VARIABLE_APPEND_WRITE,            // Attributes
++                     BufferSize,                // DataSize
++                     Buffer                     // Data
++                     );
++
++  if (Status == EFI_SUCCESS) {
++    Result = EFI_TEST_ASSERTION_PASSED;
++  } else {
++    Result = EFI_TEST_ASSERTION_FAILED;
++  }
++
++  StandardLib->RecordAssertion (
++                 StandardLib,
++                 Result,
++                 gSecureBootVariableUpdatesBbTestAssertionGuid010,
++                 L"SecureBoot - Verify signed DB append update",
++                 L"%a:%d:Status - %r",
++                 __FILE__,
++                 (UINTN)__LINE__,
++                 Status
++                 );
++
++  gtBS->FreePool (Buffer);
++
++
+   //
+   // Trace ...
+   //
+-- 
+2.17.1
+

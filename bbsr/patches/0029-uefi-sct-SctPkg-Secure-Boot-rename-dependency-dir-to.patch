@@ -1,0 +1,73 @@
+From 32a0b2db2ce88321885bc8eb0e1dbd04713eb29b Mon Sep 17 00:00:00 2001
+From: Stuart Yoder <stuart.yoder@arm.com>
+Date: Thu, 12 Aug 2021 15:26:39 -0500
+Subject: [PATCH 29/37] uefi-sct/SctPkg: Secure Boot: rename dependency dir to
+ Images
+
+The dependency directory for SecureBoot includes both images of keys
+and executables.  Rename the directory to Images to make it more
+descriptive of what is actually there.
+
+Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
+---
+ .../Dependency/{Keys => Images}/Application1.efi    | Bin
+ .../Dependency/{Keys => Images}/Application2.efi    | Bin
+ .../Dependency/{Keys => Images}/Application3.efi    | Bin
+ .../Dependency/{Keys => Images}/GNUmakefile         |   2 +-
+ .../Dependency/{Keys/Keys.inf => Images/Images.inf} |   0
+ uefi-sct/SctPkg/UEFI/UEFI_SCT.dsc                   |   2 +-
+ 6 files changed, 2 insertions(+), 2 deletions(-)
+ rename uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/{Keys => Images}/Application1.efi (100%)
+ rename uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/{Keys => Images}/Application2.efi (100%)
+ rename uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/{Keys => Images}/Application3.efi (100%)
+ rename uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/{Keys => Images}/GNUmakefile (98%)
+ rename uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/{Keys/Keys.inf => Images/Images.inf} (100%)
+
+diff --git a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Keys/Application1.efi b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/Application1.efi
+similarity index 100%
+rename from uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Keys/Application1.efi
+rename to uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/Application1.efi
+diff --git a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Keys/Application2.efi b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/Application2.efi
+similarity index 100%
+rename from uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Keys/Application2.efi
+rename to uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/Application2.efi
+diff --git a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Keys/Application3.efi b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/Application3.efi
+similarity index 100%
+rename from uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Keys/Application3.efi
+rename to uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/Application3.efi
+diff --git a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Keys/GNUmakefile b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/GNUmakefile
+similarity index 98%
+rename from uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Keys/GNUmakefile
+rename to uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/GNUmakefile
+index 9a9030d5..a3d65434 100644
+--- a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Keys/GNUmakefile
++++ b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/GNUmakefile
+@@ -26,7 +26,7 @@
+ 
+ BASE_NAME=SecureBoot
+ TARGET=$(BIN_DIR)/$(BASE_NAME)
+-SOURCE_DIR=$(WORKSPACE)/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Keys
++SOURCE_DIR=$(WORKSPACE)/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images
+ FUTURE_DATE=$(shell date --rfc-3339=date -d "+1 year")
+ FUTURE_DATE2=$(shell date --rfc-3339=date -d "+1 day")
+ FUTURE_DATE3=$(shell date --rfc-3339=date -d "+2 day")
+diff --git a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Keys/Keys.inf b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/Images.inf
+similarity index 100%
+rename from uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Keys/Keys.inf
+rename to uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/Images.inf
+diff --git a/uefi-sct/SctPkg/UEFI/UEFI_SCT.dsc b/uefi-sct/SctPkg/UEFI/UEFI_SCT.dsc
+index 1153b4cd..07657989 100644
+--- a/uefi-sct/SctPkg/UEFI/UEFI_SCT.dsc
++++ b/uefi-sct/SctPkg/UEFI/UEFI_SCT.dsc
+@@ -426,7 +426,7 @@ SctPkg/TestCase/UEFI/EFI/Protocol/ConfigKeywordHandler/BlackBoxTest/Dependency/S
+ #
+ # Dependency files for Secure Boot Test
+ #
+-SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Keys/Keys.inf
++SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/Images.inf
+ 
+ #
+ # Support Files
+-- 
+2.17.1
+

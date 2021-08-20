@@ -1,0 +1,90 @@
+From d06525bc19d05371b638f646da1e1fcd64535d5a Mon Sep 17 00:00:00 2001
+From: Stuart Yoder <stuart.yoder@arm.com>
+Date: Mon, 16 Aug 2021 17:47:30 -0500
+Subject: [PATCH 32/37] uefi-sct/SctPkg: Secure Boot: fix image name
+ consistency
+
+Update the dbx variable image payloads to be lowercase as per the
+correct name of the variable, and be consistent with the
+db variable payloads.
+
+Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
+---
+ .../SecureBoot/BlackBoxTest/Dependency/Images/GNUmakefile | 8 ++++----
+ .../SecureBoot/BlackBoxTest/ImageLoadingBBTest.c          | 8 ++++----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/GNUmakefile b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/GNUmakefile
+index 38274263..b1c5429d 100644
+--- a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/GNUmakefile
++++ b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/GNUmakefile
+@@ -49,7 +49,7 @@ TEST_PK1_CRT=$(BIN_DIR)/SecureBoot_TestPK1.crt
+ TEST_PK1_KEY=$(BIN_DIR)/SecureBoot_TestPK1.key
+ endif
+ 
+-all: $(TEST_KEYS) TestKEK2 TestKEK3 KEKSigList1.auth KEKSigList3.auth TestImage1.bin TestImage2.bin TestImage3.bin TestImage4.bin TestImage5.bin TestImage6.bin TestImage9.bin TestImage10.bin NullKEK.auth NullDB.auth NullDBX.auth TestKEK1.auth TestDB1.auth TestDBX1.auth SignCert1 dbSigList1.auth SignCert2 SignCert3 SignCert4 RevokedCert1 RevokedCert2 RevokedCert3 RevokedCert4 dbSigList2.auth dbSigList3.auth dbSigList4.auth DBXRevokedList1.auth dbSigList5.auth
++all: $(TEST_KEYS) TestKEK2 TestKEK3 KEKSigList1.auth KEKSigList3.auth TestImage1.bin TestImage2.bin TestImage3.bin TestImage4.bin TestImage5.bin TestImage6.bin TestImage9.bin TestImage10.bin NullKEK.auth NullDB.auth NullDBX.auth TestKEK1.auth TestDB1.auth TestDBX1.auth SignCert1 dbSigList1.auth SignCert2 SignCert3 SignCert4 RevokedCert1 RevokedCert2 RevokedCert3 RevokedCert4 dbSigList2.auth dbSigList3.auth dbSigList4.auth dbxRevokedList1.auth dbSigList5.auth
+ 
+ TestImage1.bin:
+ 	cp $(SOURCE_DIR)/Application1.efi $(TARGET)_$(@)
+@@ -193,14 +193,14 @@ dbSigList4.auth: SignCert4
+ 	cert-to-efi-sig-list $(BIN_DIR)/SecureBoot_SignCert4.crt $(BIN_DIR)/SecureBoot_TestDB9.esl
+ 	sign-efi-sig-list -c $(BIN_DIR)/SecureBoot_TestKEK2.crt -k $(BIN_DIR)/SecureBoot_TestKEK2.key -t "$(FUTURE_DATE3)" db $(BIN_DIR)/SecureBoot_TestDB9.esl $(BIN_DIR)/SecureBoot_DBSigList4.auth
+ 
+-DBXRevokedList1.auth: RevokedCert1 RevokedCert2 RevokedCert3 RevokedCert4
++dbxRevokedList1.auth: RevokedCert1 RevokedCert2 RevokedCert3 RevokedCert4
+ 	cert-to-efi-sig-list $(BIN_DIR)/SecureBoot_RevokedCert1.crt $(BIN_DIR)/SecureBoot_RevokedCert1.esl
+ 	cert-to-efi-sig-list $(BIN_DIR)/SecureBoot_RevokedCert2.crt $(BIN_DIR)/SecureBoot_RevokedCert2.esl
+ 	cert-to-efi-sig-list $(BIN_DIR)/SecureBoot_RevokedCert3.crt $(BIN_DIR)/SecureBoot_RevokedCert3.esl
+ 	cert-to-efi-sig-list $(BIN_DIR)/SecureBoot_RevokedCert4.crt $(BIN_DIR)/SecureBoot_RevokedCert4.esl
+ 	hash-to-efi-sig-list $(BIN_DIR)/SecureBoot_Unsigned_TestImage10.bin.tmp $(BIN_DIR)/SecureBoot_RevokedHash1.esl
+-	cat $(BIN_DIR)/SecureBoot_RevokedCert1.esl $(BIN_DIR)/SecureBoot_RevokedCert2.esl $(BIN_DIR)/SecureBoot_RevokedCert3.esl  $(BIN_DIR)/SecureBoot_RevokedCert4.esl $(BIN_DIR)/SecureBoot_RevokedHash1.esl > $(BIN_DIR)/SecureBoot_DBXRevokedList1.esl
+-	sign-efi-sig-list -c $(TEST_KEK1_CRT) -k $(TEST_KEK1_KEY) -t "$(FUTURE_DATE2)" dbx $(BIN_DIR)/SecureBoot_DBXRevokedList1.esl $(BIN_DIR)/SecureBoot_DBXRevokedList1.auth
++	cat $(BIN_DIR)/SecureBoot_RevokedCert1.esl $(BIN_DIR)/SecureBoot_RevokedCert2.esl $(BIN_DIR)/SecureBoot_RevokedCert3.esl  $(BIN_DIR)/SecureBoot_RevokedCert4.esl $(BIN_DIR)/SecureBoot_RevokedHash1.esl > $(BIN_DIR)/SecureBoot_dbxRevokedList1.esl
++	sign-efi-sig-list -c $(TEST_KEK1_CRT) -k $(TEST_KEK1_KEY) -t "$(FUTURE_DATE2)" dbx $(BIN_DIR)/SecureBoot_dbxRevokedList1.esl $(BIN_DIR)/SecureBoot_dbxRevokedList1.auth
+ 
+ dbSigList5.auth: Sign_Cert5
+ 	cert-to-efi-sig-list $(BIN_DIR)/SecureBoot_Sign_Cert5.crt $(BIN_DIR)/SecureBoot_TestDB10.esl
+diff --git a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/ImageLoadingBBTest.c b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/ImageLoadingBBTest.c
+index 8fda7763..486e6ab9 100644
+--- a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/ImageLoadingBBTest.c
++++ b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/ImageLoadingBBTest.c
+@@ -402,7 +402,7 @@ ImageLoadingVariableInit  (
+                  NULL                            // Data
+                  );
+ 
+-  FileName = L"DBXRevokedList1.auth";
++  FileName = L"dbxRevokedList1.auth";
+ 
+   //
+   //read the key file into memory.
+@@ -417,7 +417,7 @@ ImageLoadingVariableInit  (
+     StandardLib->RecordMessage (
+                      StandardLib,
+                      EFI_VERBOSE_LEVEL_DEFAULT,
+-                     L"Secure Boot ImageLoadingTest: unable to load DBXRevokedList1.auth. Status=%r.\n",
++                     L"Secure Boot ImageLoadingTest: unable to load dbxRevokedList1.auth. Status=%r.\n",
+                      Status
+                      );
+     return EFI_NOT_FOUND;
+@@ -788,7 +788,7 @@ ImageLoadingTestCheckpoint2 (
+ 
+   //
+   //  Test assertion 2: Verify revocation with image (TestImage9) with signature in db,
+-  //  but signature also in DBXRevokedList1.  Load image signed with RevokedCert4.
++  //  but signature also in dbxRevokedList1.  Load image signed with RevokedCert4.
+   //  Expect result: SECURITY_VIOLATION.
+   //
+ 
+@@ -828,7 +828,7 @@ ImageLoadingTestCheckpoint2 (
+ 
+   //
+   //  Test assertion 3: Verify revocation with image with signature in db,
+-  //  but revoked with SHA256 hash of image in DBXRevokedList1.  Load image
++  //  but revoked with SHA256 hash of image in dbxRevokedList1.  Load image
+   //  (TestImage10).  Expect result: SECURITY_VIOLATION.
+   //
+ 
+-- 
+2.17.1
+
