@@ -11,15 +11,15 @@ The BBR test suites check for compliance against the SBBR and EBBR specification
   - Firmware Test Suite (FWTS)
 
 ## Release details
-- Code Quality: v0.9 Beta
+- Code Quality: v1.0
 - The BBR tests are written for version 1.0 of the BBR specification.
 - The compliance suite is not a substitute for design verification.
-- To review the ACS logs, Arm licensees can contact Arm directly through their partner managers
+- To review the ACS logs, Arm licensees can contact Arm directly through their partner managers.
 
 ## UEFI Self Certification Tests
 UEFI SCT tests the UEFI implementation requirements defined by SBBR/EBBR.
 
-**Prerequisite** : Ensure that the system time is correct before starting SCT tests.
+**Prerequisite**: Ensure that the system time is correct before starting SCT tests.
 
 ### Running SCT
 BBR SCT tests are built as part of the test suite. <br />
@@ -43,7 +43,7 @@ You can also select and run tests individually. For more information on running 
 
 ### Manual intervention tests
 Some SCT tests for the ACS require manual intervention or interaction.
-To run these tests, follow these steps.
+To run the tests, follow these steps.
 
 1. Move or copy the SCT logs into the result partition so they do not get overwritten.
 
@@ -85,19 +85,19 @@ BBR is automatically built and packaged into ACS, but it can also be built indep
 `git clone https://github.com/ARM-software/bbr-acs.git`
 
 #### 2. Getting the required Source codes and Tools
-navigate to the `bbr-acs/<ebbr/sbbr>/scripts` directory
+Navigate to the `bbr-acs/<ebbr/sbbr>/scripts` directory
 
-get source by running the
+Get source by running the
 `./build-scripts/get_<ebbr/sbbr>_source.sh`
 
 This will download `edk2-test, edk2, fwts and tools`
 
 #### 3. Building SBBR & EBBR
- run 
+ Run
 `./build-scripts/build_<ebbr/sbbr>.sh`
 to build BBR components, SCT and FWTS.
 
-The script will apply  patches to create an "EBBR or SBBR" build recipe in the SCT and FWTS build system.
+The script applies patches to create an "EBBR or SBBR" build recipe in the SCT and FWTS build system.
 
 The binaries of SCT are generated here
     `bbr-acs/<ebbr/sbbr>/scripts/edk2-test/uefi-sct/<ARCH>_SCT #(i.e. AARCH64_SCT)`
