@@ -77,10 +77,6 @@ do_build()
 
     echo $BBR_DIR
 
-    if ! patch -R -s -f --dry-run -p1 < $BBR_DIR/common/patches/fwts_additional_patches/0001-Fix-for-dmicheck-test-crashes-with-Sig7.patch ; then
-       echo "Applying FWTS additional Patches for dmicheck..."
-       patch  -p1 < $BBR_DIR/common/patches/fwts_additional_patches/0001-Fix-for-dmicheck-test-crashes-with-Sig7.patch
-    fi
     if [ "$BUILD_PLAT" = "IR" ]; then
         if ! patch -R -s -f --dry-run -p1 < $BBR_DIR/ebbr/config/IR_VER.patch ; then
         echo "Applying FWTS Patch ..."
