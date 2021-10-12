@@ -35,14 +35,14 @@
 # KEYS_DIR - directory where secure boot keys are generated
 
 TOP_DIR=`pwd`
-KEYS_DIR=$TOP_DIR/security-extension-acs-keys
+KEYS_DIR=$TOP_DIR/security-interface-extension-keys
 
 # set the path to pick up the local efitools
 export PATH="$TOP_DIR/efitools:$PATH"
 
 do_build()
 {
-    echo "do_build: security-extension-acs-keys"
+    echo "do_build: security-interface-extension-keys"
     mkdir -p $KEYS_DIR
     pushd $KEYS_DIR
 
@@ -84,7 +84,7 @@ do_build()
 
 do_clean()
 {
-    echo "do_clean: security-extension-acs-keys"
+    echo "do_clean: security-interface-extension-keys"
 
     # delete gpg keys from previous runs
     keyname=$(gpg --list-keys "TestDB1" | head -2 | tail -1 | sed 's/^ *//g')
@@ -96,7 +96,7 @@ do_clean()
 
 do_package()
 {
-    echo "do_package: security-extension-acs-keys: nothing to do"
+    echo "do_package: security-interface-extension-keys: nothing to do"
 }
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )

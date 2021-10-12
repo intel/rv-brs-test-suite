@@ -59,9 +59,9 @@ CROSS_COMPILE=$TOP_DIR/$GCC
 BUILD_PLAT=$1
 BUILD_TYPE=$2
 
-if ! [[ $BUILD_PLAT = IR ]] && ! [[ $BUILD_PLAT = ES ]] && ! [[ $BUILD_PLAT = SE ]]  ; then
+if ! [[ $BUILD_PLAT = IR ]] && ! [[ $BUILD_PLAT = ES ]] && ! [[ $BUILD_PLAT = SIE ]]  ; then
     echo "Please provide a target."
-    echo "Usage build-sct.sh <IR/ES/SE> <BUILD_TYPE>"
+    echo "Usage build-sct.sh <IR/ES/SIE> <BUILD_TYPE>"
     exit
 fi
 
@@ -96,7 +96,7 @@ do_build()
     export PACKAGES_PATH=$TOP_DIR/$UEFI_PATH
     export PYTHON_COMMAND=/usr/bin/python3
     export WORKSPACE=$TOP_DIR/$SCT_PATH/uefi-sct
-    export KEYS_DIR=$TOP_DIR/security-extension-acs-keys
+    export KEYS_DIR=$TOP_DIR/security-interface-extension-keys
     #export HOST_ARCH = `uname -m`
     #MACHINE=`uname -m`
 
@@ -105,7 +105,7 @@ do_build()
     make -C $TOP_DIR/$UEFI_PATH/BaseTools
     
     #Copy over extra files needed for SBBR tests
-    if [[ $BUILD_PLAT != SE ]] ; then
+    if [[ $BUILD_PLAT != SIE ]] ; then
         cp -r $SBBR_TEST_DIR/SbbrBootServices uefi-sct/SctPkg/TestCase/UEFI/EFI/BootServices/
         cp -r $SBBR_TEST_DIR/SbbrEfiSpecVerLvl $SBBR_TEST_DIR/SbbrRequiredUefiProtocols $SBBR_TEST_DIR/SbbrSmbios $SBBR_TEST_DIR/SbbrSysEnvConfig uefi-sct/SctPkg/TestCase/UEFI/EFI/Generic/
         cp -r $SBBR_TEST_DIR/SBBRRuntimeServices uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/
@@ -129,7 +129,7 @@ do_build()
     cp $BBR_DIR/sbbr/config/EfiCompliant_SBBR.ini  uefi-sct/SctPkg/BBR/
     fi
 
-    if [[ $BUILD_PLAT != SE ]] ; then
+    if [[ $BUILD_PLAT != SIE ]] ; then
         if ! patch -R -p1 -s -f --dry-run < $BBR_DIR/common/patches/edk2-test-bbr.patch; then
             echo "Applying SCT patch ..."
             patch  -p1  < $BBR_DIR/common/patches/edk2-test-bbr.patch
@@ -137,7 +137,7 @@ do_build()
     fi
 
     pushd uefi-sct
-    if [[ $BUILD_PLAT = SE ]] ; then
+    if [[ $BUILD_PLAT = SIE ]] ; then
         ./SctPkg/build.sh $TARGET_ARCH GCC $UEFI_BUILD_MODE
     else
         ./SctPkg/build_bbr.sh $TARGET_ARCH GCC $UEFI_BUILD_MODE
@@ -182,7 +182,7 @@ do_package ()
         cp SctPkg/BBR/EfiCompliant_SBBR.ini ${TARGET_ARCH}_SCT/SCT/Dependency/EfiCompliantBBTest/EfiCompliant.ini
         cp SctPkg/BBR/SBBR_manual.seq ${TARGET_ARCH}_SCT/SCT/Sequence/SBBR_manual.seq
 
-    elif [ $BUILD_PLAT = SE ]; then
+    elif [ $BUILD_PLAT = SIE ]; then
         cp -r Build/UefiSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/${TARGET_ARCH}/* ${TARGET_ARCH}_SCT/SCT/
         cp $BBR_DIR/bbsr/config/BBSRStartup.nsh ${TARGET_ARCH}_SCT/SctStartup.nsh
         cp $BBR_DIR/bbsr/config/BBSR.seq  ${TARGET_ARCH}_SCT/SCT/Sequence
