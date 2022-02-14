@@ -58,6 +58,10 @@ CROSS_COMPILE=$TOP_DIR/$GCC
 BUILD_PLAT=$1
 BUILD_TYPE=$2
 
+if [ $BUILD_PLAT = SR ]; then
+   BUILD_PLAT=ES
+fi
+
 #Currently the BUILD_PLAT flag is not used. For future use
 if ! [[ $BUILD_PLAT = IR ]] && ! [[ $BUILD_PLAT = ES ]] ; then
     echo "Please provide a target."

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021, ARM Limited and Contributors. All rights reserved.
+# Copyright (c) 2021-2022, ARM Limited and Contributors. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -46,9 +46,13 @@ CROSS_COMPILE=$TOP_DIR/$GCC
 BUILD_PLAT=$1
 BUILD_TYPE=$2
 
+if [ $BUILD_PLAT = SR ]; then
+   BUILD_PLAT=ES
+fi
+
 if ! [[ $BUILD_TYPE = S ]] && ! [[  $BUILD_TYPE = F  ]] ; then
     echo "Please provide a Build type."
-    echo "Usage build-sct.sh <target> <S/F>"
+    echo "Usage build-fwts.sh <target> <S/F>"
     echo "S->Standalone BBR,F->Full systemready"
     exit
 fi

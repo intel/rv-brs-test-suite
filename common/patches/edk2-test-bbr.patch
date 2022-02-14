@@ -609,10 +609,10 @@ index 1b81ecbc..2bab3420 100644
 -}
 \ No newline at end of file
 diff --git a/uefi-sct/SctPkg/TestCase/UEFI/EFI/BootServices/MemoryAllocationServices/BlackBoxTest/MemoryAllocationServicesBBTestFunction.c b/uefi-sct/SctPkg/TestCase/UEFI/EFI/BootServices/MemoryAllocationServices/BlackBoxTest/MemoryAllocationServicesBBTestFunction.c
-index bf8cd3b3..77081cce 100644
+index 82c9baab..30db8c51 100644
 --- a/uefi-sct/SctPkg/TestCase/UEFI/EFI/BootServices/MemoryAllocationServices/BlackBoxTest/MemoryAllocationServicesBBTestFunction.c
 +++ b/uefi-sct/SctPkg/TestCase/UEFI/EFI/BootServices/MemoryAllocationServices/BlackBoxTest/MemoryAllocationServicesBBTestFunction.c
-@@ -1810,117 +1810,3 @@ BBTestAllocatePoolInterfaceTest (
+@@ -1832,117 +1832,3 @@ BBTestAllocatePoolInterfaceTest (
    FreeMemoryMap ();
    return EFI_SUCCESS;
  }
@@ -837,10 +837,10 @@ index 4deaae3b..c5b9460b 100644
 +IPSecSupport              = no
  
 diff --git a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/VariableServices/BlackBoxTest/AuthVariableServicesBBTestConformance.c b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/VariableServices/BlackBoxTest/AuthVariableServicesBBTestConformance.c
-index ac3d2c0b..23b00e35 100644
+index a415111e..45b979b6 100644
 --- a/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/VariableServices/BlackBoxTest/AuthVariableServicesBBTestConformance.c
 +++ b/uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/VariableServices/BlackBoxTest/AuthVariableServicesBBTestConformance.c
-@@ -287,7 +287,7 @@ AuthVariableDERConfTest (
+@@ -291,7 +291,7 @@ AuthVariableDERConfTest (
                     &MaximumVariableSize
                     );
  

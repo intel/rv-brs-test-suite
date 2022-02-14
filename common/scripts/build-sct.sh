@@ -59,9 +59,13 @@ CROSS_COMPILE=$TOP_DIR/$GCC
 BUILD_PLAT=$1
 BUILD_TYPE=$2
 
+if [ $BUILD_PLAT = SR ]; then
+   BUILD_PLAT=ES
+fi
+
 if ! [[ $BUILD_PLAT = IR ]] && ! [[ $BUILD_PLAT = ES ]] ; then
     echo "Please provide a target."
-    echo "Usage build-sct.sh <IR/ES> <BUILD_TYPE>"
+    echo "Usage build-sct.sh <IR/ES/SR> <BUILD_TYPE>"
     exit
 fi
 
