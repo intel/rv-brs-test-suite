@@ -100,7 +100,7 @@
   RVCT:*_*_AARCH64_DLINK_FLAGS = --muldefweak
 
   DEBUG_*_*_CC_FLAGS  = -DEFI_DEBUG -DACS_VERSION=\"v1.0\"
-  RELEASE_*_*_CC_FLAGS  = -DMDEPKG_NDEBUG
+  RELEASE_*_*_CC_FLAGS  = -DMDEPKG_NDEBUG -DACS_VERSION=\"v1.0\"
 
 [Libraries]
   SctPkg/Library/SctLib/SctLib.inf
