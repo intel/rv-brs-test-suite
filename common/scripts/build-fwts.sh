@@ -94,6 +94,13 @@ do_build()
         fi
     fi
 
+    #The below patch is temporary and shall be removed once a permanent solution
+    #in FWTS codebase is found
+    if ! patch -R -s -f --dry-run -p1 < $BBR_DIR/common/patches/0001-Fix-for-FWTS-build-issue.patch; then
+        echo "Applying FWTS build patch ..."
+        patch -p1 < $BBR_DIR/common/patches/0001-Fix-for-FWTS-build-issue.patch
+    fi
+
     mkdir -p $FWTS_BINARY
     mkdir -p $FWTS_BINARY/bash
     autoreconf -ivf
