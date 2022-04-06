@@ -538,7 +538,7 @@ SctPkg/TestCase/RIVL/Protocol/Http/HttpServiceBinding/HttpServiceBindingENTSTest
 SctPkg/TestCase/UEFI/EFI/Generic/SbbrSysEnvConfig/BlackBoxTest/SysEnvConfigBBTest.inf
 #End of UEFI System Environment and Configuration Tests - SBBR v1.0 3.3
 #
-# Check if EFI Specification Version is 2.5 or greater
+# Check if EFI Specification Version is 2.7 or greater
 SctPkg/TestCase/UEFI/EFI/Generic/SbbrEfiSpecVerLvl/BlackBoxTest/EfiSpecVerLvlBBTest.inf
 #
 # UEFI Boot Services - SBBR v1.0 3.4
