@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021, ARM Limited and Contributors. All rights reserved.
+# Copyright (c) 2021-2022, ARM Limited and Contributors. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -63,9 +63,9 @@ if [ $BUILD_PLAT = SR ]; then
    BUILD_PLAT=ES
 fi
 
-if ! [[ $BUILD_PLAT = IR ]] && ! [[ $BUILD_PLAT = ES ]] ; then
+if ! [[ $BUILD_PLAT = IR ]] && ! [[ $BUILD_PLAT = ES ]] && ! [[ $BUILD_PLAT = SIE ]]  ; then
     echo "Please provide a target."
-    echo "Usage build-sct.sh <IR/ES/SR> <BUILD_TYPE>"
+    echo "Usage build-sct.sh <IR/ES/SIE> <BUILD_TYPE>"
     exit
 fi
 
@@ -92,7 +92,12 @@ do_build()
    
     pushd $TOP_DIR/$SCT_PATH
     CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
-    PATH="$PATH:$CROSS_COMPILE_DIR"
+    if [ $BUILD_PLAT = SIE ]; then
+        export PATH="$TOP_DIR/efitools:$PATH:$CROSS_COMPILE_DIR"
+        export KEYS_DIR=$TOP_DIR/security-interface-extension-keys
+    else
+        export PATH="$PATH:$CROSS_COMPILE_DIR"
+    fi
 
     export EDK2_TOOLCHAIN=$UEFI_TOOLCHAIN
     export ${UEFI_TOOLCHAIN}_AARCH64_PREFIX=$CROSS_COMPILE
@@ -108,11 +113,13 @@ do_build()
     make -C $TOP_DIR/$UEFI_PATH/BaseTools
     
     #Copy over extra files needed for SBBR tests
-    cp -r $SBBR_TEST_DIR/SbbrBootServices uefi-sct/SctPkg/TestCase/UEFI/EFI/BootServices/
-    cp -r $SBBR_TEST_DIR/SbbrEfiSpecVerLvl $SBBR_TEST_DIR/SbbrRequiredUefiProtocols $SBBR_TEST_DIR/SbbrSmbios $SBBR_TEST_DIR/SbbrSysEnvConfig uefi-sct/SctPkg/TestCase/UEFI/EFI/Generic/
-    cp -r $SBBR_TEST_DIR/SBBRRuntimeServices uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/
-    cp $SBBR_TEST_DIR/BBR_SCT.dsc uefi-sct/SctPkg/UEFI/
-    cp $SBBR_TEST_DIR/build_bbr.sh uefi-sct/SctPkg/
+    if [[ $BUILD_PLAT != SIE ]] ; then
+        cp -r $SBBR_TEST_DIR/SbbrBootServices uefi-sct/SctPkg/TestCase/UEFI/EFI/BootServices/
+        cp -r $SBBR_TEST_DIR/SbbrEfiSpecVerLvl $SBBR_TEST_DIR/SbbrRequiredUefiProtocols $SBBR_TEST_DIR/SbbrSmbios $SBBR_TEST_DIR/SbbrSysEnvConfig uefi-sct/SctPkg/TestCase/UEFI/EFI/Generic/
+        cp -r $SBBR_TEST_DIR/SBBRRuntimeServices uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/
+        cp $SBBR_TEST_DIR/BBR_SCT.dsc uefi-sct/SctPkg/UEFI/
+        cp $SBBR_TEST_DIR/build_bbr.sh uefi-sct/SctPkg/
+    fi
     
     #Startup/runtime files.
     mkdir -p uefi-sct/SctPkg/BBR
@@ -122,7 +129,7 @@ do_build()
     cp $BBR_DIR/ebbr/config/EBBR.seq uefi-sct/SctPkg/BBR/
     cp $BBR_DIR/ebbr/config/EBBR_manual.seq uefi-sct/SctPkg/BBR/
     cp $BBR_DIR/ebbr/config/EfiCompliant_EBBR.ini uefi-sct/SctPkg/BBR/
-    else
+    elif [ $BUILD_PLAT = ES ]; then
     #SBBR
     cp $BBR_DIR/sbbr/config/SBBRStartup.nsh uefi-sct/SctPkg/BBR/
     cp $BBR_DIR/sbbr/config/SBBR.seq uefi-sct/SctPkg/BBR/
@@ -130,13 +137,19 @@ do_build()
     cp $BBR_DIR/sbbr/config/EfiCompliant_SBBR.ini  uefi-sct/SctPkg/BBR/
     fi
 
-    if ! patch -R -p1 -s -f --dry-run < $BBR_DIR/common/patches/edk2-test-bbr.patch; then
-        echo "Applying SCT patch ..."
-        patch  -p1  < $BBR_DIR/common/patches/edk2-test-bbr.patch
+    if [[ $BUILD_PLAT != SIE ]] ; then
+        if ! patch -R -p1 -s -f --dry-run < $BBR_DIR/common/patches/edk2-test-bbr.patch; then
+            echo "Applying SCT patch ..."
+            patch  -p1  < $BBR_DIR/common/patches/edk2-test-bbr.patch
+        fi
     fi
 
     pushd uefi-sct
-    ./SctPkg/build_bbr.sh $TARGET_ARCH GCC $UEFI_BUILD_MODE
+    if [[ $BUILD_PLAT = SIE ]] ; then
+        ./SctPkg/build.sh $TARGET_ARCH GCC $UEFI_BUILD_MODE
+    else
+        ./SctPkg/build_bbr.sh $TARGET_ARCH GCC $UEFI_BUILD_MODE
+    fi
     
     popd
 }
@@ -148,7 +161,7 @@ do_clean()
     PATH="$PATH:$CROSS_COMPILE_DIR"
     source $TOP_DIR/$UEFI_PATH/edksetup.sh
     make -C $TOP_DIR/$UEFI_PATH/BaseTools clean
-    rm -rf Build/bbrSct
+    rm -rf Build
     rm -rf ${TARGET_ARCH}_SCT
 
     popd
@@ -162,20 +175,29 @@ do_package ()
     pushd $TOP_DIR/$SCT_PATH/uefi-sct
 
     mkdir -p ${TARGET_ARCH}_SCT/SCT
-    cp -r Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/${TARGET_ARCH}/* ${TARGET_ARCH}_SCT/SCT/
 
     if [ $BUILD_PLAT = IR ]; then
         #EBBR
+        cp -r Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/${TARGET_ARCH}/* ${TARGET_ARCH}_SCT/SCT/
         cp Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/EBBRStartup.nsh ${TARGET_ARCH}_SCT/SctStartup.nsh
         cp SctPkg/BBR/EfiCompliant_EBBR.ini ${TARGET_ARCH}_SCT/SCT/Dependency/EfiCompliantBBTest/EfiCompliant.ini
         cp SctPkg/BBR/EBBR_manual.seq ${TARGET_ARCH}_SCT/SCT/Sequence/EBBR_manual.seq
 
-    else
+    elif [ $BUILD_PLAT = ES ]; then
         #SBBR
+        cp -r Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/${TARGET_ARCH}/* ${TARGET_ARCH}_SCT/SCT/
         cp Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/SBBRStartup.nsh ${TARGET_ARCH}_SCT/SctStartup.nsh
         cp SctPkg/BBR/EfiCompliant_SBBR.ini ${TARGET_ARCH}_SCT/SCT/Dependency/EfiCompliantBBTest/EfiCompliant.ini
         cp SctPkg/BBR/SBBR_manual.seq ${TARGET_ARCH}_SCT/SCT/Sequence/SBBR_manual.seq
 
+    elif [ $BUILD_PLAT = SIE ]; then
+        cp -r Build/UefiSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/${TARGET_ARCH}/* ${TARGET_ARCH}_SCT/SCT/
+        cp $BBR_DIR/bbsr/config/BBSRStartup.nsh ${TARGET_ARCH}_SCT/SctStartup.nsh
+        cp $BBR_DIR/bbsr/config/BBSR.seq  ${TARGET_ARCH}_SCT/SCT/Sequence
+
+    else
+         echo "Error: unexpected platform type"
+         exit
     fi
 
     pushd $TOP_DIR

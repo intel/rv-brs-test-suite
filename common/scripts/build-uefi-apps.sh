@@ -54,6 +54,7 @@ UEFI_BUILD_MODE=DEBUG
 TARGET_ARCH=AARCH64
 GCC=tools/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
 CROSS_COMPILE=$TOP_DIR/$GCC
+KEYS_DIR=$TOP_DIR/security-interface-extension-keys
 
 BUILD_PLAT=$1
 BUILD_TYPE=$2
@@ -63,9 +64,9 @@ if [ $BUILD_PLAT = SR ]; then
 fi
 
 #Currently the BUILD_PLAT flag is not used. For future use
-if ! [[ $BUILD_PLAT = IR ]] && ! [[ $BUILD_PLAT = ES ]] ; then
+if ! [[ $BUILD_PLAT = IR ]] && ! [[ $BUILD_PLAT = ES ]] && ! [[ $BUILD_PLAT = SIE ]]; then
     echo "Please provide a target."
-    echo "Usage $0 <IR/ES> <BUILD_TYPE>"
+    echo "Usage $0 <IR/ES/SIE> <BUILD_TYPE>"
     echo "S->Standalone BBR,F->Full systemready"
     exit
 fi
@@ -124,6 +125,11 @@ do_clean()
 do_package ()
 {
     echo "Packaging...";
+
+    if [[ $BUILD_PLAT = SIE ]]
+    then
+        sbsign --key $KEYS_DIR/TestDB1.key --cert $KEYS_DIR/TestDB1.crt $TOP_DIR/$UEFI_PATH/Build/MdeModule/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/${TARGET_ARCH}/CapsuleApp.efi --output $TOP_DIR/$UEFI_PATH/Build/MdeModule/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/${TARGET_ARCH}/CapsuleApp.efi
+    fi
 
     if [ -f $TOP_DIR/$UEFI_PATH/Build/MdeModule/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/${TARGET_ARCH}/CapsuleApp.efi ]; then
      echo "CapsuleApp.efi successfully generated at $TOP_DIR/$UEFI_PATH/Build/MdeModule/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/${TARGET_ARCH}/CapsuleApp.efi"
