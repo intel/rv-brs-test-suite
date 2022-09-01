@@ -549,6 +549,7 @@ BBTestHashLogExtendEventConformanceTestCheckpoint1 (
                    );
 
   EfiTcgEvent->Header.HeaderSize = sizeof(EFI_TCG2_EVENT_HEADER);
+  EfiTcgEvent->Header.HeaderVersion = 1;
   EfiTcgEvent->Header.EventType = EV_POST_CODE;
   EfiTcgEvent->Header.PCRIndex = 16;
   EfiTcgEvent->Size = EfiTcgEvent->Header.HeaderSize + SctStrSize(EventData);
@@ -692,6 +693,7 @@ BBTestHashLogExtendEventConformanceTestCheckpoint2 (
                    );
 
   EfiTcgEvent->Header.HeaderSize = sizeof(EFI_TCG2_EVENT_HEADER);
+  EfiTcgEvent->Header.HeaderVersion = 1;
   EfiTcgEvent->Header.EventType = EV_POST_CODE;
   EfiTcgEvent->Header.PCRIndex = 16;
   EfiTcgEvent->Size = EfiTcgEvent->Header.HeaderSize + SctStrSize(EventData);
