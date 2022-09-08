@@ -48,13 +48,17 @@
 #     - binary - what to call the final output binary
 
 TOP_DIR=`pwd`
+arch=$(uname -m)
 UEFI_PATH=edk2
 UEFI_TOOLCHAIN=GCC5
 UEFI_BUILD_MODE=DEBUG
 TARGET_ARCH=AARCH64
-GCC=tools/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
-CROSS_COMPILE=$TOP_DIR/$GCC
 KEYS_DIR=$TOP_DIR/security-interface-extension-keys
+
+if [[ $arch != "aarch64" ]]; then
+    GCC=tools/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
+    CROSS_COMPILE=$TOP_DIR/$GCC
+fi
 
 BUILD_PLAT=$1
 BUILD_TYPE=$2
@@ -92,11 +96,13 @@ do_build()
 {
 
     pushd $TOP_DIR/$UEFI_PATH
-    CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
-    PATH="$PATH:$CROSS_COMPILE_DIR"
+    if [[ $arch != "aarch64" ]]; then
+        CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
+        PATH="$PATH:$CROSS_COMPILE_DIR"
+        export ${UEFI_TOOLCHAIN}_AARCH64_PREFIX=$CROSS_COMPILE
+    fi
 
     export EDK2_TOOLCHAIN=$UEFI_TOOLCHAIN
-    export ${UEFI_TOOLCHAIN}_AARCH64_PREFIX=$CROSS_COMPILE
     local vars=
     export PACKAGES_PATH=$TOP_DIR/$UEFI_PATH
     export PYTHON_COMMAND=/usr/bin/python3
@@ -113,8 +119,10 @@ do_build()
 do_clean()
 {
     pushd $TOP_DIR/$UEFI_PATH
-    CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
-    PATH="$PATH:$CROSS_COMPILE_DIR"
+    if [[ $arch != "aarch64" ]]; then
+        CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
+        PATH="$PATH:$CROSS_COMPILE_DIR"
+    fi
     source $TOP_DIR/$UEFI_PATH/edksetup.sh
     make -C $TOP_DIR/$UEFI_PATH/BaseTools clean
 
