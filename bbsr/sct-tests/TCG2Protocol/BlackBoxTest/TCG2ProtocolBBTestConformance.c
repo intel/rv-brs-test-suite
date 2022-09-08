@@ -1,7 +1,8 @@
 /** @file
 
   Copyright 2006 - 2016 Unified EFI, Inc.<BR>
-  Copyright (c) 2021, Arm Inc. All rights reserved.<BR>
+  Copyright (c) 2021, Arm Inc. All rights reserved.<BR>
+
 
   This program and the accompanying materials
   are licensed and made available under the terms and conditions of the BSD License
@@ -119,7 +120,8 @@ BBTestGetActivePcrBanksConformanceTest (
   //Test Using NULL Pointer
   BBTestGetActivePcrBanksConformanceTestCheckpoint1 (StandardLib, TCG2);
 
-  //Test with correct size field
+  //Test with correct size field
+
  BBTestGetActivePcrBanksConformanceTestCheckpoint2 (StandardLib, TCG2);
 
   return EFI_SUCCESS;
@@ -286,9 +288,9 @@ BBTestGetCapabilityConformanceTestCheckpoint2 (
   // the function will initialize the fields included in ProtocolCapability.Size.
 
   if ((StructureVersionMajor != 1) | (StructureVersionMinor != 1)) {
-     StandardLib->RecordMessage (
-                     StandardLib,
-                     EFI_VERBOSE_LEVEL_DEFAULT,
+     StandardLib->RecordMessage (
+                     StandardLib,
+                     EFI_VERBOSE_LEVEL_DEFAULT,
                      L"\r\nTCG2 Protocol GetCapablity Test: Unexpected struct version numbers returned"
                      );
 
@@ -299,9 +301,9 @@ BBTestGetCapabilityConformanceTestCheckpoint2 (
   ProtocolVersionMinor = BootServiceCap.ProtocolVersion.Minor;
 
   if ((ProtocolVersionMajor != 1) | (ProtocolVersionMinor != 1)) {
-     StandardLib->RecordMessage (
-                     StandardLib,
-                     EFI_VERBOSE_LEVEL_DEFAULT,
+     StandardLib->RecordMessage (
+                     StandardLib,
+                     EFI_VERBOSE_LEVEL_DEFAULT,
                      L"\r\nTCG2 Protocol GetCapablity Test: Unexpected protocol version numbers returned."
                      );
 
@@ -349,9 +351,9 @@ BBTestGetCapabilityConformanceTestCheckpoint3 (
 
   // TCG EFI Protocol spec 6.4.4 #4
   if ((StructureVersionMajor != 1) | (StructureVersionMinor != 1)) {
-    StandardLib->RecordMessage (
-                     StandardLib,
-                     EFI_VERBOSE_LEVEL_DEFAULT,
+    StandardLib->RecordMessage (
+                     StandardLib,
+                     EFI_VERBOSE_LEVEL_DEFAULT,
                      L"\r\nTCG2 Protocol GetCapablity Test: GetCapabilty should have StructureVersion 1.1"
                      );
 
@@ -363,9 +365,9 @@ BBTestGetCapabilityConformanceTestCheckpoint3 (
   ProtocolVersionMinor = BootServiceCap.ProtocolVersion.Minor;
 
   if ((ProtocolVersionMajor != 1) | (ProtocolVersionMinor != 1)) {
-    StandardLib->RecordMessage (
-                     StandardLib,
-                     EFI_VERBOSE_LEVEL_DEFAULT,
+    StandardLib->RecordMessage (
+                     StandardLib,
+                     EFI_VERBOSE_LEVEL_DEFAULT,
                      L"\r\nTCG2 Protocol GetCapablity Test: protocol version must be 1.1"
                      );
 
@@ -373,9 +375,9 @@ BBTestGetCapabilityConformanceTestCheckpoint3 (
   }
 
   if (!(BootServiceCap.SupportedEventLogs &  EFI_TCG2_EVENT_LOG_FORMAT_TCG_2)) {
-    StandardLib->RecordMessage (
-                     StandardLib,
-                     EFI_VERBOSE_LEVEL_DEFAULT,
+    StandardLib->RecordMessage (
+                     StandardLib,
+                     EFI_VERBOSE_LEVEL_DEFAULT,
                      L"\r\nTCG2 Protocol GetCapablity Test: GetCapabilty must support TCG2 event log format"
                      );
 
@@ -383,9 +385,9 @@ BBTestGetCapabilityConformanceTestCheckpoint3 (
   }
 
   if (BootServiceCap.NumberOfPcrBanks < 1 ) {
-    StandardLib->RecordMessage (
-                     StandardLib,
-                     EFI_VERBOSE_LEVEL_DEFAULT,
+    StandardLib->RecordMessage (
+                     StandardLib,
+                     EFI_VERBOSE_LEVEL_DEFAULT,
                      L"\r\nTCG2 Protocol GetCapablity Test: expect at least 1 PCR bank"
                      );
 
@@ -395,9 +397,9 @@ BBTestGetCapabilityConformanceTestCheckpoint3 (
   EFI_TCG2_EVENT_ALGORITHM_BITMAP HashBitMapAlgos =  EFI_TCG2_BOOT_HASH_ALG_SHA256 | EFI_TCG2_BOOT_HASH_ALG_SHA384 | EFI_TCG2_BOOT_HASH_ALG_SHA512;
 
   if (!(BootServiceCap.HashAlgorithmBitmap & HashBitMapAlgos)) {
-    StandardLib->RecordMessage (
-                     StandardLib,
-                     EFI_VERBOSE_LEVEL_DEFAULT,
+    StandardLib->RecordMessage (
+                     StandardLib,
+                     EFI_VERBOSE_LEVEL_DEFAULT,
                      L"\r\nTCG2 Protocol GetCapablity Test: unexpected hash algorithms reported = %x",
                      BootServiceCap.HashAlgorithmBitmap
                      );
@@ -406,9 +408,9 @@ BBTestGetCapabilityConformanceTestCheckpoint3 (
   }
 
   if (!(BootServiceCap.ActivePcrBanks & HashBitMapAlgos)) {
-    StandardLib->RecordMessage (
-                     StandardLib,
-                     EFI_VERBOSE_LEVEL_DEFAULT,
+    StandardLib->RecordMessage (
+                     StandardLib,
+                     EFI_VERBOSE_LEVEL_DEFAULT,
                      L"\r\nTCG2 Protocol GetCapablity Test: unexpected active PCR banks reported = %x",
                      BootServiceCap.ActivePcrBanks
                      );
@@ -547,6 +549,7 @@ BBTestHashLogExtendEventConformanceTestCheckpoint1 (
                    );
 
   EfiTcgEvent->Header.HeaderSize = sizeof(EFI_TCG2_EVENT_HEADER);
+  EfiTcgEvent->Header.HeaderVersion = 1;
   EfiTcgEvent->Header.EventType = EV_POST_CODE;
   EfiTcgEvent->Header.PCRIndex = 16;
   EfiTcgEvent->Size = EfiTcgEvent->Header.HeaderSize + SctStrSize(EventData);
@@ -690,6 +693,7 @@ BBTestHashLogExtendEventConformanceTestCheckpoint2 (
                    );
 
   EfiTcgEvent->Header.HeaderSize = sizeof(EFI_TCG2_EVENT_HEADER);
+  EfiTcgEvent->Header.HeaderVersion = 1;
   EfiTcgEvent->Header.EventType = EV_POST_CODE;
   EfiTcgEvent->Header.PCRIndex = 16;
   EfiTcgEvent->Size = EfiTcgEvent->Header.HeaderSize + SctStrSize(EventData);
