@@ -97,7 +97,7 @@ do_build()
     mkdir -p uefi-sct/SctPkg/BBR
     #EBBR
     cp $BBR_DIR/ebbr/config/EBBRStartup.nsh uefi-sct/SctPkg/BBR/
-    cp $BBR_DIR/ebbr/config/EBBR.seq uefi-sct/SctPkg/BBR/
+    cp $BBR_DIR/ebbr/config/EBBR-arm.seq uefi-sct/SctPkg/BBR/EBBR.seq
     cp $BBR_DIR/ebbr/config/EBBR_manual.seq uefi-sct/SctPkg/BBR/
     cp $BBR_DIR/ebbr/config/EfiCompliant_EBBR.ini uefi-sct/SctPkg/BBR/
 
