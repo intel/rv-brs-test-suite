@@ -40,7 +40,7 @@ TOP_DIR=`pwd`
 FWTS_PATH=fwts
 FWTS_BINARY=fwts_output
 RAMDISK_PATH=ramdisk
-FWTS_DEP=$RAMDISK_PATH/fwts_build_dep
+FWTS_DEP=$RAMDISK_PATH/fwts_build_dep-arm
 
 . $TOP_DIR/../../common/config/common_config.cfg
 . $TOP_DIR/../../common/scripts/cross_toolchain-arm.sh
@@ -56,7 +56,14 @@ init()
     if [[ $BUILD_TYPE = S ]]; then
         mkdir -p $TOP_DIR/$RAMDISK_PATH
     fi
-    cp -r $BBR_DIR/common/fwts_build_dep $RAMDISK_PATH
+    cp -r $BBR_DIR/common/fwts_build_dep-arm $RAMDISK_PATH
+
+    # Copy the libraries fwts needs at runtime.
+    mkdir -pv $RAMDISK_PATH/fwts_build_dep-arm/cross_libs
+
+    for f in libc.so.6 ld-linux-armhf.so.3 libpthread.so.0 libm.so.6; do
+        cp -v "$CROSS_COMPILE_DIR/../arm-linux-gnueabihf/libc/lib/$f" "$RAMDISK_PATH/fwts_build_dep-arm/cross_libs/"
+    done
 }
 
 do_build()
@@ -80,15 +87,18 @@ do_build()
         patch -p1 < $BBR_DIR/common/patches/0001-Fix-for-FWTS-build-issue.patch
     fi
 
+    if ! patch -R -s -f --dry-run -p1 < $BBR_DIR/common/patches/0001-Build-only-what-we-use-to-test-EBBR-on-32b-arm.patch; then
+        echo "Applying FWTS EBBR on 32b arm patch ..."
+        patch -p1 < $BBR_DIR/common/patches/0001-Build-only-what-we-use-to-test-EBBR-on-32b-arm.patch
+    fi
+
     mkdir -p $FWTS_BINARY
     mkdir -p $FWTS_BINARY/bash
     autoreconf -ivf
     export ac_cv_func_malloc_0_nonnull=yes
     export ac_cv_func_realloc_0_nonnull=yes
     ./configure --host=arm-linux-gnueabihf  \
-        --enable-static=yes CFLAGS="-g -O2 -I$TOP_DIR/$FWTS_DEP/include" \
-        LDFLAGS="-L$TOP_DIR/$FWTS_DEP -Wl,-rpath-link,$TOP_DIR/$FWTS_DEP \
-        -Wl,-rpath-link,$TOP_DIR/$FWTS_PATH/src/libfwtsiasl/.libs/" \
+        --enable-static=yes CPPFLAGS="-I$TOP_DIR/$FWTS_DEP/include" CFLAGS="-g -O2" \
         --prefix=$TOP_DIR/$FWTS_PATH/$FWTS_BINARY \
         --exec-prefix=$TOP_DIR/$FWTS_PATH/$FWTS_BINARY \
 	--datarootdir=$TOP_DIR/$FWTS_PATH/$FWTS_BINARY \
