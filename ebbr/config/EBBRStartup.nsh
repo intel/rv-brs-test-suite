@@ -98,7 +98,12 @@ for %i in 0 1 2 3 4 5 6 7 8 9 A B C D E F
             mkdir sct_results
             FS%i:
             cd FS%i:\EFI\BOOT\bbr\SCT
-            Sct -s EBBR.seq      
+            if %1 == sct_extd then
+               echo "Starting extended run of SCT"
+               Sct -s EBBR_extd_run.seq
+            else
+               Sct -s EBBR.seq
+            endif
             goto Done
             endif
         endif
