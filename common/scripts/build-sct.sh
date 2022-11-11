@@ -205,6 +205,7 @@ do_package ()
         cp Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/SBBRStartup.nsh ${TARGET_ARCH}_SCT/SctStartup.nsh
         cp SctPkg/BBR/EfiCompliant_SBBR.ini ${TARGET_ARCH}_SCT/SCT/Dependency/EfiCompliantBBTest/EfiCompliant.ini
         cp SctPkg/BBR/SBBR_manual.seq ${TARGET_ARCH}_SCT/SCT/Sequence/SBBR_manual.seq
+        cp SctPkg/BBR/SBBR_extd_run.seq ${TARGET_ARCH}_SCT/SCT/Sequence/SBBR_extd_run.seq
 
     elif [ $BUILD_PLAT = SIE ]; then
         cp -r Build/UefiSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/${TARGET_ARCH}/* ${TARGET_ARCH}_SCT/SCT/
