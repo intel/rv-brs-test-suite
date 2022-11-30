@@ -115,6 +115,12 @@ BBTestGetCapabilityConformanceTestCheckpoint3 (
   );
 
 EFI_STATUS
+BBTestGetCapabilityConformanceTestCheckpoint4 (
+  IN EFI_STANDARD_TEST_LIBRARY_PROTOCOL    *StandardLib,
+  IN EFI_TCG2_PROTOCOL                     *TCG2
+  );
+
+EFI_STATUS
 BBTestGetActivePcrBanksConformanceTestCheckpoint1 (
   IN EFI_STANDARD_TEST_LIBRARY_PROTOCOL    *StandardLib,
   IN EFI_TCG2_PROTOCOL                     *TCG2
