@@ -165,11 +165,14 @@ BBSRVariableSizeTestSub1 (
                    );
 
    //Check MaxVariableSize is larger than 64kb as per R050
-    if ( MaximumVariableSize < 65536) {
+
+   //In some implementations a 64KB max variable size results in a usable size slightly less
+   //hence, relaxing the test to check for 60000 bytes.
+    if ( MaximumVariableSize < 60000) {
                      StandardLib->RecordMessage (
                      StandardLib,
                      EFI_VERBOSE_LEVEL_DEFAULT,
-                     L"\r\QueryVariable MaxVariableSize is %d, but must be at least 64KB",
+                     L"\r\nQueryVariable MaxVariableSize is %d, but must be at least 64KB",
                      MaximumVariableSize
                      );
 
