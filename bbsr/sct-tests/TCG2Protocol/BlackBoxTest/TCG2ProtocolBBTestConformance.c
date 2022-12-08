@@ -3,7 +3,6 @@
   Copyright 2006 - 2016 Unified EFI, Inc.<BR>
   Copyright (c) 2021, Arm Inc. All rights reserved.<BR>
 
-
   This program and the accompanying materials
   are licensed and made available under the terms and conditions of the BSD License
   which accompanies this distribution.  The full text of the license may be found at
@@ -27,9 +26,11 @@ Abstract:
 
 #include "TCG2ProtocolBBTest.h"
 
+#define offsetof(st, m) __builtin_offsetof(st, m)
+
 /**
  *  @brief Entrypoint for GetCapability() Function Test.
- *         3 checkpoints will be tested.
+ *         4 checkpoints will be tested.
  *  @param This a pointer of EFI_BB_TEST_PROTOCOL
  *  @param ClientInterface A pointer to the interface array under test
  *  @param TestLevel Test "thoroughness" control
@@ -49,13 +50,17 @@ BBTestGetCapabilityConformanceTest (
   EFI_STANDARD_TEST_LIBRARY_PROTOCOL    *StandardLib;
   EFI_STATUS                            Status;
   EFI_TCG2_PROTOCOL                     *TCG2;
+
   //
   // init
   //
   TCG2 = (EFI_TCG2_PROTOCOL*)ClientInterface;
 
-  //
+  // Ensure Protocol not NULL
+  if (TCG2 == NULL)
+    return EFI_UNSUPPORTED;
 
+  //
   // Get the Standard Library Interface
   //
   Status = gtBS->HandleProtocol (
@@ -67,14 +72,17 @@ BBTestGetCapabilityConformanceTest (
     return Status;
   }
 
-  // Test Using NULL BootCapablity Pointer
+  // Test Using NULL BootCapability Pointer
   BBTestGetCapabilityConformanceTestCheckpoint1 (StandardLib, TCG2);
 
-  // Test Using Capability struct with struct size less than full size
+  // Test for validating fields of struct returned by GetCapability()
   BBTestGetCapabilityConformanceTestCheckpoint2 (StandardLib, TCG2);
 
-  // Test with full size field
+  // Test Using Capability struct with struct size less than 1.0 size
   BBTestGetCapabilityConformanceTestCheckpoint3 (StandardLib, TCG2);
+
+  // Test Using Capability struct with struct size equal to 1.0 size
+  BBTestGetCapabilityConformanceTestCheckpoint4 (StandardLib, TCG2);
 
   return EFI_SUCCESS;
 }
@@ -232,8 +240,8 @@ BBTestGetCapabilityConformanceTestCheckpoint1 (
 {
   EFI_TEST_ASSERTION                    AssertionType;
   EFI_STATUS                            Status;
-
   EFI_TCG2_BOOT_SERVICE_CAPABILITY *BootServiceCapPtr = NULL;
+
   Status = TCG2->GetCapability (
                            TCG2,
                            BootServiceCapPtr);
@@ -259,6 +267,7 @@ BBTestGetCapabilityConformanceTestCheckpoint1 (
   return EFI_SUCCESS;
 }
 
+
 EFI_STATUS
 BBTestGetCapabilityConformanceTestCheckpoint2 (
   IN EFI_STANDARD_TEST_LIBRARY_PROTOCOL    *StandardLib,
@@ -271,9 +280,9 @@ BBTestGetCapabilityConformanceTestCheckpoint2 (
   char StructureVersionMinor;
   char ProtocolVersionMajor;
   char ProtocolVersionMinor;
-
   EFI_TCG2_BOOT_SERVICE_CAPABILITY      BootServiceCap;
-  BootServiceCap.Size = sizeof(UINT8) + (sizeof(EFI_TCG2_VERSION) * 2);
+
+  BootServiceCap.Size = sizeof(EFI_TCG2_BOOT_SERVICE_CAPABILITY);
 
   Status = TCG2->GetCapability (
                            TCG2,
@@ -281,40 +290,108 @@ BBTestGetCapabilityConformanceTestCheckpoint2 (
 
   AssertionType = EFI_TEST_ASSERTION_PASSED;
 
+  if (Status != EFI_SUCCESS) {
+    StandardLib->RecordMessage (
+                     StandardLib,
+                     EFI_VERBOSE_LEVEL_DEFAULT,
+                     L"\r\nTCG2 Protocol GetCapability Test: GetCapability should return EFI_SUCCESS"
+                     );
+
+    AssertionType = EFI_TEST_ASSERTION_FAILED;
+  }
+
   StructureVersionMajor = BootServiceCap.StructureVersion.Major;
   StructureVersionMinor = BootServiceCap.StructureVersion.Minor;
 
-  // If the input ProtocolCapability.Size < sizeof(EFI_TCG2_BOOT_SERVICE_CAPABILITY)
-  // the function will initialize the fields included in ProtocolCapability.Size.
-
+  // TCG EFI Protocol spec 6.4.4 #4
   if ((StructureVersionMajor != 1) | (StructureVersionMinor != 1)) {
-     StandardLib->RecordMessage (
+    StandardLib->RecordMessage (
                      StandardLib,
                      EFI_VERBOSE_LEVEL_DEFAULT,
-                     L"\r\nTCG2 Protocol GetCapablity Test: Unexpected struct version numbers returned"
+                     L"\r\nTCG2 Protocol GetCapability Test: GetCapability should have StructureVersion 1.1, reported value = %d.%d",
+                     StructureVersionMajor,
+                     StructureVersionMinor
                      );
 
-     AssertionType = EFI_TEST_ASSERTION_FAILED;
+    AssertionType = EFI_TEST_ASSERTION_FAILED;
   }
 
   ProtocolVersionMajor = BootServiceCap.ProtocolVersion.Major;
   ProtocolVersionMinor = BootServiceCap.ProtocolVersion.Minor;
 
+  // TCG EFI Protocol spec 6.4.4 #4
   if ((ProtocolVersionMajor != 1) | (ProtocolVersionMinor != 1)) {
-     StandardLib->RecordMessage (
+    StandardLib->RecordMessage (
                      StandardLib,
                      EFI_VERBOSE_LEVEL_DEFAULT,
-                     L"\r\nTCG2 Protocol GetCapablity Test: Unexpected protocol version numbers returned."
+                     L"\r\nTCG2 Protocol GetCapability Test: GetCapability should have ProtocolVersion 1.1, reported value = %d.%d",
+                     ProtocolVersionMajor,
+                     ProtocolVersionMinor
                      );
 
-     AssertionType = EFI_TEST_ASSERTION_FAILED;
+    AssertionType = EFI_TEST_ASSERTION_FAILED;
+  }
+
+  if (!(BootServiceCap.HashAlgorithmBitmap & EFI_TCG2_BOOT_HASH_ALG_SHA256)) {
+    StandardLib->RecordMessage (
+                     StandardLib,
+                     EFI_VERBOSE_LEVEL_DEFAULT,
+                     L"\r\nTCG2 Protocol GetCapability Test: unexpected hash algorithms reported = %x",
+                     BootServiceCap.HashAlgorithmBitmap
+                     );
+
+    AssertionType = EFI_TEST_ASSERTION_FAILED;
+  }
+
+  if (!(BootServiceCap.SupportedEventLogs &  EFI_TCG2_EVENT_LOG_FORMAT_TCG_2)) {
+    StandardLib->RecordMessage (
+                     StandardLib,
+                     EFI_VERBOSE_LEVEL_DEFAULT,
+                     L"\r\nTCG2 Protocol GetCapability Test: GetCapability must support TCG2 event log format"
+                     );
+
+    AssertionType = EFI_TEST_ASSERTION_FAILED;
+  }
+
+  if ((~BootServiceCap.ActivePcrBanks & BootServiceCap.HashAlgorithmBitmap) != 0) {
+    StandardLib->RecordMessage (
+                     StandardLib,
+                     EFI_VERBOSE_LEVEL_DEFAULT,
+                     L"\r\nTCG2 Protocol GetCapability Test: ActivePcrBanks is not a subset of HashAlgorithmBitmap"
+                     );
+
+    AssertionType = EFI_TEST_ASSERTION_FAILED;
+  }
+
+  if (BootServiceCap.NumberOfPcrBanks < 1 ) {
+    StandardLib->RecordMessage (
+                     StandardLib,
+                     EFI_VERBOSE_LEVEL_DEFAULT,
+                     L"\r\nTCG2 Protocol GetCapability Test: expect at least 1 PCR bank"
+                     );
+
+    AssertionType = EFI_TEST_ASSERTION_FAILED;
+  }
+
+  // Verify that ActivePcrBanks includes SHA256, SHA384, or SHA512
+  EFI_TCG2_EVENT_ALGORITHM_BITMAP HashBitMapAlgos =  EFI_TCG2_BOOT_HASH_ALG_SHA256 | EFI_TCG2_BOOT_HASH_ALG_SHA384 | EFI_TCG2_BOOT_HASH_ALG_SHA512;
+
+  if (!(BootServiceCap.ActivePcrBanks & HashBitMapAlgos)) {
+    StandardLib->RecordMessage (
+                     StandardLib,
+                     EFI_VERBOSE_LEVEL_DEFAULT,
+                     L"\r\nTCG2 Protocol GetCapability Test: ActivePcrBanks doesn't includes SHA256, SHA384, or SHA512",
+                     BootServiceCap.ActivePcrBanks
+                     );
+
+    AssertionType = EFI_TEST_ASSERTION_FAILED;
   }
 
   StandardLib->RecordAssertion (
                  StandardLib,
                  AssertionType,
                  gTcg2ConformanceTestAssertionGuid002,
-                 L"TCG2_PROTOCOL.GetCapability protocol version check failed.",
+                 L"TCG2_PROTOCOL.GetCapability - GetCapability() populates all elements of EFI_TCG_BOOT_SERVICE_CAPABILITY",
                  L"%a:%d: Status - %r",
                  __FILE__,
                  (UINTN)__LINE__,
@@ -338,7 +415,9 @@ BBTestGetCapabilityConformanceTestCheckpoint3 (
   char ProtocolVersionMinor;
 
   EFI_TCG2_BOOT_SERVICE_CAPABILITY      BootServiceCap;
-  BootServiceCap.Size = sizeof(EFI_TCG2_BOOT_SERVICE_CAPABILITY);
+
+  // set size to be value less than 1.0 or 1.1 struct
+  BootServiceCap.Size = 4;
 
   Status = TCG2->GetCapability (
                            TCG2,
@@ -346,73 +425,11 @@ BBTestGetCapabilityConformanceTestCheckpoint3 (
 
   AssertionType = EFI_TEST_ASSERTION_PASSED;
 
-  StructureVersionMajor = BootServiceCap.StructureVersion.Major;
-  StructureVersionMinor = BootServiceCap.StructureVersion.Minor;
-
-  // TCG EFI Protocol spec 6.4.4 #4
-  if ((StructureVersionMajor != 1) | (StructureVersionMinor != 1)) {
+  if (Status != EFI_BUFFER_TOO_SMALL && BootServiceCap.Size != sizeof(EFI_TCG2_BOOT_SERVICE_CAPABILITY)) {
     StandardLib->RecordMessage (
                      StandardLib,
                      EFI_VERBOSE_LEVEL_DEFAULT,
-                     L"\r\nTCG2 Protocol GetCapablity Test: GetCapabilty should have StructureVersion 1.1"
-                     );
-
-    AssertionType = EFI_TEST_ASSERTION_FAILED;
-  }
-
-  // TCG EFI Protocol spec 6.4.4 #4
-  ProtocolVersionMajor = BootServiceCap.ProtocolVersion.Major;
-  ProtocolVersionMinor = BootServiceCap.ProtocolVersion.Minor;
-
-  if ((ProtocolVersionMajor != 1) | (ProtocolVersionMinor != 1)) {
-    StandardLib->RecordMessage (
-                     StandardLib,
-                     EFI_VERBOSE_LEVEL_DEFAULT,
-                     L"\r\nTCG2 Protocol GetCapablity Test: protocol version must be 1.1"
-                     );
-
-    AssertionType = EFI_TEST_ASSERTION_FAILED;
-  }
-
-  if (!(BootServiceCap.SupportedEventLogs &  EFI_TCG2_EVENT_LOG_FORMAT_TCG_2)) {
-    StandardLib->RecordMessage (
-                     StandardLib,
-                     EFI_VERBOSE_LEVEL_DEFAULT,
-                     L"\r\nTCG2 Protocol GetCapablity Test: GetCapabilty must support TCG2 event log format"
-                     );
-
-    AssertionType = EFI_TEST_ASSERTION_FAILED;
-  }
-
-  if (BootServiceCap.NumberOfPcrBanks < 1 ) {
-    StandardLib->RecordMessage (
-                     StandardLib,
-                     EFI_VERBOSE_LEVEL_DEFAULT,
-                     L"\r\nTCG2 Protocol GetCapablity Test: expect at least 1 PCR bank"
-                     );
-
-    AssertionType = EFI_TEST_ASSERTION_FAILED;
-  }
-
-  EFI_TCG2_EVENT_ALGORITHM_BITMAP HashBitMapAlgos =  EFI_TCG2_BOOT_HASH_ALG_SHA256 | EFI_TCG2_BOOT_HASH_ALG_SHA384 | EFI_TCG2_BOOT_HASH_ALG_SHA512;
-
-  if (!(BootServiceCap.HashAlgorithmBitmap & HashBitMapAlgos)) {
-    StandardLib->RecordMessage (
-                     StandardLib,
-                     EFI_VERBOSE_LEVEL_DEFAULT,
-                     L"\r\nTCG2 Protocol GetCapablity Test: unexpected hash algorithms reported = %x",
-                     BootServiceCap.HashAlgorithmBitmap
-                     );
-
-    AssertionType = EFI_TEST_ASSERTION_FAILED;
-  }
-
-  if (!(BootServiceCap.ActivePcrBanks & HashBitMapAlgos)) {
-    StandardLib->RecordMessage (
-                     StandardLib,
-                     EFI_VERBOSE_LEVEL_DEFAULT,
-                     L"\r\nTCG2 Protocol GetCapablity Test: unexpected active PCR banks reported = %x",
-                     BootServiceCap.ActivePcrBanks
+                     L"\r\nTCG2 Protocol GetCapability Test: Did not return Status == EFI_BUFFER_TOO_SMALL and Size == sizeof(EFI_TCG2_BOOT_SERVICE_CAPABILITY)"
                      );
 
     AssertionType = EFI_TEST_ASSERTION_FAILED;
@@ -422,7 +439,66 @@ BBTestGetCapabilityConformanceTestCheckpoint3 (
                  StandardLib,
                  AssertionType,
                  gTcg2ConformanceTestAssertionGuid003,
-                 L"TCG2_PROTOCOL.GetCapability - GetCapability checks failed",
+                 L"TCG2_PROTOCOL.GetCapability() - GetCapability() handling of input struct size less than the size of EFI_TCG2_BOOT_SERVICE_CAPABILITY up to and including the ManufacturerID field",
+                 L"%a:%d: Status - %r",
+                 __FILE__,
+                 (UINTN)__LINE__,
+                 Status
+                 );
+
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+BBTestGetCapabilityConformanceTestCheckpoint4 (
+  IN EFI_STANDARD_TEST_LIBRARY_PROTOCOL    *StandardLib,
+  IN EFI_TCG2_PROTOCOL                     *TCG2
+  )
+{
+  EFI_TEST_ASSERTION                    AssertionType;
+  EFI_STATUS                            Status;
+  char StructureVersionMajor;
+  char StructureVersionMinor;
+  char ProtocolVersionMajor;
+  char ProtocolVersionMinor;
+  EFI_TCG2_BOOT_SERVICE_CAPABILITY      BootServiceCap;
+
+  // set size of struct to be up to and including the ManufacturerID
+  // (this acts like a client with a 1.0 version of the struct)
+  BootServiceCap.Size = offsetof(EFI_TCG2_BOOT_SERVICE_CAPABILITY, NumberOfPcrBanks);
+
+  Status = TCG2->GetCapability (
+                           TCG2,
+                           &BootServiceCap);
+
+  AssertionType = EFI_TEST_ASSERTION_PASSED;
+
+  if (Status != EFI_SUCCESS) {
+    StandardLib->RecordMessage (
+                     StandardLib,
+                     EFI_VERBOSE_LEVEL_DEFAULT,
+                     L"\r\nTCG2 Protocol GetCapability Test: 1.0 Compatibility. GetCapability should return EFI_SUCCESS"
+                     );
+
+    AssertionType = EFI_TEST_ASSERTION_FAILED;
+  }
+
+  // Verify returned Size equals the size of EFI_TCG2_BOOT_SERVICE_CAPABILITY up to and including the ManufacturerID field.
+  if (BootServiceCap.Size != offsetof(EFI_TCG2_BOOT_SERVICE_CAPABILITY, NumberOfPcrBanks)) {
+    StandardLib->RecordMessage (
+                     StandardLib,
+                     EFI_VERBOSE_LEVEL_DEFAULT,
+                     L"\r\nTCG2 Protocol GetCapability Test: Did not return Size == EFI_TCG2_BOOT_SERVICE_CAPABILITY up to and including the ManufacturerID field"
+                     );
+
+    AssertionType = EFI_TEST_ASSERTION_FAILED;
+  }
+
+  StandardLib->RecordAssertion (
+                 StandardLib,
+                 AssertionType,
+                 gTcg2ConformanceTestAssertionGuid016,
+                 L"TCG2_PROTOCOL.GetCapability - GetCapability() backwards compatibility check for 1.0 version of EFI_TCG_BOOT_SERVICE_CAPABILITY",
                  L"%a:%d: Status - %r",
                  __FILE__,
                  (UINTN)__LINE__,
