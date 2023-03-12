@@ -37,6 +37,8 @@ create_scripts_link()
  ln -s $TOP_DIR/../../common/scripts/build-sct.sh             $TOP_DIR/build-scripts/build-sct.sh
  ln -s $TOP_DIR/../../common/scripts/build-uefi-apps.sh       $TOP_DIR/build-scripts/build-uefi-apps.sh
  ln -s $TOP_DIR/../../common/scripts/build-fwts.sh            $TOP_DIR/build-scripts/build-fwts.sh
+ ln -s $TOP_DIR/../../common/scripts/build-qemu.sh            $TOP_DIR/build-scripts/build-qemu.sh
+ ln -s $TOP_DIR/../../common/uefi_images/uefi_qemu_flash1.img $TOP_DIR/uefi_qemu_flash1.img
 }
 
 init_dir()
@@ -48,7 +50,7 @@ init_dir()
 create_scripts_link
 init_dir
 
-source ./build-scripts/build-fwts.sh IR S
+# source ./build-scripts/build-fwts.sh IR S
 source ./build-scripts/build-sct.sh  IR S
-source ./build-scripts/build-uefi-apps.sh  IR S
-
+# source ./build-scripts/build-uefi-apps.sh  IR S
+source ./build-scripts/build-qemu.sh

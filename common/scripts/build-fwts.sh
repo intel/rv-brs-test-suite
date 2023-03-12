@@ -138,34 +138,34 @@ do_build()
 
 do_clean()
 {
-    pushd $TOP_DIR/$FWTS_PATH
-    if [[ $arch != "aarch64" ]]; then
-        CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
-        PATH="$PATH:$CROSS_COMPILE_DIR"
-    fi
-    if [ -f "$TOP_DIR/$FWTS_PATH/Makefile" ]; then
-        make clean
-    fi
-    if [ -f "$TOP_DIR/$FWTS_PATH/$FWTS_BINARY/bin/fwts" ]; then
-        make uninstall
-    fi
-    rm -rf $TOP_DIR/$RAMDISK_PATH/$FWTS_BINARY
-    popd
+    # pushd $TOP_DIR/$FWTS_PATH
+    # if [[ $arch != "aarch64" ]]; then
+    #     CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
+    #     PATH="$PATH:$CROSS_COMPILE_DIR"
+    # fi
+    # if [ -f "$TOP_DIR/$FWTS_PATH/Makefile" ]; then
+    #     make clean
+    # fi
+    # if [ -f "$TOP_DIR/$FWTS_PATH/$FWTS_BINARY/bin/fwts" ]; then
+    #     make uninstall
+    # fi
+    # rm -rf $TOP_DIR/$RAMDISK_PATH/$FWTS_BINARY
+    # popd
 }
 
 do_package ()
 {
-    echo "Packaging FWTS... $VARIANT";
-    if [[ $BUILD_TYPE = F ]]; then
-        sed -i '/ir_bbr_fwts_tests.ini/d' $TOP_DIR/ramdisk/files.txt
-        if [ "$BUILD_PLAT" = "IR" ]; then
-          #Add the entry in file.txt of ramdisk
-          echo "file /bin/ir_bbr_fwts_tests.ini         ./fwts_output/bin/ir_bbr_fwts_tests.ini                   766 0 0" >> $TOP_DIR/ramdisk/files.txt
-          cp $BBR_DIR/ebbr/config/ir_bbr_fwts_tests.ini $TOP_DIR/$FWTS_PATH/$FWTS_BINARY/bin
-        fi
-    fi
-    cp -R $TOP_DIR/$FWTS_PATH/$FWTS_BINARY ramdisk
-    chmod 777 -R $TOP_DIR/$RAMDISK_PATH/$FWTS_BINARY
+    # echo "Packaging FWTS... $VARIANT";
+    # if [[ $BUILD_TYPE = F ]]; then
+    #     sed -i '/ir_bbr_fwts_tests.ini/d' $TOP_DIR/ramdisk/files.txt
+    #     if [ "$BUILD_PLAT" = "IR" ]; then
+    #       #Add the entry in file.txt of ramdisk
+    #       echo "file /bin/ir_bbr_fwts_tests.ini         ./fwts_output/bin/ir_bbr_fwts_tests.ini                   766 0 0" >> $TOP_DIR/ramdisk/files.txt
+    #       cp $BBR_DIR/ebbr/config/ir_bbr_fwts_tests.ini $TOP_DIR/$FWTS_PATH/$FWTS_BINARY/bin
+    #     fi
+    # fi
+    # cp -R $TOP_DIR/$FWTS_PATH/$FWTS_BINARY ramdisk
+    # chmod 777 -R $TOP_DIR/$RAMDISK_PATH/$FWTS_BINARY
 }
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
