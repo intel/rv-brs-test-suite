@@ -81,21 +81,21 @@ if ! [[ $BUILD_TYPE = S ]] && ! [[  $BUILD_TYPE = F  ]] ; then
 fi
 
 if [[ $BUILD_TYPE = S ]]; then
-    BBR_DIR=$TOP_DIR/../../
+    BRS_DIR=$TOP_DIR/../../
 else
-    BBR_DIR=$TOP_DIR/bbr-acs
+    BRS_DIR=$TOP_DIR/rv-brs-test-suite
 fi
 
 echo "Target: $BUILD_PLAT"
 echo "Build type: $BUILD_TYPE"
 
-SBBR_TEST_DIR=$BBR_DIR/common/sct-tests/sbbr-tests
-BBSR_TEST_DIR=$BBR_DIR/bbsr/sct-tests
+BRSI_TEST_DIR=$BRS_DIR/common/sct-tests/sbbr-tests
+BBSR_TEST_DIR=$BRS_DIR/bbsr/sct-tests
 if [[ $BUILD_TYPE = S ]]; then
-    sed -i 's|SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/SecureBootBBTest.inf|#SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/SecureBootBBTest.inf|g' $BBR_DIR/common/sct-tests/sbbr-tests/BBR_SCT.dsc
-    sed -i 's|SctPkg/TestCase/UEFI/EFI/RuntimeServices/BBSRVariableSizeTest/BlackBoxTest/BBSRVariableSizeBBTest.inf|#SctPkg/TestCase/UEFI/EFI/RuntimeServices/BBSRVariableSizeTest/BlackBoxTest/BBSRVariableSizeBBTest.inf|g' $BBR_DIR/common/sct-tests/sbbr-tests/BBR_SCT.dsc
-    sed -i 's|SctPkg/TestCase/UEFI/EFI/Protocol/TCG2Protocol/BlackBoxTest/TCG2ProtocolBBTest.inf|#SctPkg/TestCase/UEFI/EFI/Protocol/TCG2Protocol/BlackBoxTest/TCG2ProtocolBBTest.inf|g' $BBR_DIR/common/sct-tests/sbbr-tests/BBR_SCT.dsc
-    sed -i 's|SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/Images.inf|#SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/Images.inf|g' $BBR_DIR/common/sct-tests/sbbr-tests/BBR_SCT.dsc
+    sed -i 's|SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/SecureBootBBTest.inf|#SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/SecureBootBBTest.inf|g' $BRS_DIR/common/sct-tests/sbbr-tests/BRS_SCT.dsc
+    sed -i 's|SctPkg/TestCase/UEFI/EFI/RuntimeServices/BBSRVariableSizeTest/BlackBoxTest/BBSRVariableSizeBBTest.inf|#SctPkg/TestCase/UEFI/EFI/RuntimeServices/BBSRVariableSizeTest/BlackBoxTest/BBSRVariableSizeBBTest.inf|g' $BRS_DIR/common/sct-tests/sbbr-tests/BRS_SCT.dsc
+    sed -i 's|SctPkg/TestCase/UEFI/EFI/Protocol/TCG2Protocol/BlackBoxTest/TCG2ProtocolBBTest.inf|#SctPkg/TestCase/UEFI/EFI/Protocol/TCG2Protocol/BlackBoxTest/TCG2ProtocolBBTest.inf|g' $BRS_DIR/common/sct-tests/sbbr-tests/BRS_SCT.dsc
+    sed -i 's|SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/Images.inf|#SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/Images.inf|g' $BRS_DIR/common/sct-tests/sbbr-tests/BRS_SCT.dsc
 fi
 
 do_build()
@@ -123,13 +123,13 @@ do_build()
     source $TOP_DIR/$UEFI_PATH/edksetup.sh
     make -C $TOP_DIR/$UEFI_PATH/BaseTools
     
-    #Copy over extra files needed for SBBR tests
+    #Copy over extra files needed for BRSI tests
     if [[ $BUILD_PLAT != SIE ]] ; then
-        cp -r $SBBR_TEST_DIR/SbbrBootServices uefi-sct/SctPkg/TestCase/UEFI/EFI/BootServices/
-        cp -r $SBBR_TEST_DIR/SbbrEfiSpecVerLvl $SBBR_TEST_DIR/SbbrRequiredUefiProtocols $SBBR_TEST_DIR/SbbrSmbios $SBBR_TEST_DIR/SbbrSysEnvConfig uefi-sct/SctPkg/TestCase/UEFI/EFI/Generic/
-        cp -r $SBBR_TEST_DIR/SBBRRuntimeServices uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/
-        cp $SBBR_TEST_DIR/BBR_SCT.dsc uefi-sct/SctPkg/UEFI/
-        cp $SBBR_TEST_DIR/build_bbr.sh uefi-sct/SctPkg/
+        cp -r $BRSI_TEST_DIR/SbbrBootServices uefi-sct/SctPkg/TestCase/UEFI/EFI/BootServices/
+        cp -r $BRSI_TEST_DIR/SbbrEfiSpecVerLvl $BRSI_TEST_DIR/SbbrRequiredUefiProtocols $BRSI_TEST_DIR/SbbrSmbios $BRSI_TEST_DIR/SbbrSysEnvConfig uefi-sct/SctPkg/TestCase/UEFI/EFI/Generic/
+        cp -r $BRSI_TEST_DIR/BRSIRuntimeServices uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/
+        cp $BRSI_TEST_DIR/BRS_SCT.dsc uefi-sct/SctPkg/UEFI/
+        cp $BRSI_TEST_DIR/build_bbr.sh uefi-sct/SctPkg/
         # copy SIE SCT tests to edk2-test
         cp -r $BBSR_TEST_DIR/BBSRVariableSizeTest uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices
         cp -r $BBSR_TEST_DIR/SecureBoot uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices
@@ -138,31 +138,31 @@ do_build()
     fi
     
     #Startup/runtime files.
-    mkdir -p uefi-sct/SctPkg/BBR
+    mkdir -p uefi-sct/SctPkg/BRS
     if [ $BUILD_PLAT = IR ]; then
     #EBBR
-    cp $BBR_DIR/ebbr/config/EBBRStartup.nsh uefi-sct/SctPkg/BBR/
-    cp $BBR_DIR/ebbr/config/EBBR.seq uefi-sct/SctPkg/BBR/
-    cp $BBR_DIR/ebbr/config/EBBR_manual.seq uefi-sct/SctPkg/BBR/
-    cp $BBR_DIR/ebbr/config/EBBR_extd_run.seq uefi-sct/SctPkg/BBR/
-    cp $BBR_DIR/ebbr/config/EfiCompliant_EBBR.ini uefi-sct/SctPkg/BBR/
+    cp $BRS_DIR/ebbr/config/EBBRStartup.nsh uefi-sct/SctPkg/BRS/
+    cp $BRS_DIR/ebbr/config/EBBR.seq uefi-sct/SctPkg/BRS/
+    cp $BRS_DIR/ebbr/config/EBBR_manual.seq uefi-sct/SctPkg/BRS/
+    cp $BRS_DIR/ebbr/config/EBBR_extd_run.seq uefi-sct/SctPkg/BRS/
+    cp $BRS_DIR/ebbr/config/EfiCompliant_EBBR.ini uefi-sct/SctPkg/BRS/
     elif [ $BUILD_PLAT = ES ]; then
-    #SBBR
-    cp $BBR_DIR/sbbr/config/SBBRStartup.nsh uefi-sct/SctPkg/BBR/
-    cp $BBR_DIR/sbbr/config/SBBR.seq uefi-sct/SctPkg/BBR/
-    cp $BBR_DIR/sbbr/config/SBBR_manual.seq uefi-sct/SctPkg/BBR/
-    cp $BBR_DIR/sbbr/config/SBBR_extd_run.seq uefi-sct/SctPkg/BBR/
-    cp $BBR_DIR/sbbr/config/EfiCompliant_SBBR.ini  uefi-sct/SctPkg/BBR/
+    #BRSI
+    cp $BRS_DIR/brsi/config/BRSIStartup.nsh uefi-sct/SctPkg/BRS/
+    cp $BRS_DIR/brsi/config/BRSI.seq uefi-sct/SctPkg/BRS/
+    cp $BRS_DIR/brsi/config/BRSI_manual.seq uefi-sct/SctPkg/BRS/
+    cp $BRS_DIR/brsi/config/BRSI_extd_run.seq uefi-sct/SctPkg/BRS/
+    cp $BRS_DIR/brsi/config/EfiCompliant_BRSI.ini  uefi-sct/SctPkg/BRS/
     fi
 
     # if [[ $BUILD_PLAT != SIE ]] ; then
-    #     if git apply --check $BBR_DIR/common/patches/edk2-test-bbr.patch; then
+    #     if git apply --check $BRS_DIR/common/patches/edk2-test-bbr.patch; then
     #         echo "Applying edk2-test BBR patch..."
-    #         git apply --ignore-whitespace --ignore-space-change $BBR_DIR/common/patches/edk2-test-bbr.patch
+    #         git apply --ignore-whitespace --ignore-space-change $BRS_DIR/common/patches/edk2-test-bbr.patch
     #     fi
-    #     if git apply --check $BBR_DIR/bbsr/patches/0001-SIE-Patch-for-UEFI-SCT-Build.patch; then
+    #     if git apply --check $BRS_DIR/bbsr/patches/0001-SIE-Patch-for-UEFI-SCT-Build.patch; then
     #         echo "Applying SIE SCT patch..."
-    #         git apply --ignore-whitespace --ignore-space-change $BBR_DIR/bbsr/patches/0001-SIE-Patch-for-UEFI-SCT-Build.patch
+    #         git apply --ignore-whitespace --ignore-space-change $BRS_DIR/bbsr/patches/0001-SIE-Patch-for-UEFI-SCT-Build.patch
     #     fi
     # fi
 
@@ -227,8 +227,8 @@ do_package ()
         echo "skip package ..."
         # cp -r Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/${TARGET_ARCH}/* ${TARGET_ARCH}_SCT/SCT/
         # cp Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/EBBRStartup.nsh ${TARGET_ARCH}_SCT/SctStartup.nsh
-        # cp SctPkg/BBR/EfiCompliant_EBBR.ini ${TARGET_ARCH}_SCT/SCT/Dependency/EfiCompliantBBTest/EfiCompliant.ini
-        # cp SctPkg/BBR/EBBR_manual.seq ${TARGET_ARCH}_SCT/SCT/Sequence/EBBR_manual.seq
+        # cp SctPkg/BRS/EfiCompliant_EBBR.ini ${TARGET_ARCH}_SCT/SCT/Dependency/EfiCompliantBBTest/EfiCompliant.ini
+        # cp SctPkg/BRS/EBBR_manual.seq ${TARGET_ARCH}_SCT/SCT/Sequence/EBBR_manual.seq
 
     elif [ $BUILD_PLAT = ES ]; then
         # Sign the SCT binaries
@@ -244,23 +244,23 @@ do_package ()
         # SecureBootSignDependency ProtocolHandlerServices
         # SecureBootSignDependency ConfigKeywordHandler
         # SecureBootSignDependency PciIo
-        #SBBR
+        #BRSI
         # cp -r Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/${TARGET_ARCH}/* ${TARGET_ARCH}_SCT/SCT/
-        # cp Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/SBBRStartup.nsh ${TARGET_ARCH}_SCT/SctStartup.nsh
+        # cp Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/BRSIStartup.nsh ${TARGET_ARCH}_SCT/SctStartup.nsh
         mkdir -p ${TARGET_ARCH}_SCT/SCT/Dependency/EfiCompliantBBTest ${TARGET_ARCH}_SCT/SCT/Sequence
-        cp SctPkg/BBR/EfiCompliant_SBBR.ini ${TARGET_ARCH}_SCT/SCT/Dependency/EfiCompliantBBTest/EfiCompliant.ini
-        cp SctPkg/BBR/SBBR_manual.seq ${TARGET_ARCH}_SCT/SCT/Sequence/SBBR_manual.seq
-        cp SctPkg/BBR/SBBR_extd_run.seq ${TARGET_ARCH}_SCT/SCT/Sequence/SBBR_extd_run.seq
+        cp SctPkg/BRS/EfiCompliant_BRSI.ini ${TARGET_ARCH}_SCT/SCT/Dependency/EfiCompliantBBTest/EfiCompliant.ini
+        cp SctPkg/BRS/BRSI_manual.seq ${TARGET_ARCH}_SCT/SCT/Sequence/BRSI_manual.seq
+        cp SctPkg/BRS/BRSI_extd_run.seq ${TARGET_ARCH}_SCT/SCT/Sequence/BRSI_extd_run.seq
         #BBSR
-        cp $BBR_DIR/bbsr/config/sie_SctStartup.nsh ${TARGET_ARCH}_SCT/sie_SctStartup.nsh
-        cp $BBR_DIR/bbsr/config/BBSR.seq  ${TARGET_ARCH}_SCT/SCT/Sequence
+        cp $BRS_DIR/bbsr/config/sie_SctStartup.nsh ${TARGET_ARCH}_SCT/sie_SctStartup.nsh
+        cp $BRS_DIR/bbsr/config/BBSR.seq  ${TARGET_ARCH}_SCT/SCT/Sequence
 
-        cp $TOP_DIR/edk2-test/uefi-sct/SctPkg/BBR/SBBR.seq  $TOP_DIR/edk2-test/uefi-sct/Build/UefiSct/DEBUG_GCC5/SctPackageRISCV64/RISCV64/Sequence/
+        cp $TOP_DIR/edk2-test/uefi-sct/SctPkg/BRS/BRSI.seq  $TOP_DIR/edk2-test/uefi-sct/Build/UefiSct/DEBUG_GCC5/SctPackageRISCV64/RISCV64/Sequence/
 
     elif [ $BUILD_PLAT = SIE ]; then
         cp -r Build/UefiSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/${TARGET_ARCH}/* ${TARGET_ARCH}_SCT/SCT/
-        cp $BBR_DIR/bbsr/config/BBSRStartup.nsh ${TARGET_ARCH}_SCT/SctStartup.nsh
-        cp $BBR_DIR/bbsr/config/BBSR.seq  ${TARGET_ARCH}_SCT/SCT/Sequence
+        cp $BRS_DIR/bbsr/config/BBSRStartup.nsh ${TARGET_ARCH}_SCT/SctStartup.nsh
+        cp $BRS_DIR/bbsr/config/BBSR.seq  ${TARGET_ARCH}_SCT/SCT/Sequence
 
     else
          echo "Error: unexpected platform type"
