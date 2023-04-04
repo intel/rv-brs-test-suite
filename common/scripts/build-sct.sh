@@ -81,7 +81,7 @@ if ! [[ $BUILD_TYPE = S ]] && ! [[  $BUILD_TYPE = F  ]] ; then
 fi
 
 if [[ $BUILD_TYPE = S ]]; then
-    BRS_DIR=$TOP_DIR/../../
+    BRS_DIR=$TOP_DIR/../..
 else
     BRS_DIR=$TOP_DIR/rv-brs-test-suite
 fi
@@ -89,7 +89,7 @@ fi
 echo "Target: $BUILD_PLAT"
 echo "Build type: $BUILD_TYPE"
 
-BRSI_TEST_DIR=$BRS_DIR/common/sct-tests/sbbr-tests
+BRSI_TEST_DIR=$BRS_DIR/common/sct-tests/brsi-tests
 BBSR_TEST_DIR=$BRS_DIR/bbsr/sct-tests
 if [[ $BUILD_TYPE = S ]]; then
     sed -i 's|SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/SecureBootBBTest.inf|#SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/SecureBootBBTest.inf|g' $BRS_DIR/common/sct-tests/sbbr-tests/BRS_SCT.dsc
@@ -100,7 +100,7 @@ fi
 
 do_build()
 {
-   
+
     pushd $TOP_DIR/$SCT_PATH
     export KEYS_DIR=$TOP_DIR/security-interface-extension-keys
     export EDK2_TOOLCHAIN=$UEFI_TOOLCHAIN
@@ -122,7 +122,7 @@ do_build()
     fi
     source $TOP_DIR/$UEFI_PATH/edksetup.sh
     make -C $TOP_DIR/$UEFI_PATH/BaseTools
-    
+
     #Copy over extra files needed for BRSI tests
     if [[ $BUILD_PLAT != SIE ]] ; then
         cp -r $BRSI_TEST_DIR/SbbrBootServices uefi-sct/SctPkg/TestCase/UEFI/EFI/BootServices/
@@ -136,7 +136,7 @@ do_build()
         cp -r $BBSR_TEST_DIR/TCG2Protocol uefi-sct/SctPkg/TestCase/UEFI/EFI/Protocol
         cp -r $BBSR_TEST_DIR/TCG2.h uefi-sct/SctPkg/UEFI/Protocol
     fi
-    
+
     #Startup/runtime files.
     mkdir -p uefi-sct/SctPkg/BRS
     if [ $BUILD_PLAT = IR ]; then
@@ -173,14 +173,14 @@ do_build()
     # else
     #     ./SctPkg/build_bbr.sh $TARGET_ARCH GCC $UEFI_BUILD_MODE  -n $PARALLELISM
     # fi
-    
+
     popd
 }
 
 do_clean()
 {
     pushd $TOP_DIR/$SCT_PATH/uefi-sct
-    if [[ $arch != "aarch64" ]]; then
+    if [[ $arch != "riscv64" ]]; then
         CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
         PATH="$PATH:$CROSS_COMPILE_DIR"
     fi
