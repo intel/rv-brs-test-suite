@@ -42,8 +42,8 @@ FWTS_PATH=fwts
 FWTS_BINARY=fwts_output
 RAMDISK_PATH=ramdisk
 FWTS_DEP=$RAMDISK_PATH/fwts_build_dep
-if [[ $arch != "aarch64" ]]; then
-    CROSS_COMPILE=$TOP_DIR/$GCC
+if [[ $arch != "riscv64" ]]; then
+    CROSS_COMPILE=/usr/bin/riscv64-linux-gnu-gcc
 fi
 
 BUILD_PLAT=$1
@@ -77,7 +77,7 @@ init()
 do_build()
 {
     pushd $TOP_DIR/$FWTS_PATH
-    if [[ $arch != "aarch64" ]]; then
+    if [[ $arch != "riscv64" ]]; then
         CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
         DEF_PATH=$PATH
         PATH=$(getconf PATH) #Reset path to avoid cross compiler mismatch
@@ -93,9 +93,9 @@ do_build()
         fi
     fi
     if [ "$BUILD_PLAT" = "ES" ]; then
-        if ! patch -R -s -f --dry-run -p1 < $BBR_DIR/sbbr/config/ES_VER.patch ; then
+        if ! patch -R -s -f --dry-run -p1 < $BBR_DIR/brsi/config/ES_VER.patch ; then
         echo "Applying FWTS Patch ..."
-        patch -p1 < $BBR_DIR/sbbr/config/ES_VER.patch
+        patch -p1 < $BBR_DIR/brsi/config/ES_VER.patch
         fi
     fi
 
@@ -111,8 +111,8 @@ do_build()
     autoreconf -ivf
     export ac_cv_func_malloc_0_nonnull=yes
     export ac_cv_func_realloc_0_nonnull=yes
-    if [[ $arch != "aarch64" ]]; then
-        ./configure --host=aarch64-linux-gnu  \
+    if [[ $arch != "riscv64" ]]; then
+        ./configure --host=riscv64-linux-gnu  \
         --enable-static=yes CFLAGS="-g -O2 -I$TOP_DIR/$FWTS_DEP/include" \
         LDFLAGS="-L$TOP_DIR/$FWTS_DEP -Wl,-rpath-link,$TOP_DIR/$FWTS_DEP \
         -Wl,-rpath-link,$TOP_DIR/$FWTS_PATH/src/libfwtsiasl/.libs/" \
@@ -130,7 +130,7 @@ do_build()
     fi
 
     make install
-    if [[ $arch != "aarch64" ]]; then
+    if [[ $arch != "riscv64" ]]; then
         PATH=$DEF_PATH #Restore def path
     fi
     popd
@@ -138,34 +138,34 @@ do_build()
 
 do_clean()
 {
-    # pushd $TOP_DIR/$FWTS_PATH
-    # if [[ $arch != "aarch64" ]]; then
-    #     CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
-    #     PATH="$PATH:$CROSS_COMPILE_DIR"
-    # fi
-    # if [ -f "$TOP_DIR/$FWTS_PATH/Makefile" ]; then
-    #     make clean
-    # fi
-    # if [ -f "$TOP_DIR/$FWTS_PATH/$FWTS_BINARY/bin/fwts" ]; then
-    #     make uninstall
-    # fi
-    # rm -rf $TOP_DIR/$RAMDISK_PATH/$FWTS_BINARY
-    # popd
+    pushd $TOP_DIR/$FWTS_PATH
+    if [[ $arch != "riscv64" ]]; then
+        CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
+        PATH="$PATH:$CROSS_COMPILE_DIR"
+    fi
+    if [ -f "$TOP_DIR/$FWTS_PATH/Makefile" ]; then
+        make clean
+    fi
+    if [ -f "$TOP_DIR/$FWTS_PATH/$FWTS_BINARY/bin/fwts" ]; then
+        make uninstall
+    fi
+    rm -rf $TOP_DIR/$RAMDISK_PATH/$FWTS_BINARY
+    popd
 }
 
 do_package ()
 {
-    # echo "Packaging FWTS... $VARIANT";
-    # if [[ $BUILD_TYPE = F ]]; then
-    #     sed -i '/ir_bbr_fwts_tests.ini/d' $TOP_DIR/ramdisk/files.txt
-    #     if [ "$BUILD_PLAT" = "IR" ]; then
-    #       #Add the entry in file.txt of ramdisk
-    #       echo "file /bin/ir_bbr_fwts_tests.ini         ./fwts_output/bin/ir_bbr_fwts_tests.ini                   766 0 0" >> $TOP_DIR/ramdisk/files.txt
-    #       cp $BBR_DIR/ebbr/config/ir_bbr_fwts_tests.ini $TOP_DIR/$FWTS_PATH/$FWTS_BINARY/bin
-    #     fi
-    # fi
-    # cp -R $TOP_DIR/$FWTS_PATH/$FWTS_BINARY ramdisk
-    # chmod 777 -R $TOP_DIR/$RAMDISK_PATH/$FWTS_BINARY
+    echo "Packaging FWTS... $VARIANT";
+    if [[ $BUILD_TYPE = F ]]; then
+        sed -i '/ir_bbr_fwts_tests.ini/d' $TOP_DIR/ramdisk/files.txt
+        if [ "$BUILD_PLAT" = "IR" ]; then
+          #Add the entry in file.txt of ramdisk
+          echo "file /bin/ir_bbr_fwts_tests.ini         ./fwts_output/bin/ir_bbr_fwts_tests.ini                   766 0 0" >> $TOP_DIR/ramdisk/files.txt
+          cp $BBR_DIR/ebbr/config/ir_bbr_fwts_tests.ini $TOP_DIR/$FWTS_PATH/$FWTS_BINARY/bin
+        fi
+    fi
+    cp -R $TOP_DIR/$FWTS_PATH/$FWTS_BINARY ramdisk
+    chmod 777 -R $TOP_DIR/$RAMDISK_PATH/$FWTS_BINARY
 }
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )

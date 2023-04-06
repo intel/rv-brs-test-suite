@@ -92,4 +92,4 @@ get_uefi_src
 get_sct_src
 get_qemu_src
 #get_cross_compiler
-#get_fwts_src
+get_fwts_src

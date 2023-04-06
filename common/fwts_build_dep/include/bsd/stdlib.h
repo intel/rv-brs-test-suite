@@ -42,23 +42,31 @@
 #ifndef LIBBSD_STDLIB_H
 #define LIBBSD_STDLIB_H
 
+#ifdef LIBBSD_OVERLAY
 #include <sys/cdefs.h>
+#else
+#include <bsd/sys/cdefs.h>
+#endif
 #include <sys/stat.h>
 #include <stdint.h>
 
 __BEGIN_DECLS
+#if !defined(__GLIBC__) || \
+    !__GLIBC_PREREQ(2, 36) || \
+    !defined(_DEFAULT_SOURCE)
 uint32_t arc4random(void);
-void arc4random_stir(void);
-void arc4random_addrandom(unsigned char *dat, int datlen);
 void arc4random_buf(void *_buf, size_t n);
 uint32_t arc4random_uniform(uint32_t upper_bound);
+#endif
+void arc4random_stir(void);
+void arc4random_addrandom(unsigned char *dat, int datlen);
 
 int dehumanize_number(const char *str, int64_t *size);
 
 const char *getprogname(void);
 void setprogname(const char *);
 
-int heapsort (void *, size_t, size_t, int (*)(const void *, const void *));
+int heapsort(void *, size_t, size_t, int (*)(const void *, const void *));
 int mergesort(void *base, size_t nmemb, size_t size,
               int (*cmp)(const void *, const void *));
 int radixsort(const unsigned char **base, int nmemb,
@@ -67,9 +75,14 @@ int sradixsort(const unsigned char **base, int nmemb,
                const unsigned char *table, unsigned endbyte);
 
 void *reallocf(void *ptr, size_t size);
-#if defined(_GNU_SOURCE) && defined(__GLIBC__) && !__GLIBC_PREREQ(2, 26)
+#if !defined(__GLIBC__) || \
+    !__GLIBC_PREREQ(2, 26) || \
+    (__GLIBC_PREREQ(2, 26) && !__GLIBC_PREREQ(2, 29) && !defined(_GNU_SOURCE)) || \
+    (__GLIBC_PREREQ(2, 29) && !defined(_DEFAULT_SOURCE))
 void *reallocarray(void *ptr, size_t nmemb, size_t size);
 #endif
+void *recallocarray(void *ptr, size_t oldnmemb, size_t nmemb, size_t size);
+void freezero(void *ptr, size_t size);
 
 long long strtonum(const char *nptr, long long minval, long long maxval,
                    const char **errstr);

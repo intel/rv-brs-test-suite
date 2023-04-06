@@ -50,7 +50,7 @@ init_dir()
 create_scripts_link
 init_dir
 
-# source ./build-scripts/build-fwts.sh ES S
+source ./build-scripts/build-fwts.sh ES S
 source ./build-scripts/build-sct.sh  ES S
 # source ./build-scripts/build-uefi-apps.sh ES S
 source ./build-scripts/build-qemu.sh
