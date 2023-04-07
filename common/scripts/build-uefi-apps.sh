@@ -57,7 +57,7 @@ KEYS_DIR=$TOP_DIR/security-interface-extension-keys
 if [[ $BUILD_TYPE = S ]]; then
     GCC=tools/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
 fi
-if [[ $arch != "aarch64" ]]; then
+if [[ $arch != "riscv64" ]]; then
     CROSS_COMPILE=$TOP_DIR/$GCC
 fi
 
@@ -72,14 +72,14 @@ fi
 if ! [[ $BUILD_PLAT = IR ]] && ! [[ $BUILD_PLAT = ES ]] && ! [[ $BUILD_PLAT = SIE ]]; then
     echo "Please provide a target."
     echo "Usage $0 <IR/ES/SIE> <BUILD_TYPE>"
-    echo "S->Standalone BBR,F->Full systemready"
+    echo "S->Standalone BRS,F->Full suite"
     exit
 fi
 
 if ! [[ $BUILD_TYPE = S ]] && ! [[  $BUILD_TYPE = F  ]] ; then
     echo "Please provide a Build type."
     echo "Usage $0 <target> <S/F>"
-    echo "S->Standalone BBR,F->Full systemready"
+    echo "S->Standalone BRS,F->Full suite"
     exit
 fi
 
@@ -88,19 +88,19 @@ echo "Build type: $BUILD_TYPE"
 
 
 if [[ $BUILD_TYPE = S ]]; then
-    BBR_DIR=$TOP_DIR/../../
+    BRS_DIR=$TOP_DIR/../../
 else
-    BBR_DIR=$TOP_DIR/bbr-acs
+    BRS_DIR=$TOP_DIR/rv-brs-test-suite
 fi
 
 do_build()
 {
 
     pushd $TOP_DIR/$UEFI_PATH
-    if [[ $arch != "aarch64" ]]; then
-        CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
-        PATH="$PATH:$CROSS_COMPILE_DIR"
-        export ${UEFI_TOOLCHAIN}_AARCH64_PREFIX=$CROSS_COMPILE
+    if [[ $arch != "riscv64" ]]; then
+        # CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
+        # PATH="$PATH:$CROSS_COMPILE_DIR"
+        export GCC5_RISCV64_PREFIX=riscv64-linux-gnu-
     fi
 
     export EDK2_TOOLCHAIN=$UEFI_TOOLCHAIN
@@ -111,14 +111,14 @@ do_build()
     #Build base tools
     source $TOP_DIR/$UEFI_PATH/edksetup.sh
     make -C $TOP_DIR/$UEFI_PATH/BaseTools
-    build -a AARCH64 -t GCC5 -p MdeModulePkg/MdeModulePkg.dsc
+    build -a RISCV64 -t GCC5 -p MdeModulePkg/MdeModulePkg.dsc
     popd
 }
 
 do_clean()
 {
     pushd $TOP_DIR/$UEFI_PATH
-    if [[ $arch != "aarch64" ]]; then
+    if [[ $arch != "riscv64" ]]; then
         CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
         PATH="$PATH:$CROSS_COMPILE_DIR"
     fi
@@ -132,12 +132,13 @@ do_clean()
 do_package ()
 {
     if [ $BUILD_TYPE = F ]; then
-        sbsign --key $KEYS_DIR/TestDB1.key --cert $KEYS_DIR/TestDB1.crt $TOP_DIR/$UEFI_PATH/Build/MdeModule/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/${TARGET_ARCH}/CapsuleApp.efi --output $TOP_DIR/$UEFI_PATH/Build/MdeModule/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/${TARGET_ARCH}/CapsuleApp.efi
+        echo "skip sbsign..."
+        # sbsign --key $KEYS_DIR/TestDB1.key --cert $KEYS_DIR/TestDB1.crt $TOP_DIR/$UEFI_PATH/Build/MdeModule/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/${TARGET_ARCH}/CapsuleApp.efi --output $TOP_DIR/$UEFI_PATH/Build/MdeModule/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/${TARGET_ARCH}/CapsuleApp.efi
     fi
     if [ -f $TOP_DIR/$UEFI_PATH/Build/MdeModule/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/${TARGET_ARCH}/CapsuleApp.efi ]; then
      echo "CapsuleApp.efi successfully generated at $TOP_DIR/$UEFI_PATH/Build/MdeModule/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/${TARGET_ARCH}/CapsuleApp.efi"
     else
-     echo "Error: CapsuleApp.efi could not be generated. Please check the logs"
+     echo "skip sbsign..: CapsuleApp.efi could not be generated. Please check the logs"
     fi
 
 }
