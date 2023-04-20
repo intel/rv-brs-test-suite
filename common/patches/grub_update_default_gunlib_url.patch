@@ -1,0 +1,13 @@
+diff --git a/bootstrap b/bootstrap
+index 5b08e7e2d..5cc4fcc34 100755
+--- a/bootstrap
++++ b/bootstrap
+@@ -47,7 +47,7 @@ PERL="${PERL-perl}"
+ 
+ me=$0
+ 
+-default_gnulib_url=git://git.sv.gnu.org/gnulib
++default_gnulib_url=https://github.com/coreutils/gnulib.git
+ 
+ usage() {
+   cat <<EOF

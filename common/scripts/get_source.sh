@@ -30,24 +30,7 @@
 
 TOP_DIR=`pwd`
 QEMU_SRC_VERSION=68c05247ba4b849e547ec4153f366be5c352bb0b
-
-get_cross_compiler()
-{
-    LINARO=https://releases.linaro.org/components/toolchain/binaries
-    VERSION=7.5-2019.12
-    GCC=aarch64-linux-gnu/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu.tar.xz
-    TOOL_DIR=gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu
-    mkdir -p tools
-    pushd $TOP_DIR/tools
-    if [ ! -d "$TOOL_DIR" ]; then
-        echo "Getting compiler $TOOL_DIR"
-        wget $LINARO/$VERSION/$GCC
-        tar -xf gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu.tar.xz
-        rm -rf gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu.tar.xz
-    fi
-
-    popd
-}
+GRUB_SRC_TAG=grub-2.06
 
 get_fwts_src()
 {
@@ -84,12 +67,22 @@ get_qemu_src()
     popd
 }
 
-sudo apt install git curl mtools gdisk gcc\
- openssl automake autotools-dev libtool bison flex\
- bc uuid-dev python3 libglib2.0-dev libssl-dev autopoint
+get_grub_src()
+{
+    GRUB_SRC_TAG=riscv_devel_Nikita_V3
+    echo "Downloading grub source code,Version: ${GRUB_SRC_TAG}"
+    git clone -b $GRUB_SRC_TAG https://github.com/tekkamanninja/grub.git grub
+    pushd $TOP_DIR/grub
+    echo "Applying Grub patch..."
+    git apply $TOP_DIR/../../common/patches/grub_update_default_gunlib_url.patch
+    popd
+}
+
+sudo apt install git curl mtools gdisk gcc openssl automake autotools-dev libtool \
+                 bison flex bc uuid-dev python3 libglib2.0-dev libssl-dev autopoint
 
 get_uefi_src
 get_sct_src
 get_qemu_src
-#get_cross_compiler
 get_fwts_src
+get_grub_src

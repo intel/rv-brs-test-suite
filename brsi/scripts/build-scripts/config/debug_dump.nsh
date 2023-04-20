@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 # Copyright (c) 2021, ARM Limited and Contributors. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -28,32 +26,44 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-TOP_DIR=`pwd`
+echo -off
 
-create_scripts_link()
-{
- ln -s $TOP_DIR/../../common/scripts/framework.sh             $TOP_DIR/build-scripts/framework.sh
- ln -s $TOP_DIR/../../common/scripts/parse_params.sh          $TOP_DIR/build-scripts/parse_params.sh
- ln -s $TOP_DIR/../../common/scripts/build-sct.sh             $TOP_DIR/build-scripts/build-sct.sh
- ln -s $TOP_DIR/../../common/scripts/build-uefi-apps.sh       $TOP_DIR/build-scripts/build-uefi-apps.sh
- ln -s $TOP_DIR/../../common/scripts/build-fwts.sh            $TOP_DIR/build-scripts/build-fwts.sh
- ln -s $TOP_DIR/../../common/scripts/build-qemu.sh            $TOP_DIR/build-scripts/build-qemu.sh
- ln -s $TOP_DIR/../../common/scripts/build-grub.sh            $TOP_DIR/build-scripts/build-grub.sh
- ln -s $TOP_DIR/../../common/scripts/make_image.sh            $TOP_DIR/build-scripts/make_image.sh
- ln -s $TOP_DIR/../../common/uefi_images/uefi_qemu_flash1.img $TOP_DIR/uefi_qemu_flash1.img
-}
+for %m in 0 1 2 3 4 5 6 7 8 9 A B C D E F then
+    if exist FS%m:\acs_results then
+        FS%m:
+        cd FS%m:\acs_results
+        if not exist uefi_dump then
+            mkdir uefi_dump
+        endif
+        cd uefi_dump
+        echo "Starting UEFI Debug dump"
+        connect -r
+        pci > pci.log
+        drivers > drivers.log
+        devices > devices.log
+        dmpstore -all > dmpstore.log
+        dh -d > dh.log
+        memmap > memmap.log
+        bcfg boot dump > bcfg.log
+        map -r > map.log
+        devtree > devtree.log
+        ver > uefi_version.log
+        ifconfig -l > ifconfig.log
+        dmem > dmem.log
 
-init_dir()
-{
- mkdir -p $TOP_DIR/build-scripts/config
- cp -r $TOP_DIR/../config/*                                 $TOP_DIR/build-scripts/config/
-}
-
-create_scripts_link
-init_dir
-
-# source ./build-scripts/build-fwts.sh ES S
-source ./build-scripts/build-sct.sh
-# # source ./build-scripts/build-uefi-apps.sh ES S
-# source ./build-scripts/build-qemu.sh
-# source ./build-scripts/build-grub.sh
+        for %n in 0 1 2 3 4 5 6 7 8 9 A B C D E F then
+                if exist FS%n:\EFI\BOOT\bsa\ir_bsa.flag then
+                    #IR Specific ->DT
+                else
+                    smbiosview > smbiosview.log
+                    acpiview -l  > acpiview_l.log
+                    acpiview -r 2 > acpiview_r.log
+                    acpiview > acpiview.log
+                    acpiview -d -s acpiview_d
+                    goto Done
+                endif
+                goto Done
+        endfor
+    endif
+endfor
+:Done
