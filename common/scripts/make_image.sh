@@ -48,7 +48,7 @@ SEC_PER_MB=$((1024*2))
 GRUB_PATH=grub
 UEFI_SHELL_PATH=edk2-test/uefi-sct/Build/Shell/DEBUG_GCC5/RISCV64/ShellPkg/Application/Shell/EA4BB293-2D7F-4456-A681-1F22F42CD0BC/OUTPUT/
 SCT_PATH=edk2-test/uefi-sct/RISCV64_SCT
-UEFI_APPS_PATH=${TOP_DIR}/edk2/Build/MdeModule/DEBUG_GCC5/RISCV64
+UEFI_APPS_PATH=${TOP_DIR}/edk2-test/uefi-sct/Build/MdeModule/DEBUG_GCC5/RISCV64/MdeModulePkg/Application/CapsuleApp/CapsuleApp/OUTPUT
 
 create_cfgfiles ()
 {
