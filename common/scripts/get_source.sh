@@ -29,7 +29,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 TOP_DIR=`pwd`
-QEMU_SRC_VERSION=68c05247ba4b849e547ec4153f366be5c352bb0b
+QEMU_SRC_VERSION=aa9e7fa4689d1becb2faf67f65aafcbcf664f1ce
 GRUB_SRC_TAG=grub-2.06
 
 get_fwts_src()
@@ -60,7 +60,7 @@ get_qemu_src()
 {
     echo "Downloading qemu. TAG : $QEMU_SRC_VERSION"
     git clone --depth 1 --single-branch \
-    --branch dev-upstream https://github.com/ventanamicro/qemu.git
+    --branch master https://github.com/qemu/qemu.git
     pushd $TOP_DIR/qemu
     git checkout $QEMU_SRC_VERSION
     git submodule update --init --recursive
