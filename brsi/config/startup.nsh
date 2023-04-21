@@ -65,18 +65,6 @@ for %p in 0 1 2 3 4 5 6 7 8 9 A B C D E F then
 endfor
 :DoneDebug
 
-for %j in 0 1 2 3 4 5 6 7 8 9 A B C D E F then
-    if exist FS%j:\EFI\BOOT\bsa\sr_bsa.flag then
-        FS%j:\EFI\BOOT\bsa\sbsa.nsh
-        goto Donebsa
-    endif
-    if exist FS%j:\EFI\BOOT\bsa\bsa.nsh then
-        FS%j:\EFI\BOOT\bsa\bsa.nsh
-        goto Donebsa
-    endif
-endfor
-
-:Donebsa
 for %l in 0 1 2 3 4 5 6 7 8 9 A B C D E F then
     if exist FS%l:\Image and exist FS%l:\ramdisk-buildroot.img then
         FS%l:

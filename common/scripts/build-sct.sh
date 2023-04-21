@@ -69,12 +69,6 @@ CROSS_COMPILE=$TOP_DIR/$GCC
 
 BRSI_TEST_DIR=$BRS_DIR/common/sct-tests/brsi-tests
 BBSR_TEST_DIR=$BRS_DIR/bbsr/sct-tests
-# if [[ $BUILD_TYPE = S ]]; then
-    sed -i 's|^SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/SecureBootBBTest.inf|#SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/SecureBootBBTest.inf|g' $BRS_DIR/common/sct-tests/brsi-tests/BRS_SCT.dsc
-    sed -i 's|^SctPkg/TestCase/UEFI/EFI/RuntimeServices/BBSRVariableSizeTest/BlackBoxTest/BBSRVariableSizeBBTest.inf|#SctPkg/TestCase/UEFI/EFI/RuntimeServices/BBSRVariableSizeTest/BlackBoxTest/BBSRVariableSizeBBTest.inf|g' $BRS_DIR/common/sct-tests/brsi-tests/BRS_SCT.dsc
-    sed -i 's|^SctPkg/TestCase/UEFI/EFI/Protocol/TCG2Protocol/BlackBoxTest/TCG2ProtocolBBTest.inf|#SctPkg/TestCase/UEFI/EFI/Protocol/TCG2Protocol/BlackBoxTest/TCG2ProtocolBBTest.inf|g' $BRS_DIR/common/sct-tests/brsi-tests/BRS_SCT.dsc
-    sed -i 's|^SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/Images.inf|#SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/Dependency/Images/Images.inf|g' $BRS_DIR/common/sct-tests/brsi-tests/BRS_SCT.dsc
-# fi
 
 do_build()
 {
@@ -100,20 +94,6 @@ do_build()
     source $TOP_DIR/$UEFI_PATH/edksetup.sh
     make -C $TOP_DIR/$UEFI_PATH/BaseTools
 
-    #Copy over extra files needed for BRSI tests
-    # if [[ $BUILD_PLAT != SIE ]] ; then
-        cp -r $BRSI_TEST_DIR/SbbrBootServices uefi-sct/SctPkg/TestCase/UEFI/EFI/BootServices/
-        cp -r $BRSI_TEST_DIR/SbbrEfiSpecVerLvl $BRSI_TEST_DIR/SbbrRequiredUefiProtocols $BRSI_TEST_DIR/SbbrSmbios $BRSI_TEST_DIR/SbbrSysEnvConfig uefi-sct/SctPkg/TestCase/UEFI/EFI/Generic/
-        cp -r $BRSI_TEST_DIR/BRSIRuntimeServices uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/
-        cp $BRSI_TEST_DIR/BRS_SCT.dsc uefi-sct/SctPkg/UEFI/
-        cp $BRSI_TEST_DIR/build_bbr.sh uefi-sct/SctPkg/
-        # copy SIE SCT tests to edk2-test
-        # cp -r $BBSR_TEST_DIR/BBSRVariableSizeTest uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices
-        # cp -r $BBSR_TEST_DIR/SecureBoot uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices
-        # cp -r $BBSR_TEST_DIR/TCG2Protocol uefi-sct/SctPkg/TestCase/UEFI/EFI/Protocol
-        # cp -r $BBSR_TEST_DIR/TCG2.h uefi-sct/SctPkg/UEFI/Protocol
-    # fi
-
     #Startup/runtime files.
     mkdir -p uefi-sct/SctPkg/BRS
     #BRSI
@@ -125,11 +105,6 @@ do_build()
 
     pushd uefi-sct
     DSC_EXTRA="ShellPkg/ShellPkg.dsc MdeModulePkg/MdeModulePkg.dsc" ./SctPkg/build.sh ${TARGET_ARCH} GCC DEBUG -n `nproc`
-    # if [[ $BUILD_PLAT = SIE ]] ; then
-    #     ./SctPkg/build.sh $TARGET_ARCH GCC $UEFI_BUILD_MODE  -n $PARALLELISM
-    # else
-    #     ./SctPkg/build_bbr.sh $TARGET_ARCH GCC $UEFI_BUILD_MODE  -n $PARALLELISM
-    # fi
 
     popd
 }

@@ -1,4 +1,5 @@
 # Copyright (c) 2021, 2023 ARM Limited and Contributors. All rights reserved.
+# Copyright (c) 2023 Intel Corporation
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -100,7 +101,7 @@ for %i in 0 1 2 3 4 5 6 7 8 9 A B C D E F
             cd FS%i:\EFI\BOOT\brs\SCT
             if %1 == sct_extd then
                echo "Starting extended run of SCT"
-               Sct -s SBBR_extd_run.seq
+               Sct -s BRSI_extd_run.seq
             else
                Sct -s BRSI.seq
             endif
