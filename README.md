@@ -13,7 +13,7 @@ The BRS test suite check for compliance against the BRS specifications. These te
 - `./build-scripts/build_brsi.sh`
 - `./build-scripts/build_image.sh`
 To run the tests with QEMU and a pre-built UEFI image, execute:
-- `./build-scripts/run.sh`
+- `./build-scripts/start_qemu.sh`
 
 ## UEFI Self Certification Tests
 UEFI SCT tests the UEFI implementation requirements defined by the BRS specification.

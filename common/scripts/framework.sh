@@ -65,6 +65,7 @@ popd
 
 PLATDIR=${TOP_DIR}/output
 OUTDIR=${PLATDIR}
+mkdir -p $OUTDIR
 
 do_clean
 do_build

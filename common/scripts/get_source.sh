@@ -29,7 +29,6 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 TOP_DIR=`pwd`
-QEMU_SRC_VERSION=aa9e7fa4689d1becb2faf67f65aafcbcf664f1ce
 GRUB_SRC_TAG=grub-2.06
 
 get_fwts_src()
@@ -56,16 +55,6 @@ get_uefi_src()
     git submodule update --init
     popd
 }
-get_qemu_src()
-{
-    echo "Downloading qemu. TAG : $QEMU_SRC_VERSION"
-    git clone --depth 1 --single-branch \
-    --branch master https://github.com/qemu/qemu.git
-    pushd $TOP_DIR/qemu
-    git checkout $QEMU_SRC_VERSION
-    git submodule update --init --recursive
-    popd
-}
 
 get_grub_src()
 {
@@ -78,11 +67,32 @@ get_grub_src()
     popd
 }
 
+get_linux_src()
+{
+    LINUX_KERNEL_VERSION=acpi-6.2
+    echo "Downloading Linux source code. Version : ${LINUX_KERNEL_VERSION}"
+    git clone --branch $LINUX_KERNEL_VERSION \
+        https://github.com/intel-innersource/frameworks.platforms.risc-v.linux-kernel.git linux
+}
+
+get_buildroot_src()
+{
+    BUILDROOT_SRC_VERSION=2023.02
+    echo "Downloading Buildroot source code. TAG : ${BUILDROOT_SRC_VERSION}"
+    git clone -b $BUILDROOT_SRC_VERSION https://github.com/buildroot/buildroot.git
+    pushd $TOP_DIR/buildroot/package/fwts
+    echo "Applying Buildroot FWTS patch..."
+    git apply $TOP_DIR/../../common/patches/build_fwts_version.patch
+    popd
+}
+
 sudo apt install git curl mtools gdisk gcc openssl automake autotools-dev libtool \
                  bison flex bc uuid-dev python3 libglib2.0-dev libssl-dev autopoint
 
 get_uefi_src
 get_sct_src
-get_qemu_src
 get_fwts_src
 get_grub_src
+get_linux_src
+get_buildroot_src
+

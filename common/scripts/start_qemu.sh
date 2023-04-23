@@ -1,6 +1,19 @@
 #!/usr/bin/env bash
 
 TOP_DIR=`pwd`
+QEMU_SRC_VERSION=aa9e7fa4689d1becb2faf67f65aafcbcf664f1ce
+
+get_qemu_src()
+{
+    echo "Downloading qemu. TAG : $QEMU_SRC_VERSION"
+    git clone --depth 1 --single-branch \
+    --branch master https://github.com/qemu/qemu.git
+    pushd $TOP_DIR/qemu
+    git checkout $QEMU_SRC_VERSION
+    git submodule update --init --recursive
+    popd
+}
+
 build_qemu()
 {
     if [ -f "$TOP_DIR/qemu/build/qemu-system-riscv64" ];then
@@ -39,6 +52,6 @@ start_qemu()
     -drive format=raw,file=$BRS_IMG,if=none,id=drv1 \
     -device virtio-net-pci,netdev=net0,romfile="" -netdev type=user,id=net0
 }
-
+get_qemu_src
 build_qemu
 start_qemu

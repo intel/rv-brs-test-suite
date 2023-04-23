@@ -38,7 +38,7 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 TOP_DIR=`pwd`
 PLATDIR=${TOP_DIR}/output
 OUTDIR=${PLATDIR}
-GRUB_FS_CONFIG_FILE=${TOP_DIR}/../config/grub.cfg
+#GRUB_FS_CONFIG_FILE=${TOP_DIR}/../config/grub.cfg
 GRUB_BUILDROOT_CONFIG_FILE=${TOP_DIR}/../config/grub-buildroot.cfg
 EFI_CONFIG_FILE=${TOP_DIR}/../config/startup.nsh
 SCT_STARTUP_FILE=${TOP_DIR}/../config/BRSIStartup.nsh
@@ -54,8 +54,8 @@ create_cfgfiles ()
 {
     local fatpart_name="$1"
 
-        mcopy -i  $fatpart_name -o ${GRUB_BUILDROOT_CONFIG_FILE} ::/grub.cfg
-        mcopy -i  $fatpart_name -o ${SCT_STARTUP_FILE}     ::/EFI/BOOT/brs/
+    mcopy -i  $fatpart_name -o ${GRUB_BUILDROOT_CONFIG_FILE} ::/grub.cfg
+    mcopy -i  $fatpart_name -o ${SCT_STARTUP_FILE}     ::/EFI/BOOT/brs/
 
     mcopy -i  $fatpart_name -o ${EFI_CONFIG_FILE}     ::/EFI/BOOT/
     mcopy -i  $fatpart_name -o ${DEBUG_CONFIG_FILE}    ::/EFI/BOOT/debug/
@@ -79,10 +79,10 @@ create_fatpart ()
 
     mcopy -i $fatpart_name bootriscv64.efi ::/EFI/BOOT
     mcopy -i $fatpart_name Shell.efi ::/EFI/BOOT
-
+    mcopy -i $fatpart_name $OUTDIR/Image ::/
+    mcopy -i $fatpart_name $PLATDIR/ramdisk-buildroot.img  ::/
 
     mcopy -s -i $fatpart_name SCT/* ::/EFI/BOOT/brs
-
     mcopy -i $fatpart_name ${UEFI_APPS_PATH}/CapsuleApp.efi ::/EFI/BOOT/app
 
     echo "FAT partition image created"
@@ -154,7 +154,7 @@ prepare_disk_image ()
     #Result partition
     create_fatpart2 "RESULT" $FAT2_SIZE
     cat RESULT >> $IMG_BB
-    
+
     #Space for backup partition table at the bottom (1M)
     cat part_table >> $IMG_BB
 
