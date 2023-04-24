@@ -29,16 +29,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 TOP_DIR=`pwd`
-GRUB_SRC_TAG=grub-2.06
 
-get_fwts_src()
-{
-    git clone --single-branch https://git.launchpad.net/fwts
-    pushd $TOP_DIR/fwts
-    git checkout V23.01.00
-    git submodule update --init
-    popd
-}
 get_sct_src()
 {
     git clone --single-branch https://github.com/tianocore/edk2-test
@@ -69,10 +60,10 @@ get_grub_src()
 
 get_linux_src()
 {
-    LINUX_KERNEL_VERSION=acpi-6.2
+    LINUX_KERNEL_VERSION=v6.3-rc1
     echo "Downloading Linux source code. Version : ${LINUX_KERNEL_VERSION}"
-    git clone --branch $LINUX_KERNEL_VERSION \
-        https://github.com/intel-innersource/frameworks.platforms.risc-v.linux-kernel.git linux
+    git clone --depth 1 --single-branch --branch aia_plic \
+              https://github.com/vlsunil/linux.git linux
 }
 
 get_buildroot_src()
@@ -91,7 +82,6 @@ sudo apt install git curl mtools gdisk gcc openssl automake autotools-dev libtoo
 
 get_uefi_src
 get_sct_src
-get_fwts_src
 get_grub_src
 get_linux_src
 get_buildroot_src

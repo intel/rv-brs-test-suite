@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
 
 TOP_DIR=`pwd`
-QEMU_SRC_VERSION=aa9e7fa4689d1becb2faf67f65aafcbcf664f1ce
+QEMU_SRC_VERSION=7.2.50
 
 get_qemu_src()
 {
     echo "Downloading qemu. TAG : $QEMU_SRC_VERSION"
     git clone --depth 1 --single-branch \
-    --branch master https://github.com/qemu/qemu.git
+    --branch aia_plic https://github.com/vlsunil/qemu.git
     pushd $TOP_DIR/qemu
-    git checkout $QEMU_SRC_VERSION
     git submodule update --init --recursive
     popd
 }
@@ -45,12 +44,10 @@ start_qemu()
     fi
     echo "Starting rv64 qemu... press Ctrl+A, X to exit qemu"
     sleep 2
-    $TOP_DIR/qemu/build/qemu-system-riscv64 -nographic \
+    $TOP_DIR/qemu/build/qemu-system-riscv64 -nographic -machine virt -cpu rv64 -m 4G -smp 2   \
+    -drive file=$BRS_IMG,if=none,format=raw,id=drv1 -device virtio-blk-device,drive=drv1      \
     -drive file=$TOP_DIR/../prebuilt_images/uefi_flash1_23.04.img,if=pflash,format=raw,unit=1 \
-    -machine virt -m 2G -smp 2 -numa node,mem=1G -numa node,mem=1G \
-    -device virtio-blk-pci,drive=drv1 \
-    -drive format=raw,file=$BRS_IMG,if=none,id=drv1 \
-    -device virtio-net-pci,netdev=net0,romfile="" -netdev type=user,id=net0
+    -device virtio-net-device,netdev=net0 -netdev type=user,id=net0
 }
 get_qemu_src
 build_qemu
