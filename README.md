@@ -7,13 +7,28 @@ The BRS test suite check for compliance against the BRS specifications. These te
   - UEFI Self Certification Tests (SCT)
   - Firmware Test Suite (FWTS)
 
-#### Building BRS test suite
-- `cd ./brsi/scripts/`
+#### Steps to Build and Run RV BRS test suite live image
+- `git clone https://github.com/intel-sandbox/rv-brs-test-suite.git`
+- `cd rv-brs-test-suite/brsi/scripts/`
 - `./build-scripts/get_brsi_source.sh`
 - `./build-scripts/build_brsi.sh`
 - `./build-scripts/build_image.sh`
-To run the tests with QEMU and a pre-built UEFI image, execute:
+
+If everything go well, the live image will be available at `brsi/scripts/output/brs_live_image.img.xz`
+Note: it would take around 1 hour to finish the build, if you just want to have a quick try,
+you can use the prebuilt images in `rv-brs-test-suite/brsi/prebuilt_images/`
+
+To run the tests with QEMU and the live image, execute:
 - `./build-scripts/start_qemu.sh`
+
+This would start the live image and automatically run the UEFI SCT tests without intervene. After finishing the SCT tests,
+it would boot to the linux and stop at the login:
+```
+Welcome to Buildroot
+buildroot login:
+```
+
+and then you can login with user name `root`. After login to the linux system, you can run the FWTS test by enter `fwts`.
 
 ## UEFI Self Certification Tests
 UEFI SCT tests the UEFI implementation requirements defined by the BRS specification.
@@ -70,9 +85,14 @@ Several BRS assertions are tested through FWTS.
 
 From the UEFI shell, you can choose to boot Linux OS by entering the command:
 
-`Shell>exit`
+```
+Shell>FS0:
+FS0:\> cd EFI
+FS0:\EFI\> cd BOOT
+FS0:\EFI\BOOT\> bootriscv64.efi
+```
 
-This command loads the grub menu. Press enter to choose the option 'Linux BusyBox' that boots the OS and runs FWTS tests automatically. <br />
+This command loads the grub menu. Press enter to choose the option `Linux Buildroot` that boots the OS. <br />
 
 Logs are stored in the results partition, which can be viewed on any machine after the tests are run.
 
