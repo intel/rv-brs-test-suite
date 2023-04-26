@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2023, ARM Limited and Contributors. All rights reserved.
+# Copyright (c) 2023 Intel Corporation
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -57,7 +58,6 @@ TARGET_ARCH=RISCV64
 KEYS_DIR=$TOP_DIR/security-interface-extension-keys
 TEST_DB1_KEY=$KEYS_DIR/TestDB1.key
 TEST_DB1_CRT=$KEYS_DIR/TestDB1.crt
-SCT_FRAMEWORK=$TOP_DIR/$SCT_PATH/uefi-sct/Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/${TARGET_ARCH}
 CROSS_COMPILE=$TOP_DIR/$GCC
 
 # if [[ $BUILD_TYPE = S ]]; then
@@ -139,17 +139,6 @@ SecureBootSign() {
     done
 }
 
-# signing SCT test dependency files
-SecureBootSignDependency() {
-    echo "KEYS_DIR = $KEYS_DIR"
-
-    for f in $SCT_FRAMEWORK/Dependency/$1BBTest/*.efi
-    do
-        echo "sbsign --key $TEST_DB1_KEY --cert $TEST_DB1_CRT $f --output $f"
-        sbsign --key $TEST_DB1_KEY --cert $TEST_DB1_CRT $f --output $f
-    done
-}
-
 do_package ()
 {
     echo "Packaging sct... $VARIANT";
@@ -158,19 +147,6 @@ do_package ()
 
     mkdir -p ${TARGET_ARCH}_SCT/SCT
 
-        # Sign the SCT binaries
-        # SecureBootSign $SCT_FRAMEWORK
-        # SecureBootSign $SCT_FRAMEWORK/Support
-        # SecureBootSign $TOP_DIR/$SCT_PATH/uefi-sct/Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}
-        # SecureBootSign $SCT_FRAMEWORK/SCRT
-        # SecureBootSign $SCT_FRAMEWORK/Test
-        # SecureBootSign $SCT_FRAMEWORK/Ents/Support
-        # SecureBootSign $SCT_FRAMEWORK/Ents/Test
-        # SecureBootSignDependency LoadedImage
-        # SecureBootSignDependency ImageServices
-        # SecureBootSignDependency ProtocolHandlerServices
-        # SecureBootSignDependency ConfigKeywordHandler
-        # SecureBootSignDependency PciIo
         #BRSI
         mkdir -p ${TARGET_ARCH}_SCT/SCT/Dependency/EfiCompliantBBTest ${TARGET_ARCH}_SCT/SCT/Sequence
         cp -r Build/UefiSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/${TARGET_ARCH}/* ${TARGET_ARCH}_SCT/SCT/
