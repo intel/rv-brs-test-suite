@@ -78,12 +78,12 @@ create_fatpart ()
     mmd -i $fatpart_name ::/EFI/BOOT/app
 
     mcopy -i $fatpart_name bootriscv64.efi ::/EFI/BOOT
-    mcopy -i $fatpart_name Shell.efi ::/EFI/BOOT
+    # mcopy -i $fatpart_name Shell.efi ::/EFI/BOOT
     mcopy -i $fatpart_name $OUTDIR/Image ::/
     mcopy -i $fatpart_name $PLATDIR/ramdisk-buildroot.img  ::/
 
     mcopy -s -i $fatpart_name SCT/* ::/EFI/BOOT/brs
-    mcopy -i $fatpart_name ${UEFI_APPS_PATH}/CapsuleApp.efi ::/EFI/BOOT/app
+    # mcopy -i $fatpart_name ${UEFI_APPS_PATH}/CapsuleApp.efi ::/EFI/BOOT/app
 
     echo "FAT partition image created"
 }
@@ -134,7 +134,7 @@ prepare_disk_image ()
     rm -f $PLATDIR/$IMG_BB
     mkdir -p $PLATDIR
     cp grubriscv64.efi bootriscv64.efi
-    cp $TOP_DIR/$UEFI_SHELL_PATH/Shell.efi Shell.efi
+    # cp $TOP_DIR/$UEFI_SHELL_PATH/Shell.efi Shell.efi
 
     cp -Tr $TOP_DIR/$SCT_PATH/ SCT
     grep -q -F 'mtools_skip_check=1' ~/.mtoolsrc || echo "mtools_skip_check=1" >> ~/.mtoolsrc

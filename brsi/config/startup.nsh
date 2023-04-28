@@ -58,14 +58,6 @@ for %e in 0 1 2 3 4 5 6 7 8 9 A B C D E F then
 endfor
 :DoneApp
 
-for %p in 0 1 2 3 4 5 6 7 8 9 A B C D E F then
-    if exist FS%p:\EFI\BOOT\debug\debug_dump.nsh then
-        FS%p:\EFI\BOOT\debug\debug_dump.nsh
-        goto DoneDebug
-    endif
-endfor
-:DoneDebug
-
 for %l in 0 1 2 3 4 5 6 7 8 9 A B C D E F then
     if exist FS%l:\Image and exist FS%l:\ramdisk-buildroot.img then
         FS%l:
