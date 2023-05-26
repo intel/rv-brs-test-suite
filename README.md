@@ -8,20 +8,30 @@ The BRS test suite check for compliance against the BRS specifications. These te
   - Firmware Test Suite (FWTS)
 
 #### Steps to Build and Run RV BRS test suite live image
-- `git clone https://github.com/intel-sandbox/rv-brs-test-suite.git`
+- `git clone https://github.com/intel/rv-brs-test-suite.git`
 - `cd rv-brs-test-suite/brsi/scripts/`
 - `./build-scripts/get_brsi_source.sh`
+	
+	This script will automatically download the required components from the following sources:
+	| repo  | source                   |branch/tag/commit|
+	| ------------- | ------------------------------ |------------------|
+	| `edk2`  | https://github.com/tianocore/edk2.git       |branch:edk2-stable202208|
+	| `edk2-test`   | https://github.com/tianocore/edk2-test     |commit:06f84debb|
+	| `grub`   | https://github.com/tekkamanninja/grub.git     |tag:riscv_devel_Nikita_V3|
+	| `kernel`   | https://github.com/vlsunil/linux.git     |branch:aia_plic|
+	| `buildroot`   | https://github.com/buildroot/buildroot.git     |branch:2023.02|
+
 - `./build-scripts/build_brsi.sh`
 - `./build-scripts/build_image.sh`
 
-If everything go well, the live image will be available at `brsi/scripts/output/brs_live_image.img.xz`
+If everything goes well, the live image will be available at `brsi/scripts/output/brs_live_image.img.xz`
 Note: it would take around 1 hour to finish the build, if you just want to have a quick try,
 you can use the prebuilt images in `rv-brs-test-suite/brsi/prebuilt_images/`
 
 To run the tests with QEMU and the live image, execute:
 - `./build-scripts/start_qemu.sh`
 
-This would start the live image and automatically run the UEFI SCT tests without intervene. After finishing the SCT tests,
+This would start the live image and automatically run the UEFI SCT tests without intervention. After finishing the SCT tests,
 it would boot to the linux and stop at the login:
 ```
 Welcome to Buildroot
@@ -36,7 +46,7 @@ UEFI SCT tests the UEFI implementation requirements defined by the BRS specifica
 **Prerequisite**: Ensure that the system time is correct before starting SCT tests.
 
 ### Running SCT
-BRS SCT tests are built as part of the test suite. <br />
+The BRS SCT tests are built as part of the test suite. <br />
 
 Running BRS SCT tests is now automated. You can choose to skip the automated SCT tests by pressing any key when the UEFI shell prompts.
 
@@ -53,7 +63,7 @@ To run SCT manually, follow these steps:
  `FS(X):EFI\BOOT\brs\SCT>SCT -a -v`
 
 
-You can also select and run tests individually. For more information on running the tests, see the [SCT User Guide](http://www.uefi.org/testtools).
+You can also select and run tests individually. For more information on running SCT, see the [SCT User Guide](http://www.uefi.org/testtools).
 
 ### Manual intervention tests
 Some SCT tests for the ACS require manual intervention or interaction.
@@ -71,9 +81,7 @@ To run the tests, follow these steps.
  
 3. While the system runs the reset tests, you may have to manually reset the system if it hangs.
 
-**Note:** The logs for the manual tests will overwrite the logs for the original test run 
-
-is the reason to have a copy of the original test. This new folder contains the logs from the new tests run in the manual sequence file. You may to concatenate some of the logs to view together.
+**Note:** The logs for the manual tests will overwrite the logs for the original test run which is the reason to have a copy of the original test. This new folder contains the logs from the new tests run in the manual sequence file. You may to concatenate some of the logs to view together.
 
 
 
