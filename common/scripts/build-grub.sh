@@ -38,8 +38,6 @@
 # GRUB_PATH - path to GRUB source
 # CROSS_COMPILE - PATH to GCC including CROSS-COMPILE prefix
 # PARALLELISM - number of cores to build across
-# GRUB_BUILD_ENABLED - Flag to enable building Linux
-# BUSYBOX_BUILD_ENABLED - Building Busybox
 #
 
 

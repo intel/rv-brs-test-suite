@@ -11,7 +11,7 @@ The BRS test suite check for compliance against the BRS specifications. These te
 - `git clone https://github.com/intel/rv-brs-test-suite.git`
 - `cd rv-brs-test-suite/brsi/scripts/`
 - `./build-scripts/get_brsi_source.sh`
-	
+
 	This script will automatically download the required components from the following sources:
 	| repo  | source                   |branch/tag/commit|
 	| ------------- | ------------------------------ |------------------|
@@ -89,7 +89,7 @@ To run the tests, follow these steps.
 FWTS is a package hosted by Canonical. FWTS provides tests for ACPI, SMBIOS and UEFI.
 Several BRS assertions are tested through FWTS.
 
-### Running FWTS tests
+### Running FWTS tests manually
 
 From the UEFI shell, you can choose to boot Linux OS by entering the command:
 
@@ -100,9 +100,13 @@ FS0:\EFI\> cd BOOT
 FS0:\EFI\BOOT\> bootriscv64.efi
 ```
 
-This command loads the grub menu. Press enter to choose the option `Linux Buildroot` that boots the OS. <br />
+This command loads the grub menu. Press enter to choose the option `Linux Buildroot` that boots the OS, finally the login message would prompt and wait for input. <br />
+```
+Welcome to Buildroot
+buildroot login:
+```
 
-Logs are stored in the results partition, which can be viewed on any machine after the tests are run.
+Then you can login with user name `root` and run the FWTS test by enter `fwts`. `results.log` will be stored in the current directory when trigger the fwts test.
 
 ## License
  

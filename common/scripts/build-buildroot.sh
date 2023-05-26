@@ -34,17 +34,12 @@
 #
 # VARIANT - build variant name
 # TOP_DIR - workspace root directory
-# BUILDROOT_BUILD_ENABLED - Flag to enable building Buildroot
 # BUILDROOT_PATH - sub-directory containing Buildroot code
-# BUILDROOT_ARCH - Build architecture (arm)
+# BUILDROOT_ARCH - Build architecture (riscv)
 # BUILDROOT_RAMDISK_BUILDROOT_PATH - path to the BB binary
-# TARGET_BINS_PLATS - the platforms to create binaries for
-# TARGET_{plat} - array of platform parameters, indexed by
-#       ramdisk - the address of the ramdisk per platform
+# BUILDROOT_DEFCONFIG - default config file for buildroot
 set -x
 TOP_DIR=`pwd`
-#BAND=$1
-#. $TOP_DIR/../../common/config/sr_es_common_config.cfg
 
 LINUX_ARCH=riscv
 BUILDROOT_PATH=buildroot

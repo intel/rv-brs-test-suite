@@ -34,38 +34,15 @@
 #
 # VARIANT - build variant name
 # TOP_DIR - workspace root directory
-# CROSS_COMPILE - PATH to GCC including CROSS-COMPILE prefix
 # PARALLELISM - number of cores to build across
-# LINUX_BUILD_ENABLED - Flag to enable building Linux
 # LINUX_PATH - sub-directory containing Linux code
-# LINUX_ARCH - Build architecture (arm64)
-# LINUX_CONFIG_LIST - List of Linaro configs to use to build
-# LINUX_CONFIG_DEFAULT - the default from the list (for tools)
-# LINUX_{config} - array of linux config options, indexed by
-#     path - the path to the linux source
-#    defconfig - a defconfig to build
-#    config - the list of config fragments
-# TARGET_BINS_PLATS - the platforms to create binaries for
-# TARGET_{plat} - array of platform parameters, indexed by
-#    fdts - the fdt pattern used by the platform
-# UBOOT_UIMAGE_ADDRS - address at which to link UBOOT image
-# UBOOT_MKIMAGE - path to uboot mkimage
-# LINUX_ARCH - the arch
-# UBOOT_BUILD_ENABLED - flag to indicate the need for uimages.
-#
+# LINUX_ARCH - Build architecture (riscv)
 # LINUX_IMAGE_TYPE - Image or zImage (Image is the default if not specified)
+# LINUX_OUT_DIR - directory store the built linux image
 
 TOP_DIR=`pwd`
-#BAND=$1
-#if [ $BAND == "SR" ] || [ $BAND == "ES" ]; then
-#    . $TOP_DIR/../../common/config/sr_es_common_config.cfg
-#else
-#    . $TOP_DIR/../../common/config/common_config.cfg
-#fi
-
 LINUX_ARCH=riscv
 LINUX_IMAGE_TYPE=Image
-#KEYS_DIR=$TOP_DIR/security-interface-extension-keys
 LINUX_PATH=$TOP_DIR/linux
 LINUX_OUT_DIR=out
 
