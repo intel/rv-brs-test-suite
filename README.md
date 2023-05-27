@@ -8,18 +8,23 @@ The BRS test suite check for compliance against the BRS specifications. These te
   - Firmware Test Suite (FWTS)
 
 #### Steps to Build and Run RV BRS test suite live image
+Ubuntu 22.04 operating system.
 - `git clone https://github.com/intel/rv-brs-test-suite.git`
 - `cd rv-brs-test-suite/brsi/scripts/`
 - `./build-scripts/get_brsi_source.sh`
 
 	This script will automatically download the required components from the following sources:
-	| repo  | source                   |branch/tag/commit|
+	| repo  | source/release            |branch/tag/commit|
 	| ------------- | ------------------------------ |------------------|
 	| `edk2`  | https://github.com/tianocore/edk2.git       |branch:edk2-stable202208|
-	| `edk2-test`   | https://github.com/tianocore/edk2-test     |commit:06f84debb|
+	| `edk2-test/SCT`   | https://github.com/tianocore/edk2-test     |commit:06f84debb|
 	| `grub`   | https://github.com/tekkamanninja/grub.git     |tag:riscv_devel_Nikita_V3|
 	| `kernel`   | https://github.com/vlsunil/linux.git     |branch:aia_plic|
 	| `buildroot`   | https://github.com/buildroot/buildroot.git     |branch:2023.02|
+	| `FWTS`   | https://fwts.ubuntu.com/release/fwts-V23.03.00.tar.gz     |version:v23.03.00|
+	
+	The following packages are required for the script to run smoothly. If any of these packages are missing, they will be installed:
+	curl mtools gdisk gcc openssl automake autotools-dev libtool bison flex bc uuid-dev python3 libglib2.0-dev libssl-dev autopoint
 
 - `./build-scripts/build_brsi.sh`
 - `./build-scripts/build_image.sh`
@@ -31,6 +36,10 @@ you can use the prebuilt images in `rv-brs-test-suite/brsi/prebuilt_images/`
 To run the tests with QEMU and the live image, execute:
 - `./build-scripts/start_qemu.sh`
 
+	This script will automatically download the required components from the following sources:
+	| repo  | source            |branch|
+	| ------------- | ------------------------------ |------------------|
+	| `QEMU`  | https://github.com/vlsunil/qemu.git       |branch:aia_plic|
 This would start the live image and automatically run the UEFI SCT tests without intervention. After finishing the SCT tests,
 it would boot to the linux and stop at the login:
 ```
