@@ -79,7 +79,7 @@ get_buildroot_src()
 }
 
 sudo apt install git curl mtools gdisk gcc openssl automake autotools-dev libtool \
-                 bison flex bc uuid-dev python3 libglib2.0-dev libssl-dev autopoint
+                 bison flex bc uuid-dev python3 libglib2.0-dev libssl-dev autopoint libslirp-dev
 
 get_uefi_src
 get_sct_src

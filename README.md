@@ -8,7 +8,7 @@ The BRS test suite check for compliance against the BRS specifications. These te
   - Firmware Test Suite (FWTS)
 
 #### Steps to Build and Run RV BRS test suite live image
-Ubuntu 22.04 operating system.
+Prerequisites: Ubuntu 22.04 with at least 20GB of free disk space.
 - `git clone https://github.com/intel/rv-brs-test-suite.git`
 - `cd rv-brs-test-suite/brsi/scripts/`
 - `./build-scripts/get_brsi_source.sh`
@@ -17,7 +17,7 @@ Ubuntu 22.04 operating system.
 	| repo  | source/release            |branch/tag/commit|
 	| ------------- | ------------------------------ |------------------|
 	| `edk2`  | https://github.com/tianocore/edk2.git       |branch:edk2-stable202208|
-	| `edk2-test/SCT`   | https://github.com/tianocore/edk2-test     |commit:06f84debb|
+	| `UEFI-SCT`   | https://github.com/tianocore/edk2-test     |commit:06f84debb|
 	| `grub`   | https://github.com/tekkamanninja/grub.git     |tag:riscv_devel_Nikita_V3|
 	| `kernel`   | https://github.com/vlsunil/linux.git     |branch:aia_plic|
 	| `buildroot`   | https://github.com/buildroot/buildroot.git     |branch:2023.02|
@@ -67,7 +67,7 @@ To run SCT manually, follow these steps:
 1. `Shell>FS(X):`
 - `FS(X):>cd EFI\BOOT\brs\SCT`
 - To run BRS tests
- `FS(X):EFI\BOOT\brs\SCT>SCT -s <BRSI.seq>`
+ `FS(X):EFI\BOOT\brs\SCT>SCT -s BRSI.seq`
 - To run all tests
  `FS(X):EFI\BOOT\brs\SCT>SCT -a -v`
 

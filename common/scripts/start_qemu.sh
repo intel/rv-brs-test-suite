@@ -48,7 +48,7 @@ build_qemu()
     else
 	    echo "build qemu-riscv64..."
 	    pushd $TOP_DIR/qemu
-	    ./configure  --enable-debug --target-list=riscv64-softmmu
+	    ./configure  --enable-slirp --enable-debug --target-list=riscv64-softmmu
 	    make -j `nproc`
 	    popd
     fi
