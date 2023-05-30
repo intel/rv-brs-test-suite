@@ -77,9 +77,37 @@ get_buildroot_src()
     git apply $TOP_DIR/../../common/patches/build_fwts_version.patch
     popd
 }
+function check_requirements() {
 
+  # Check if operating system is Ubuntu and version is 22.04
+  if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    OS=$NAME
+    VER=$VERSION_ID
+  elif [ -f /etc/lsb-release ]; then
+    . /etc/lsb-release
+    OS=$DISTRIB_ID
+    VER=$DISTRIB_RELEASE
+  fi
+
+  if [[ "$OS" != "Ubuntu" && "$VER" != "22.04" ]]; then
+      echo "This application requires Ubuntu 22.04."
+      exit 1
+  fi
+
+  # Check free disk space (at least 20GB)
+  local disk_space=$(df . -m --output=avail | tail -n 1 | tr -d '[:space:]')
+  if [[ $disk_space -lt 20*1024 ]]; then
+    echo "This application requires at least 20GB of free disk space."
+    exit 1
+  fi
+
+}
+
+check_requirements
 sudo apt install git curl mtools gdisk gcc openssl automake autotools-dev libtool \
-                 bison flex bc uuid-dev python3 libglib2.0-dev libssl-dev autopoint libslirp-dev
+                 bison flex bc uuid-dev python3 libglib2.0-dev libssl-dev autopoint libslirp-dev \
+                 make g++ gcc-riscv64-unknown-elf
 
 get_uefi_src
 get_sct_src

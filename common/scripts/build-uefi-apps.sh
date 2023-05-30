@@ -99,8 +99,6 @@ do_build()
 
     pushd $TOP_DIR/$UEFI_PATH
     if [[ $arch != "riscv64" ]]; then
-        # CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
-        # PATH="$PATH:$CROSS_COMPILE_DIR"
         export GCC5_RISCV64_PREFIX=riscv64-linux-gnu-
     fi
 

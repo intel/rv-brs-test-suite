@@ -7,8 +7,10 @@ The BRS test suite check for compliance against the BRS specifications. These te
   - UEFI Self Certification Tests (SCT)
   - Firmware Test Suite (FWTS)
 
+#### Prerequisites
+Ubuntu 22.04 or Docker environment for compatible versions, with at least 20GB of free disk space.
+To prevent potential issues, please ensure that there are no invalid path names (e.g., spaces, line breaks, carriage returns) in the PATH environment variable.
 #### Steps to Build and Run RV BRS test suite live image
-Prerequisites: Ubuntu 22.04 with at least 20GB of free disk space.
 - `git clone https://github.com/intel/rv-brs-test-suite.git`
 - `cd rv-brs-test-suite/brsi/scripts/`
 - `./build-scripts/get_brsi_source.sh`
@@ -24,7 +26,7 @@ Prerequisites: Ubuntu 22.04 with at least 20GB of free disk space.
 	| `FWTS`   | https://fwts.ubuntu.com/release/fwts-V23.03.00.tar.gz     |version:v23.03.00|
 	
 	The following packages are required for the script to run smoothly. If any of these packages are missing, they will be installed:
-	curl mtools gdisk gcc openssl automake autotools-dev libtool bison flex bc uuid-dev python3 libglib2.0-dev libssl-dev autopoint
+	curl mtools gdisk gcc openssl automake autotools-dev libtool bison flex bc uuid-dev python3 libglib2.0-dev libssl-dev autopoint gcc-riscv64-unknown-elf gcc g++
 
 - `./build-scripts/build_brsi.sh`
 - `./build-scripts/build_image.sh`
