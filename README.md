@@ -9,7 +9,7 @@ The BRS test suite check for compliance against the BRS specifications. These te
 
 #### Prerequisites
 Ubuntu 22.04 or Docker environment for compatible versions, with at least 20GB of free disk space.
-To prevent potential issues, please ensure that there are no invalid path names (e.g., spaces, line breaks, carriage returns) in the PATH environment variable.
+To prevent potential issues, please ensure there is no whitespace (e.g., spaces, tabs, line breaks, carriage returns) in the PATH environment variable. E.g. if you're on WSL, you might want a clean environment without the Windows paths like '/mnt/c/Program Files/'.
 #### Steps to Build and Run RV BRS test suite live image
 - `git clone https://github.com/intel/rv-brs-test-suite.git`
 - `cd rv-brs-test-suite/brsi/scripts/`
