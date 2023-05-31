@@ -90,25 +90,39 @@ function check_requirements() {
     VER=$DISTRIB_RELEASE
   fi
 
-  if [[ "$OS" != "Ubuntu" && "$VER" != "22.04" ]]; then
-      echo "This application requires Ubuntu 22.04."
-      exit 1
+  if [[ "$OS" == "Ubuntu" && ("$VER" == "22.04" || "$VER" == "20.04" )]]; then
+      echo "$OS $VER Proceeding with the build..."
+  else
+      echo "You are running $OS $VER"
+      echo "Warning: It is recommended to run this build on Ubuntu 22.04/20.04."\
+           "However if you choose to proceed with a different version, press 'y' to continue."
+      read -p "Do you want to continue anyway? (y/n) " choice
+      case "$choice" in
+          y|Y ) ;;
+          * ) exit 0;;
+      esac
   fi
-
   # Check free disk space (at least 20GB)
   local disk_space=$(df . -m --output=avail | tail -n 1 | tr -d '[:space:]')
   if [[ $disk_space -lt 20*1024 ]]; then
-    echo "This application requires at least 20GB of free disk space."
-    exit 1
+    echo "Warning: Only $(expr $disk_space / 1024)GB of free disk space remaining."\
+          "The application requires at least 20GB of free disk space during the build and test process."
+    read -p "Do you want to continue anyway? (y/n) " choice
+    case "$choice" in
+        y|Y ) ;;
+        * ) exit 0;;
+    esac
+  fi
+
+  if [[ "$OS" == "Ubuntu" || "$OS" == "Debian GNU/Linux" ]]; then
+      sudo apt install git curl mtools gdisk gcc openssl automake autotools-dev libtool \
+                       bison flex bc uuid-dev python3 libglib2.0-dev libssl-dev autopoint libslirp-dev \
+                       make g++ gcc-riscv64-unknown-elf gettext
   fi
 
 }
 
 check_requirements
-sudo apt install git curl mtools gdisk gcc openssl automake autotools-dev libtool \
-                 bison flex bc uuid-dev python3 libglib2.0-dev libssl-dev autopoint libslirp-dev \
-                 make g++ gcc-riscv64-unknown-elf
-
 get_uefi_src
 get_sct_src
 get_grub_src
