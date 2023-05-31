@@ -94,11 +94,9 @@ To run the tests, follow these steps.
 
 **Note:** The logs for the manual tests will overwrite the logs for the original test run which is the reason to have a copy of the original test. This new folder contains the logs from the new tests run in the manual sequence file. You may to concatenate some of the logs to view together.
 
+## Firmware Test Suite (FWTS)
 
-
-## BRS based on Firmware Test Suite
-FWTS is a package hosted by Canonical. FWTS provides tests for ACPI, SMBIOS and UEFI.
-Several BRS assertions are tested through FWTS.
+The Firmware Test Suite (FWTS), a package hosted by Canonical, provides tests for ACPI, SMBIOS and UEFI. Quite a few BRS assertions are tested through FWTS, especially for BRS-I.
 
 ### Running FWTS tests manually
 
