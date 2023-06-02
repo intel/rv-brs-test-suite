@@ -153,6 +153,45 @@ buildroot login:
 
 Then you can login with user name `root` and run the FWTS test by enter `fwts`. `results.log` will be stored in the current directory when trigger the fwts test.
 
+### FWTS test log analysis
+The FWTS test results as well as the some detail error logs will be stored in the results.log file. If you just want to get the overall test results summary, you can just scroll down to the end of the results.log file and the summary will be just like below:
+```
+Test           |Pass |Fail |Abort|Warn |Skip |Info |
+---------------+-----+-----+-----+-----+-----+-----+
+acpi_ac        |     |     |     |     |   16|     |
+acpi_als       |     |     |     |     |   17|     |
+acpi_battery   |     |     |     |     |   31|     |
+acpi_ec        |     |     |     |     |   15|     |
+acpi_lid       |     |     |     |     |   15|     |
+...
+...
+wdat           |     |     |     |     |    1|     |
+wpbt           |     |     |     |     |    1|     |
+wsmt           |     |     |     |     |    1|     |
+xenv           |     |     |     |     |    1|     |
+xsdt           |    1|     |     |     |     |     |
+---------------+-----+-----+-----+-----+-----+-----+
+Total:         |  132|    4|   13|    1|  448|    8|
+---------------+-----+-----+-----+-----+-----+-----+
+```
+If you want to deep dive the root cause of some failed or skipped cases, you can get some clue from the detailed test logs in the results.log file.
+```
+bgrt: BGRT Boot Graphics Resource Table test.
+--------------------------------------------------------------------------------
+ACPI BGRT table does not exist, skipping test
+================================================================================
+0 passed, 0 failed, 0 warning, 0 aborted, 1 skipped, 0 info only.
+================================================================================
+
+bert: BERT Boot Error Record Table test.
+--------------------------------------------------------------------------------
+ACPI BERT table does not exist, skipping test
+================================================================================
+0 passed, 0 failed, 0 warning, 0 aborted, 1 skipped, 0 info only.
+================================================================================
+```
+Alternatively, you can also run specific FWTS case by `fwts <case-name>` to get the detailed logs on the current terminal.
+
 ## License
  
 Risc-v BRS test suite is distributed under Apache v2.0 License.
