@@ -21,11 +21,14 @@ If you want to upstream changes to UEFI-SCT, follow these steps:
 
 Note: Use the patched file located in `common/patches` and apply the patch within the `script/brsi/scripts/build-scripts/build_brsi.sh` before changes are accepted.
 
-## Updating Components in BRS Test Suite
-To update components, such as UEFI-SCT or fwts, along with a private component in the BRS test suite, follow these steps:
+## Updating Components version in BRS Test Suite
+To update components, such as UEFI-SCT or linux, along with a private component in the BRS test suite, follow these steps:
 
 1. Update the `<repository>` and/or `<branch/tag/commit>` element(s) in the `brsi/scripts/build-scripts/get_source.sh` file.
 2. Remove the old directory and run `brsi/scripts/build-scripts/get_brsi_source.sh` to update the component.
 3. Follow the `README.md` to build the project and confirm that the updated component version is included in the final image.
+
+### Updating FWTS version in BRS Test Suite
+Since the FWTS was a builtin package of buildroot, its version depend on that of buildroot. If you need a different FWTS, a fresh patch was needed to update the FWTS version(`common/patches/build_fwts_version.patch`). Once you updated the aforementioned patch, please remove the old buildroot source directory and run the `get_brsi_source.sh` again to include the changes.
 
 For any issues or further queries, please feel free to raise them as a GitHub issue.
