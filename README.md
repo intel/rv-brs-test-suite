@@ -77,7 +77,7 @@ To run SCT manually, follow these steps:
 You can also select and run tests individually. For more information on running SCT, see the [SCT User Guide](http://www.uefi.org/testtools).
 
 ### Manual intervention tests
-Some SCT tests for the ACS require manual intervention or interaction.
+Some SCT tests require manual intervention or interaction.
 To run the tests, follow these steps.
 
 1. Move or copy the SCT logs into the result partition so they do not get overwritten.
@@ -93,6 +93,42 @@ To run the tests, follow these steps.
 3. While the system runs the reset tests, you may have to manually reset the system if it hangs.
 
 **Note:** The logs for the manual tests will overwrite the logs for the original test run which is the reason to have a copy of the original test. This new folder contains the logs from the new tests run in the manual sequence file. You may to concatenate some of the logs to view together.
+### SCT test log analysis
+SCT log will store at:
+
+	- `FS(Y):\acs_results\sct_results_previous_run\sct_results\Overall\>`
+	- `03/22/2023  11:48           9,678,122  Summary.ekl`
+	- `03/22/2023  11:48          11,523,502  Summary.log`
+
+Take the `PlatformSpecificElements` test case as an example. This particular test case is divided into several sub-tests, and each sub-test will print a brief log to aid in debugging. This log can be particularly helpful in identifying any issues or errors that may arise during the testing process.
+
+```
+  UEFI 2.6
+  Test Configuration #0
+  ------------------------------------------------------------
+  Check the platform specific elements defined in the UEFI Spec Section 2.6.2                                  <<<<case description
+  ------------------------------------------------------------
+  Logfile: "\EFI\BOOT\brs\SCT\Overall\Summary.log"
+  Test Started: 03/22/23  11:48a
+  ------------------------------------------------------------
+  UEFI Compliant - Console protocols must be implemented -- PASS                                               <<<<sub-test status
+  8F7556C2-4665-4353-A3AF-9C005A1E63E1                                                                         <<<<guid
+  /ptah_to_source_code/EfiCompliantBBTestPlatform_uefi.c:1022:Text Input - Yes, Text Output - Yes, Text ...    <<<<detail debug log
+  ...
+  UEFI Compliant - Boot from network protocols must be implemented -- FAILURE
+  98551AE7-5020-4DDD-861A-CFFFB4D60382
+  /ptah_to_source_code/EfiCompliantBBTestPlatform_uefi.c:1594:PXE BC - No, SNP - Yes, MNP - No, UNDI - No
+
+  UEFI Compliant - UEFI General Network Application required -- WARNING
+  76A6A1B0-8C53-407D-8486-9A6E6332D3CE
+  /ptah_to_source_code/EfiCompliantBBTestPlatform_uefi.c:1729:MnpSB-N, ArpSB-N, Ip4SB-N, Dhcp4SB-N, Tcp4SB-N,...
+  ...
+  PlatformSpecificElements: [FAILED]                                                                           <<<<case summary
+    Passes........... 8
+    Warnings......... 18
+    Errors........... 4
+  ------------------------------------------------------------
+```
 
 ## Firmware Test Suite (FWTS)
 
@@ -119,7 +155,7 @@ Then you can login with user name `root` and run the FWTS test by enter `fwts`. 
 
 ## License
  
-Risc-v BRS ACS is distributed under Apache v2.0 License.
+Risc-v BRS test suite is distributed under Apache v2.0 License.
 
 ## Feedback, contributions and support
 
