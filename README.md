@@ -42,14 +42,7 @@ To run the tests with QEMU and the live image, execute:
 	| repo  | source            |branch|
 	| ------------- | ------------------------------ |------------------|
 	| `QEMU`  | https://github.com/vlsunil/qemu.git       |branch:aia_plic|
-This would start the live image and automatically run the UEFI SCT tests without intervention. After finishing the SCT tests,
-it would boot to the linux and stop at the login:
-```
-Welcome to Buildroot
-buildroot login:
-```
-
-and then you can login with user name `root`. After login to the linux system, you can run the FWTS test by enter `fwts`.
+This would start the live image and automatically run the UEFI SCT and FWTS tests without intervention.
 
 ## UEFI Self Certification Tests
 UEFI SCT tests the UEFI implementation requirements defined by the BRS specification.
@@ -145,16 +138,10 @@ FS0:\EFI\> cd BOOT
 FS0:\EFI\BOOT\> bootriscv64.efi
 ```
 
-This command loads the grub menu. Press enter to choose the option `Linux Buildroot` that boots the OS, finally the login message would prompt and wait for input. <br />
-```
-Welcome to Buildroot
-buildroot login:
-```
-
-Then you can login with user name `root` and run the FWTS test by enter `fwts`. `results.log` will be stored in the current directory when trigger the fwts test.
+This command loads the grub menu. Press enter to choose the option `Linux Buildroot` that boots the OS and the FWTS would run automatically after OS initialization. When the FWTS tests were done, the corresponding log file can be found at `/results.log`. What's more, if you want to debug some of the FWTS tests, you can just input the `fwts [option] [test]` command and the results will be stored under the current directory when trigger the fwts test.
 
 ### FWTS test log analysis
-The FWTS test results as well as the some detail error logs will be stored in the results.log file. If you just want to get the overall test results summary, you can just scroll down to the end of the results.log file and the summary will be just like below:
+The FWTS test results as well as some detail error logs will be stored in the `results.log` file. If you just want to get the overall test results summary, you can just scroll down to the end of the `results.log` file and the summary will be just like below:
 ```
 Test           |Pass |Fail |Abort|Warn |Skip |Info |
 ---------------+-----+-----+-----+-----+-----+-----+
@@ -190,7 +177,7 @@ ACPI BERT table does not exist, skipping test
 0 passed, 0 failed, 0 warning, 0 aborted, 1 skipped, 0 info only.
 ================================================================================
 ```
-Alternatively, you can also run specific FWTS case by `fwts <case-name>` to get the detailed logs on the current terminal.
+Alternatively, you can also run specific FWTS case by `fwts [option] [test]` to get the detailed logs on the current terminal.
 
 ## License
  

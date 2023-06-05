@@ -72,9 +72,10 @@ get_buildroot_src()
     BUILDROOT_SRC_VERSION=2023.02
     echo "Downloading Buildroot source code. TAG : ${BUILDROOT_SRC_VERSION}"
     git clone -b $BUILDROOT_SRC_VERSION https://github.com/buildroot/buildroot.git
-    pushd $TOP_DIR/buildroot/package/fwts
-    echo "Applying Buildroot FWTS patch..."
-    git apply $TOP_DIR/../../common/patches/build_fwts_version.patch
+    pushd $TOP_DIR/buildroot/
+    echo "Applying Buildroot patch..."
+    git apply $TOP_DIR/../../common/patches/buildroot_update_fwts_version.patch
+    git apply $TOP_DIR/../../common/patches/buildroot_enable_busybox_auto_login.patch
     popd
 }
 function check_requirements() {

@@ -1,0 +1,37 @@
+diff --git a/package/busybox/busybox.mk b/package/busybox/busybox.mk
+index 1633ca525d..eb1f867e65 100644
+--- a/package/busybox/busybox.mk
++++ b/package/busybox/busybox.mk
+@@ -229,18 +229,6 @@ define BUSYBOX_SET_INIT
+ 	$(call KCONFIG_ENABLE_OPT,CONFIG_INIT)
+ endef
+ 
+-ifeq ($(BR2_TARGET_GENERIC_GETTY),y)
+-define BUSYBOX_SET_GETTY
+-	$(SED) '/# GENERIC_SERIAL$$/s~^.*#~$(SYSTEM_GETTY_PORT)::respawn:/sbin/getty -L $(SYSTEM_GETTY_OPTIONS) $(SYSTEM_GETTY_PORT) $(SYSTEM_GETTY_BAUDRATE) $(SYSTEM_GETTY_TERM) #~' \
+-		$(TARGET_DIR)/etc/inittab
+-endef
+-else
+-define BUSYBOX_SET_GETTY
+-	$(SED) '/# GENERIC_SERIAL$$/s~^.*#~#ttyS0::respawn:/sbin/getty -L ttyS0 115200 vt100 #~' $(TARGET_DIR)/etc/inittab
+-endef
+-endif # BR2_TARGET_GENERIC_GETTY
+-BUSYBOX_TARGET_FINALIZE_HOOKS += BUSYBOX_SET_GETTY
+-
+ BUSYBOX_TARGET_FINALIZE_HOOKS += SYSTEM_REMOUNT_ROOT_INITTAB
+ 
+ endif # BR2_INIT_BUSYBOX
+diff --git a/package/busybox/inittab b/package/busybox/inittab
+index f2b4df801b..274209bd5c 100644
+--- a/package/busybox/inittab
++++ b/package/busybox/inittab
+@@ -28,6 +28,9 @@ null::sysinit:/bin/ln -sf /proc/self/fd/2 /dev/stderr
+ # now run any rc scripts
+ ::sysinit:/etc/init.d/rcS
+ 
++::once:/usr/bin/fwts
++::respawn:-/bin/sh -i
++
+ # Put a getty on the serial port
+ #ttyS0::respawn:/sbin/getty -L ttyS0 115200 vt100 # GENERIC_SERIAL
+ 
