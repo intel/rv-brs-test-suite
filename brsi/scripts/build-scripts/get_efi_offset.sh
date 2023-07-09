@@ -58,6 +58,8 @@ if [ ! -d "$edk2_build_path" ] || [ ! -d "$edk2_test_build_path" ] || [ ! -f "$q
         if [ "$choice" != "y" ] && [ "$choice" != "Y" ]; then
             echo "Exiting script."
             exit 0
+        else
+	    > $output_filename
         fi
     fi
 fi
@@ -75,7 +77,7 @@ if [ ! -x "peinfo/peinfo" ]; then
     cd .. || { echo "Failed to change directory."; exit 1; }
 fi
 PEINFO="peinfo/peinfo"
-cat ${qemu_debug_log} | grep Loading | grep -i efi | while read LINE; do
+cat ${qemu_debug_log} | grep Loading | grep -i efi | tac | while read LINE; do
    BASE="`echo ${LINE} | cut -d " " -f4`"
    NAME="`echo ${LINE} | cut -d " " -f6 | tr -d "[:cntrl:]"`"
    if [ -e ${edk2_build_path}/${NAME} ];then
@@ -90,6 +92,10 @@ cat ${qemu_debug_log} | grep Loading | grep -i efi | while read LINE; do
         | grep -A 5 text | grep VirtualAddress | cut -d " " -f2`"
    TEXT="`python -c "print(hex(${BASE} + ${ADDR}))"`"
    SYMS="`echo ${NAME} | sed -e "s/\.efi/\.debug/g"`"
-   echo "add-symbol-file ${efi_file_path}/${SYMS} ${TEXT}" >> "$output_filename"
+   # Check if line exists in the output file and update or append accordingly
+   grep -qF "add-symbol-file ${efi_file_path}/${SYMS}" "$output_filename" && \
+   sed -i 's/add-symbol-file ${efi_file_path}\/${SYMS} .*/add-symbol-file ${efi_file_path}\/${SYMS} ${TEXT}/' "$output_filename" || \
+       echo "add-symbol-file ${efi_file_path}/${SYMS} ${TEXT}" >> "$output_filename"
+
 done
 echo "update gdb script $output_filename."
