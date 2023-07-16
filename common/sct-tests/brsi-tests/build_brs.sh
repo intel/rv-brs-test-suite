@@ -265,7 +265,7 @@ cp $EDK_TOOLS_PATH/Source/C/bin/GenBin $DEST_DIR/GenBin
 # Build the packages needed for the SCT
 #
 
-build -p SctPkg/UEFI/BRS_SCT.dsc -a $SCT_TARGET_ARCH -t $TARGET_TOOLS -b $SCT_BUILD $@
+build -p $PWD/SctPkg/UEFI/BRS_SCT.dsc -a $SCT_TARGET_ARCH -t $TARGET_TOOLS -b $SCT_BUILD $@
 # Check if there is any error
 status=$?
 if test $status -ne 0

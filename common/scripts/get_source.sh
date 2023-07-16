@@ -33,17 +33,17 @@ TOP_DIR=`pwd`
 
 get_sct_src()
 {
-    git clone --single-branch https://github.com/tianocore/edk2-test
+    git clone  https://github.com/tianocore/edk2-test
     pushd $TOP_DIR/edk2-test
-    git checkout 06f84debb796b2f6ac893b130e90ab5599195b29
+    git checkout 39f27f233aeab16f71fc8f5ed6b287eb9f884ec6
     popd
 }
 
 get_uefi_src()
 {
-    git clone --depth 1 --single-branch \
-    --branch edk2-stable202208 https://github.com/tianocore/edk2.git
+    git clone  https://github.com/tianocore/edk2.git
     pushd $TOP_DIR/edk2
+    git checkout 94b5a98ea0b6536f5e9798243edf8b85389adb24
     git submodule update --init
     popd
 }

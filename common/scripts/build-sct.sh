@@ -141,10 +141,12 @@ do_clean()
     if [ ! -d $TOP_DIR/$SCT_PATH/uefi-sct/edk2 ]; then
     	ln -s $TOP_DIR/edk2 $TOP_DIR/$SCT_PATH/uefi-sct/edk2
     fi
+    # pushd $TOP_DIR/$UEFI_PATH
     source $TOP_DIR/$UEFI_PATH/edksetup.sh
     make -C $TOP_DIR/$UEFI_PATH/BaseTools clean
     rm -rf Build
     rm -rf ${TARGET_ARCH}_SCT
+    # pop
 
     popd
 
