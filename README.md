@@ -67,6 +67,21 @@ To run SCT manually, follow these steps:
  `FS(X):EFI\BOOT\brs\SCT>SCT -a -v`
 
 
+If you want to try running SCT on real hardware instead of QEMU, please follow these steps:
+
+1. Mount the image by running `sudo losetup --partscan --find --show brsi/scripts/output/brs_live_image.img` and assign it to `/dev/loopX`, where X is a number specific to your system.
+2. Run `sudo mount /dev/loopXp1 /mnt/brs` to mount the partition at `/mnt/brs`.
+3. Copy the `/mnt/brs/EFI/BOOT/brs` directory to the hardware UEFI partition `e.g. FS(X):EFI\BOOT\`.
+4. Run the BRS tests by executing the command `FS(X):EFI\BOOT\brs\SCT>SCT -s BRSI.seq`, similar to how it is done in QEMU.
+
+To generate an SCT test report in CSV format, you can use the following command:
+
+```
+SCT -r <Reportname>
+```
+
+The test report will be generated under the `./report/<reportname>` directory. Please replace `<Reportname>` with your desired name for the report.
+
 You can also select and run tests individually. For more information on running SCT, see the [SCT User Guide](http://www.uefi.org/testtools).
 
 ### Manual intervention tests
