@@ -75,7 +75,7 @@ start_qemu()
     $TOP_DIR/qemu/build/qemu-system-riscv64 -nographic -machine virt -cpu rv64 -m 4G -smp 2   \
     -drive file=$BRS_IMG,if=none,format=raw,id=drv1 -device virtio-blk-device,drive=drv1      \
     -drive file=$TOP_DIR/../prebuilt_images/uefi_flash1_23.04.img,if=pflash,format=raw,unit=1 \
-    -device virtio-net-device,netdev=net0 -netdev type=user,id=net0 \
+    -device e1000,netdev=net0 -netdev type=user,id=net0 \
     -device qemu-xhci \
     -device usb-mouse \
     -device usb-kbd
