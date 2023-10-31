@@ -82,6 +82,8 @@ SCT -r <Reportname>
 
 The test report will be generated under the `./report/<reportname>` directory. Please replace `<Reportname>` with your desired name for the report.
 
+If the test case requires additional arguments, please update the corresponding .ini file before generating the live image. Refer to this `./common/patches/Update-test-profile-for-MemRead_Func-as-an-example.patch` for an example.
+
 You can also select and run tests individually. For more information on running SCT, see the [SCT User Guide](http://www.uefi.org/testtools).
 
 ### Manual intervention tests
