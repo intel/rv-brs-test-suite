@@ -1,0 +1,33 @@
+From 7d23b28b3216990eafc3619a983659dc345590a8 Mon Sep 17 00:00:00 2001
+From: Yin Wang <yin.wang@intel.com>
+Date: Tue, 31 Oct 2023 16:08:27 +0800
+Subject: [PATCH] Update test profile for MemRead_Func as an example on QEMU
+
+---
+ .../BlackBoxTest/Dependency/Config/PciIoBBTest.ini     | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/uefi-sct/SctPkg/TestCase/UEFI/EFI/Protocol/PciIo/BlackBoxTest/Dependency/Config/PciIoBBTest.ini b/uefi-sct/SctPkg/TestCase/UEFI/EFI/Protocol/PciIo/BlackBoxTest/Dependency/Config/PciIoBBTest.ini
+index 9db53f20..3cc7fe9d 100644
+--- a/uefi-sct/SctPkg/TestCase/UEFI/EFI/Protocol/PciIo/BlackBoxTest/Dependency/Config/PciIoBBTest.ini
++++ b/uefi-sct/SctPkg/TestCase/UEFI/EFI/Protocol/PciIo/BlackBoxTest/Dependency/Config/PciIoBBTest.ini
+@@ -57,11 +57,11 @@ TargetValue=
+ AlternateValue=
+ 
+ [MemRead_Func]
+-DevicePath=
+-BarIndex=
+-AddressOffset=
+-Length=
+-PciIoWidth=
++DevicePath=Acpi(PNP0A03,0)/Pci(2|0)
++BarIndex=0
++AddressOffset=5c
++Length=4
++PciIoWidth=EfiPciIoWidthUint32
+ DataUnits=
+ 
+ [MemWrite_Func]
+-- 
+2.34.1
+
