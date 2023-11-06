@@ -41,6 +41,18 @@ get_qemu_src()
     popd
 }
 
+build_opensbi()
+{
+    if [ -f "$TOP_DIR/opensbi/build/platform/generic/firmware/fw_dynamic.bin" ];then
+	    echo "skip build opensbi."
+    else
+	    echo "build opensbi..."
+	    pushd $TOP_DIR/opensbi
+	    make ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- PLATFORM=generic
+	    popd
+    fi
+}
+
 build_qemu()
 {
     if [ -f "$TOP_DIR/qemu/build/qemu-system-riscv64" ];then

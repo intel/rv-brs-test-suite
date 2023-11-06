@@ -78,6 +78,19 @@ get_buildroot_src()
     git apply $TOP_DIR/../../common/patches/buildroot_enable_busybox_auto_login.patch
     popd
 }
+
+get_opensbi_src()
+{
+    if [ ! -f "$TOP_DIR/opensbi" ];then
+        echo "Downloading opensbi."
+        git clone --depth 1 --single-branch \
+        --branch dev-upstream https://github.com/ventanamicro/opensbi.git
+        pushd $TOP_DIR/opensbi
+        git checkout 9772fd290ad1914bc99cb8d3107c36a589d428ed
+        popd
+    fi
+}
+
 function check_requirements() {
 
   # Check if operating system is Ubuntu and version is 22.04
