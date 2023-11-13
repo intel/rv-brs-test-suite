@@ -1,0 +1,45 @@
+From 63621183bcba22e2c97e7fed0fa5f13b7fe22c80 Mon Sep 17 00:00:00 2001
+From: Haibo Xu <haibo1.xu@intel.com>
+Date: Wed, 19 Jul 2023 14:41:22 +0800
+Subject: [PATCH 1/6] lib: Add fwts_architecture macro for risc-v
+
+---
+ src/lib/include/fwts_arch.h | 1 +
+ src/lib/src/fwts_arch.c     | 2 ++
+ 2 files changed, 3 insertions(+)
+
+diff --git a/fwts-23.09.00/src/lib/include/fwts_arch.h b/fwts-23.09.00/src/lib/include/fwts_arch.h
+index ddf29e84..02270269 100644
+--- a/fwts-23.09.00/src/lib/include/fwts_arch.h
++++ b/fwts-23.09.00/src/lib/include/fwts_arch.h
+@@ -27,6 +27,7 @@ typedef enum {
+ 	FWTS_ARCH_X86,
+ 	FWTS_ARCH_IA64,
+ 	FWTS_ARCH_ARM64,
++	FWTS_ARCH_RISCV64,
+ 	FWTS_ARCH_OTHER
+ } fwts_architecture;
+ 
+diff --git a/fwts-23.09.00/src/lib/src/fwts_arch.c b/fwts-23.09.00/src/lib/src/fwts_arch.c
+index d60f25a6..ace78d51 100644
+--- a/fwts-23.09.00/src/lib/src/fwts_arch.c
++++ b/fwts-23.09.00/src/lib/src/fwts_arch.c
+@@ -31,6 +31,7 @@ static const struct fwts_arch_info arch_info[] = {
+ 	{ FWTS_ARCH_IA64, "ia64" },
+ 	{ FWTS_ARCH_ARM64, "arm64" },
+ 	{ FWTS_ARCH_ARM64, "aarch64" },
++	{ FWTS_ARCH_RISCV64, "riscv64" },
+ 	{ FWTS_ARCH_OTHER, "other" }
+ };
+ 
+@@ -38,6 +39,7 @@ static const struct fwts_arch_info arch_name[] = {
+ 	{ FWTS_ARCH_X86, "x86" },
+ 	{ FWTS_ARCH_IA64, "ia64" },
+ 	{ FWTS_ARCH_ARM64, "arm64" },
++	{ FWTS_ARCH_RISCV64, "riscv64" },
+ 	{ FWTS_ARCH_OTHER, "other" },
+ };
+ 
+-- 
+2.34.1
+

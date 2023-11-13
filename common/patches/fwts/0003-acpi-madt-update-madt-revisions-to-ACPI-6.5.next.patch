@@ -1,0 +1,129 @@
+From 46164451d0a2a83fe0fd06efc8889501185a912b Mon Sep 17 00:00:00 2001
+From: Haibo Xu <haibo1.xu@intel.com>
+Date: Tue, 7 Nov 2023 17:03:33 +0800
+Subject: [PATCH 3/6] acpi: madt: update madt revisions to ACPI 6.5.next
+
+Add risc-v madt subtable types which were accepted
+in ACPI 6.5.next[1].
+
+[1] https://github.com/riscv-non-isa/riscv-acpi/wiki/ACPI-ASWG-ECR-Process
+---
+ src/acpi/madt/madt.c        | 14 +++++++++-
+ src/lib/include/fwts_acpi.h | 55 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 68 insertions(+), 1 deletion(-)
+
+diff --git a/fwts-23.09.00/src/acpi/madt/madt.c b/fwts-23.09.00/src/acpi/madt/madt.c
+index 318ac668..32d3fa27 100644
+--- a/fwts-23.09.00/src/acpi/madt/madt.c
++++ b/fwts-23.09.00/src/acpi/madt/madt.c
+@@ -122,7 +122,7 @@
+ 
+ #define SUBTABLE_UNDEFINED	0x00
+ #define SUBTABLE_VARIABLE	0xff
+-#define NUM_SUBTABLE_TYPES	24
++#define NUM_SUBTABLE_TYPES	28
+ #define MAX_IO_APIC_ID		256 /* IO APIC ID field is 1 byte */
+ 
+ #define SBBR_ACPI_MAJOR_VERSION 6
+@@ -247,6 +247,15 @@ static struct acpi_madt_subtable_lengths spec_info[] = {
+ 			     16, 16, 12, 82, 24, 24, 16, 20, 16,
+ 			     15, 23, 21, 13, 19, 17, 15 }
+ 	},
++	{ /* for ACPI 6.5.next */
++		.major_version = 6,
++		.minor_version = 5,
++		.madt_version = 6,
++		.num_types = 28,
++		.lengths = { 8, 12, 10, 8, 6, 12, 16, SUBTABLE_VARIABLE,
++			     16, 16, 12, 82, 24, 24, 16, 20, 16,
++			     15, 23, 21, 13, 19, 17, 15, 36, 16, 36, 36 }
++	},
+ 	{ /* terminator */
+ 		.major_version = 0,
+ 		.minor_version = 0,
+@@ -516,6 +525,9 @@ static int madt_arch_revision(fwts_framework *fw)
+ 	if (fw->target_arch == FWTS_ARCH_ARM64) {
+ 		minrev = 3;
+ 		arch = "aarch64";
++	} else if (fw->target_arch == FWTS_ARCH_RISCV64) {
++		minrev = 5;
++		arch = "riscv64";
+ 	} else {
+ 		minrev = 1;
+ 		arch = "intel";
+diff --git a/fwts-23.09.00/src/lib/include/fwts_acpi.h b/fwts-23.09.00/src/lib/include/fwts_acpi.h
+index 481277e5..1cd4aa9d 100644
+--- a/fwts-23.09.00/src/lib/include/fwts_acpi.h
++++ b/fwts-23.09.00/src/lib/include/fwts_acpi.h
+@@ -531,6 +531,10 @@ typedef enum {
+ 	FWTS_MADT_MSI_PIC,
+ 	FWTS_MADT_BIO_PIC,
+ 	FWTS_MADT_LPC_PIC,
++	FWTS_MADT_RINTC,
++	FWTS_MADT_IMSIC,
++	FWTS_MADT_APLIC,
++	FWTS_MADT_PLIC,
+ 	FWTS_MADT_RESERVED, /* does not have defined structure */
+ 	FWTS_MADT_OEM /* does not have defined structure */
+ } fwts_acpi_madt_type;
+@@ -700,6 +704,57 @@ typedef struct {
+ 	uint32_t	flag;
+ } __attribute__ ((packed)) fwts_acpi_madt_core_pic;
+ 
++/* Type 24, FWTS_MADT_RINTC */
++typedef struct {
++	uint8_t version;
++	uint8_t reserved;
++	uint32_t flags;
++	uint64_t hart_id;
++	uint32_t uid;
++	uint32_t ext_intc_id;
++	uint64_t imsic_addr;
++	uint32_t imsic_size;
++} __attribute__ ((packed)) fwts_acpi_madt_rintc;
++
++/* Type 25, FWTS_MADT_IMSIC */
++typedef struct {
++	uint8_t version;
++	uint8_t reserved;
++	uint32_t flags;
++	uint16_t num_ids;
++	uint16_t num_guest_ids;
++	uint8_t guest_index_bits;
++	uint8_t hart_index_bits;
++	uint8_t group_index_bits;
++	uint8_t group_index_shift;
++} __attribute__ ((packed)) fwts_acpi_madt_imsic;
++
++/* Type 26, FWTS_MADT_APLIC */
++typedef struct {
++	uint8_t version;
++	uint8_t id;
++	uint32_t flags;
++	uint8_t hw_id[8];
++	uint16_t num_idcs;
++	uint16_t num_sources;
++	uint32_t gsi_base;
++	uint64_t addr;
++	uint32_t size;
++} __attribute__ ((packed)) fwts_acpi_madt_aplic;
++
++/* Type 27, FWTS_MADT_PLIC */
++typedef struct {
++	uint8_t version;
++	uint8_t id;
++	uint8_t hw_id[8];
++	uint16_t num_irqs;
++	uint16_t max_prio;
++	uint32_t flags;
++	uint32_t size;
++	uint64_t base_addr;
++	uint32_t gsi_base;
++} __attribute__ ((packed)) fwts_acpi_madt_plic;
++
+ /*
+  * ACPI TCPA (Trusted Computing Platform Alliance Capabilities Table)
+  *   http://www.kuro5hin.org/story/2002/10/27/16622/530,
+-- 
+2.34.1
+

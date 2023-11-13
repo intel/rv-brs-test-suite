@@ -1,0 +1,66 @@
+From 22fe7db366e53e5cd6554e97c0fe043a5a3ef626 Mon Sep 17 00:00:00 2001
+From: Haibo Xu <haibo1.xu@intel.com>
+Date: Thu, 10 Aug 2023 17:39:35 +0000
+Subject: [PATCH 6/6] acpi: acpitables: Update acpitables test for ACPI 6.5
+
+---
+ src/acpi/acpitables/acpitables.c | 36 ++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+
+diff --git a/fwts-23.09.00/src/acpi/acpitables/acpitables.c b/fwts-23.09.00/src/acpi/acpitables/acpitables.c
+index 1ab27edf..bd99f5bb 100644
+--- a/fwts-23.09.00/src/acpi/acpitables/acpitables.c
++++ b/fwts-23.09.00/src/acpi/acpitables/acpitables.c
+@@ -243,6 +243,39 @@ static const fwts_acpi_table_rev acpi_64_rev[] = {
+ 	{NULL, 0xff}	// end of table
+ };
+ 
++static const fwts_acpi_table_rev acpi_65_rev[] = {
++	{"APIC", 6},
++	{"BERT", 1},
++	{"BGRT", 1},
++	{"CCEL", 1},
++	{"CPEP", 1},
++	{"DSDT", 2},
++	{"ECDT", 1},
++	{"EINJ", 2},
++	{"ERST", 1},
++	{"FACP", 6},
++	{"FPDT", 1},
++	{"GTDT", 3},
++	{"HEST", 2},
++	{"MSCT", 1},
++	{"MPST", 1},
++	{"NFIT", 1},
++	{"PCCT", 2},
++	{"PHAT", 1},
++	{"PMTT", 2},
++	{"PPTT", 3},
++	{"RASF", 1},
++	{"RAS2", 1},
++	{"RSDT", 1},
++	{"SBST", 1},
++	{"SDEV", 1},
++	{"SLIT", 1},
++	{"SRAT", 3},
++	{"SSDT", 2},
++	{"SVKL", 1},
++	{"XSDT", 1},
++	{NULL, 0xff}	// end of table
++};
+ static int acpi_table_check_test2(fwts_framework *fw)
+ {
+ 	const fwts_acpi_table_rev *tables_rev;
+@@ -266,6 +299,9 @@ static int acpi_table_check_test2(fwts_framework *fw)
+ 		case FWTS_ACPI_VERSION_64:
+ 			tables_rev = acpi_64_rev;
+ 			break;
++		case FWTS_ACPI_VERSION_65:
++			tables_rev = acpi_65_rev;
++			break;
+ 		default:
+ 			fwts_log_info_verbatim(fw, "This test does not support ACPI %4.4" PRIx32 ".",  version);
+ 			return FWTS_SKIP;
+-- 
+2.34.1
+
