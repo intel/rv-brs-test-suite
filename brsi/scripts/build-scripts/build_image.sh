@@ -46,7 +46,7 @@ DEBUG_CONFIG_FILE=${TOP_DIR}/../../brsi/config/debug_dump.nsh
 BLOCK_SIZE=512
 SEC_PER_MB=$((1024*2))
 GRUB_PATH=grub
-UEFI_SHELL_PATH=edk2-test/uefi-sct/Build/Shell/DEBUG_GCC5/RISCV64/ShellPkg/Application/Shell/EA4BB293-2D7F-4456-A681-1F22F42CD0BC/OUTPUT/
+UEFI_SHELL_PATH=Build/RiscVVirtQemu/RELEASE_GCC5/RISCV64/
 SCT_PATH=edk2-test/uefi-sct/RISCV64_SCT
 UEFI_APPS_PATH=${TOP_DIR}/edk2-test/uefi-sct/Build/MdeModule/DEBUG_GCC5/RISCV64/MdeModulePkg/Application/CapsuleApp/CapsuleApp/OUTPUT
 
@@ -78,7 +78,7 @@ create_fatpart ()
     mmd -i $fatpart_name ::/EFI/BOOT/app
 
     mcopy -i $fatpart_name bootriscv64.efi ::/EFI/BOOT
-    # mcopy -i $fatpart_name Shell.efi ::/EFI/BOOT
+    mcopy -i $fatpart_name Shell.efi ::/EFI/BOOT
     mcopy -i $fatpart_name $OUTDIR/Image ::/
     mcopy -i $fatpart_name $PLATDIR/ramdisk-buildroot.img  ::/
 
@@ -134,7 +134,7 @@ prepare_disk_image ()
     rm -f $PLATDIR/$IMG_BB
     mkdir -p $PLATDIR
     cp grubriscv64.efi bootriscv64.efi
-    # cp $TOP_DIR/$UEFI_SHELL_PATH/Shell.efi Shell.efi
+    cp $TOP_DIR/$UEFI_SHELL_PATH/Shell.efi Shell.efi
 
     cp -Tr $TOP_DIR/$SCT_PATH/ SCT
     grep -q -F 'mtools_skip_check=1' ~/.mtoolsrc || echo "mtools_skip_check=1" >> ~/.mtoolsrc

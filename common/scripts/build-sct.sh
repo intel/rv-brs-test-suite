@@ -68,7 +68,6 @@ CROSS_COMPILE=$TOP_DIR/$GCC
 # fi
 
 BRSI_TEST_DIR=$BRS_DIR/common/sct-tests/brsi-tests
-BBSR_TEST_DIR=$BRS_DIR/bbsr/sct-tests
 # if [[ $BUILD_TYPE = S ]]; then
     sed -i 's|^SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/SecureBootBBTest.inf|#SctPkg/TestCase/UEFI/EFI/RuntimeServices/SecureBoot/BlackBoxTest/SecureBootBBTest.inf|g' $BRS_DIR/common/sct-tests/brsi-tests/BRS_SCT.dsc
     sed -i 's|^SctPkg/TestCase/UEFI/EFI/RuntimeServices/BBSRVariableSizeTest/BlackBoxTest/BBSRVariableSizeBBTest.inf|#SctPkg/TestCase/UEFI/EFI/RuntimeServices/BBSRVariableSizeTest/BlackBoxTest/BBSRVariableSizeBBTest.inf|g' $BRS_DIR/common/sct-tests/brsi-tests/BRS_SCT.dsc
@@ -97,7 +96,7 @@ do_build()
     if [ ! -d $TOP_DIR/$SCT_PATH/uefi-sct/edk2 ]; then
     	ln -s $TOP_DIR/edk2 $TOP_DIR/$SCT_PATH/uefi-sct/edk2
     fi
-    source $TOP_DIR/$UEFI_PATH/edksetup.sh
+    source $TOP_DIR/$UEFI_PATH/edksetup.sh || ture
     make -C $TOP_DIR/$UEFI_PATH/BaseTools
 
     #Copy over extra files needed for BRSI tests
@@ -141,7 +140,7 @@ do_clean()
     if [ ! -d $TOP_DIR/$SCT_PATH/uefi-sct/edk2 ]; then
     	ln -s $TOP_DIR/edk2 $TOP_DIR/$SCT_PATH/uefi-sct/edk2
     fi
-    source $TOP_DIR/$UEFI_PATH/edksetup.sh
+    source $TOP_DIR/$UEFI_PATH/edksetup.sh || ture
     make -C $TOP_DIR/$UEFI_PATH/BaseTools clean
     rm -rf Build
     rm -rf ${TARGET_ARCH}_SCT

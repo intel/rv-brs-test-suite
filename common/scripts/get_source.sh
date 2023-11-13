@@ -31,20 +31,21 @@
 
 TOP_DIR=`pwd`
 
+get_edk2_src()
+{
+    git clone --depth 1 --single-branch \
+    --branch edk2-stable202308 https://github.com/tianocore/edk2.git
+    pushd $TOP_DIR/edk2
+
+    git submodule update --init
+    popd
+}
+
 get_sct_src()
 {
     git clone --single-branch https://github.com/tianocore/edk2-test
     pushd $TOP_DIR/edk2-test
-    git checkout 06f84debb796b2f6ac893b130e90ab5599195b29
-    popd
-}
-
-get_uefi_src()
-{
-    git clone --depth 1 --single-branch \
-    --branch edk2-stable202208 https://github.com/tianocore/edk2.git
-    pushd $TOP_DIR/edk2
-    git submodule update --init
+    git checkout 81dfa8d53d4290366ae41e1f4c2ed6d6c5016c07
     popd
 }
 
@@ -54,6 +55,7 @@ get_grub_src()
     echo "Downloading grub source code,Version: ${GRUB_SRC_TAG}"
     git clone -b $GRUB_SRC_TAG https://github.com/tekkamanninja/grub.git grub
     pushd $TOP_DIR/grub
+    git checkout be9d4f1863a1fcb1cbbd2f867309457fade8be73
     echo "Applying Grub patch..."
     git apply $TOP_DIR/../../common/patches/grub_update_default_gunlib_url.patch
     popd
@@ -63,34 +65,25 @@ get_linux_src()
 {
     LINUX_KERNEL_VERSION=v6.3-rc1
     echo "Downloading Linux source code. Version : ${LINUX_KERNEL_VERSION}"
-    git clone --depth 1 --single-branch --branch aia_plic \
+    git clone --depth 1 --single-branch --branch acpi_b2_v2_riscv_aia_v11 \
               https://github.com/vlsunil/linux.git linux
+    pushd $TOP_DIR/linux
+    git checkout ac5e19d018afa8a37761510bd233ca319a763c42
+    popd
 }
 
 get_buildroot_src()
 {
-    BUILDROOT_SRC_VERSION=2023.02
+    BUILDROOT_SRC_VERSION=master
     echo "Downloading Buildroot source code. TAG : ${BUILDROOT_SRC_VERSION}"
     git clone -b $BUILDROOT_SRC_VERSION https://github.com/buildroot/buildroot.git
     pushd $TOP_DIR/buildroot/
     echo "Applying Buildroot patch..."
     git apply $TOP_DIR/../../common/patches/buildroot_update_fwts_version.patch
     git apply $TOP_DIR/../../common/patches/buildroot_enable_busybox_auto_login.patch
+    cp $TOP_DIR/../../common/patches/fwts/*.patch $TOP_DIR/buildroot/package/fwts/
     popd
 }
-
-get_opensbi_src()
-{
-    if [ ! -f "$TOP_DIR/opensbi" ];then
-        echo "Downloading opensbi."
-        git clone --depth 1 --single-branch \
-        --branch dev-upstream https://github.com/ventanamicro/opensbi.git
-        pushd $TOP_DIR/opensbi
-        git checkout 9772fd290ad1914bc99cb8d3107c36a589d428ed
-        popd
-    fi
-}
-
 function check_requirements() {
 
   # Check if operating system is Ubuntu and version is 22.04
@@ -137,9 +130,8 @@ function check_requirements() {
 }
 
 check_requirements
-get_uefi_src
+get_edk2_src
 get_sct_src
 get_grub_src
 get_linux_src
 get_buildroot_src
-

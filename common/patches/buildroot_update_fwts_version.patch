@@ -96,26 +96,26 @@ index 08608d1dd7..110f770e32 100644
  
  config BR2_PACKAGE_FWTS
 diff --git a/package/fwts/fwts.hash b/package/fwts/fwts.hash
-index 612bc768dd..2887f1c2b6 100644
+index 8525d47ecb..f73d03f255 100644
 --- a/package/fwts/fwts.hash
 +++ b/package/fwts/fwts.hash
 @@ -1,5 +1,5 @@
  # Hash from: http://fwts.ubuntu.com/release/SHA256SUMS
--sha256  fee1c323fb9725c2b99c348c434d63196391cad66566d34b42707e55d14d7f25  fwts-V22.09.00.tar.gz
-+sha256  9648b2b5f8cf55dd8f8d0e1f972899a64f77b0b36a63b78b54554e51d1ecafe9  fwts-V23.03.00.tar.gz
+-sha256  a15e11c42856e9dfcf7ac23ed370618d2777eb996dd7843accf12d45b21b551c  fwts-V23.07.00.tar.gz
++sha256  fc00b35f08bea4ac6eb26a48c7a0e2c48e47593ca20c68093cc0d4e00075cf47  fwts-V23.09.00.tar.gz
  
  # Hash for license file
- sha256  fbbea748555635dd8c7e6e2f99cddd778f5ee3f9e3510775183bf9799076e5e5  debian/copyright
+ sha256  b9e44b1f9f65178e037a59a31b051b51dbd6a531d27c8775d3438a6ce53fc874  debian/copyright
 diff --git a/package/fwts/fwts.mk b/package/fwts/fwts.mk
-index f04c7a848f..6e79a692ee 100644
+index f06609777d..7ffffd053a 100644
 --- a/package/fwts/fwts.mk
 +++ b/package/fwts/fwts.mk
 @@ -4,7 +4,7 @@
  #
  ################################################################################
  
--FWTS_VERSION = 22.09.00
-+FWTS_VERSION = 23.03.00
+-FWTS_VERSION = 23.07.00
++FWTS_VERSION = 23.09.00
  FWTS_SOURCE = fwts-V$(FWTS_VERSION).tar.gz
  FWTS_SITE = http://fwts.ubuntu.com/release
  FWTS_STRIP_COMPONENTS = 0
