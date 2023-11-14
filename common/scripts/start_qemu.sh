@@ -29,6 +29,8 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 TOP_DIR=`pwd`
+UEFI_BUILD_MODE=DEBUG
+UEFI_TOOLCHAIN=GCC5
 QEMU_SRC_VERSION=riscv_acpi_b2_v7
 
 get_qemu_src()
@@ -70,7 +72,7 @@ build_opensbi()
 
 build_edk2()
 {
-    if [ -f "$TOP_DIR/Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_CODE.fd" ];then
+    if [ -f "$TOP_DIR/Build/RiscVVirtQemu/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/FV/RISCV_VIRT_CODE.fd" ];then
 	    echo "skip build edk2."
     else
 	    echo "build edk2..."
@@ -83,9 +85,9 @@ build_edk2()
         make -C edk2/BaseTools
         make -C edk2/BaseTools/Source/C
         source edk2/edksetup.sh BaseTools
-        build -a RISCV64 --buildtarget RELEASE -p OvmfPkg/RiscVVirt/RiscVVirtQemu.dsc -t GCC5
-        truncate -s 32M Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_CODE.fd
-        truncate -s 32M Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_VARS.fd
+        build -a RISCV64 --buildtarget ${UEFI_BUILD_MODE} -p OvmfPkg/RiscVVirt/RiscVVirtQemu.dsc -t ${UEFI_TOOLCHAIN}
+        truncate -s 32M Build/RiscVVirtQemu/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/FV/RISCV_VIRT_CODE.fd
+        truncate -s 32M Build/RiscVVirtQemu/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/FV/RISCV_VIRT_VARS.fd
 	    popd
     fi
 }
@@ -107,13 +109,12 @@ start_qemu()
 {
     BRS_IMG=$TOP_DIR/output/brs_live_image.img
     BRS_IMG_XZ=$TOP_DIR/output/brs_live_image.img.xz
-
-    if [ -e $BRS_IMG ];then
-		echo "find image: $BRS_IMG "
+    if [ -e $BRS_IMG_XZ ]; then
+        echo "decompresing $BRS_IMG_XZ"
+        xz -d $BRS_IMG_XZ
 	else
-        if [ -e $BRS_IMG_XZ ]; then
-            echo "decompresing $BRS_IMG_XZ"
-            xz -d $BRS_IMG_XZ
+        if [ -e $BRS_IMG ];then
+            echo "find image: $BRS_IMG "
         else
             echo "Firmware test suite image: $BRS_IMG_XZ does not exist!" 1>&2
             exit 1
@@ -126,8 +127,8 @@ start_qemu()
     -cpu rv64 -m 4G -smp 2   \
     -bios $TOP_DIR/opensbi/build/platform/generic/firmware/fw_dynamic.bin \
     -drive file=$BRS_IMG,if=none,format=raw,id=drv1 -device virtio-blk-device,drive=drv1      \
-    -blockdev node-name=pflash0,driver=file,read-only=on,filename=$TOP_DIR/Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_CODE.fd \
-    -blockdev node-name=pflash1,driver=file,filename=$TOP_DIR/Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_VARS.fd \
+    -blockdev node-name=pflash0,driver=file,read-only=on,filename=$TOP_DIR/Build/RiscVVirtQemu/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/FV/RISCV_VIRT_CODE.fd \
+    -blockdev node-name=pflash1,driver=file,filename=$TOP_DIR/Build/RiscVVirtQemu/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/FV/RISCV_VIRT_VARS.fd \
     -device e1000,netdev=net0 \
     -netdev type=user,id=net0 \
     -device qemu-xhci \
