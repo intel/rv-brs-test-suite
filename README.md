@@ -3,7 +3,7 @@ The Boot and Runtime Services (BRS) specification provides the requirements for 
 
 For more information, see the [BRS specification](https://github.com/riscv-non-isa/riscv-os-a-see/).
 
-The BRS test suite check for compliance against the BRS specifications. These tests are also delivered through two runtime executable environments:
+The BRS test suite project is based on the original BBR-ACS (Base Boot Requirements - Architecture Compliance Suite) project, It is designed to check for compliance against BRS specifications. These tests are also delivered through two runtime executable environments:
   - UEFI Self Certification Tests (SCT)
   - Firmware Test Suite (FWTS)
 
