@@ -7,10 +7,10 @@ Subject: [PATCH 4/6] acpi: madt: Add AIA and PLIC sub-tables test for riscv
  src/acpi/madt/madt.c | 302 ++++++++++++++++++++++++++++++++++++++++++-
  1 file changed, 298 insertions(+), 4 deletions(-)
 
-diff --git a/fwts-23.09.00/src/acpi/madt/madt.c b/fwts-23.09.00/src/acpi/madt/madt.c
+diff --git a/src/acpi/madt/madt.c b/src/acpi/madt/madt.c
 index 32d3fa27..5eaf0694 100644
---- a/fwts-23.09.00/src/acpi/madt/madt.c
-+++ b/fwts-23.09.00/src/acpi/madt/madt.c
+--- a/src/acpi/madt/madt.c
++++ b/src/acpi/madt/madt.c
 @@ -587,10 +587,14 @@ static const char *madt_sub_names[] = {
  	/* 0x12 */ "LIO PIC",
  	/* 0x13 */ "HT PIC",

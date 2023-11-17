@@ -7,10 +7,10 @@ Subject: [PATCH 2/6] acpi: rsdp: Add xsdt_address check for riscv
  src/acpi/rsdp/rsdp.c | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/fwts-23.09.00/src/acpi/rsdp/rsdp.c b/fwts-23.09.00/src/acpi/rsdp/rsdp.c
+diff --git a/src/acpi/rsdp/rsdp.c b/src/acpi/rsdp/rsdp.c
 index 419016f3..72705b36 100644
---- a/fwts-23.09.00/src/acpi/rsdp/rsdp.c
-+++ b/fwts-23.09.00/src/acpi/rsdp/rsdp.c
+--- a/src/acpi/rsdp/rsdp.c
++++ b/src/acpi/rsdp/rsdp.c
 @@ -165,6 +165,11 @@ static int rsdp_test1(fwts_framework *fw)
  			passed = true;
  		break;

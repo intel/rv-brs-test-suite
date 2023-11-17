@@ -8,10 +8,10 @@ Subject: [PATCH 1/6] lib: Add fwts_architecture macro for risc-v
  src/lib/src/fwts_arch.c     | 2 ++
  2 files changed, 3 insertions(+)
 
-diff --git a/fwts-23.09.00/src/lib/include/fwts_arch.h b/fwts-23.09.00/src/lib/include/fwts_arch.h
+diff --git a/src/lib/include/fwts_arch.h b/src/lib/include/fwts_arch.h
 index ddf29e84..02270269 100644
---- a/fwts-23.09.00/src/lib/include/fwts_arch.h
-+++ b/fwts-23.09.00/src/lib/include/fwts_arch.h
+--- a/src/lib/include/fwts_arch.h
++++ b/src/lib/include/fwts_arch.h
 @@ -27,6 +27,7 @@ typedef enum {
  	FWTS_ARCH_X86,
  	FWTS_ARCH_IA64,
@@ -20,10 +20,10 @@ index ddf29e84..02270269 100644
  	FWTS_ARCH_OTHER
  } fwts_architecture;
  
-diff --git a/fwts-23.09.00/src/lib/src/fwts_arch.c b/fwts-23.09.00/src/lib/src/fwts_arch.c
+diff --git a/src/lib/src/fwts_arch.c b/src/lib/src/fwts_arch.c
 index d60f25a6..ace78d51 100644
---- a/fwts-23.09.00/src/lib/src/fwts_arch.c
-+++ b/fwts-23.09.00/src/lib/src/fwts_arch.c
+--- a/src/lib/src/fwts_arch.c
++++ b/src/lib/src/fwts_arch.c
 @@ -31,6 +31,7 @@ static const struct fwts_arch_info arch_info[] = {
  	{ FWTS_ARCH_IA64, "ia64" },
  	{ FWTS_ARCH_ARM64, "arm64" },

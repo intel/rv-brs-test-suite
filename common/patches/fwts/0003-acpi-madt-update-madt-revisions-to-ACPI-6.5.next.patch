@@ -12,10 +12,10 @@ in ACPI 6.5.next[1].
  src/lib/include/fwts_acpi.h | 55 +++++++++++++++++++++++++++++++++++++
  2 files changed, 68 insertions(+), 1 deletion(-)
 
-diff --git a/fwts-23.09.00/src/acpi/madt/madt.c b/fwts-23.09.00/src/acpi/madt/madt.c
+diff --git a/src/acpi/madt/madt.c b/src/acpi/madt/madt.c
 index 318ac668..32d3fa27 100644
---- a/fwts-23.09.00/src/acpi/madt/madt.c
-+++ b/fwts-23.09.00/src/acpi/madt/madt.c
+--- a/src/acpi/madt/madt.c
++++ b/src/acpi/madt/madt.c
 @@ -122,7 +122,7 @@
  
  #define SUBTABLE_UNDEFINED	0x00
@@ -51,10 +51,10 @@ index 318ac668..32d3fa27 100644
  	} else {
  		minrev = 1;
  		arch = "intel";
-diff --git a/fwts-23.09.00/src/lib/include/fwts_acpi.h b/fwts-23.09.00/src/lib/include/fwts_acpi.h
+diff --git a/src/lib/include/fwts_acpi.h b/src/lib/include/fwts_acpi.h
 index 481277e5..1cd4aa9d 100644
---- a/fwts-23.09.00/src/lib/include/fwts_acpi.h
-+++ b/fwts-23.09.00/src/lib/include/fwts_acpi.h
+--- a/src/lib/include/fwts_acpi.h
++++ b/src/lib/include/fwts_acpi.h
 @@ -531,6 +531,10 @@ typedef enum {
  	FWTS_MADT_MSI_PIC,
  	FWTS_MADT_BIO_PIC,

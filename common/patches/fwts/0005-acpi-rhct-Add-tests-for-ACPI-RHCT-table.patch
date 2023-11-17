@@ -10,10 +10,10 @@ Subject: [PATCH 5/6] acpi: rhct: Add tests for ACPI RHCT table
  3 files changed, 324 insertions(+)
  create mode 100644 src/acpi/rhct/rhct.c
 
-diff --git a/fwts-23.09.00/src/Makefile.am b/fwts-23.09.00/src/Makefile.am
+diff --git a/src/Makefile.am b/src/Makefile.am
 index f3c2b2be..7c33e8c3 100644
---- a/fwts-23.09.00/src/Makefile.am
-+++ b/fwts-23.09.00/src/Makefile.am
+--- a/src/Makefile.am
++++ b/src/Makefile.am
 @@ -131,6 +131,7 @@ fwts_SOURCES = main.c 				\
  	acpi/pptt/pptt.c 			\
  	acpi/rasf/rasf.c			\
@@ -22,11 +22,11 @@ index f3c2b2be..7c33e8c3 100644
  	acpi/rsdp/rsdp.c			\
  	sbbr/rsdp/rsdp.c			\
  	acpi/rsdt/rsdt.c			\
-diff --git a/fwts-23.09.00/src/acpi/rhct/rhct.c b/fwts-23.09.00/src/acpi/rhct/rhct.c
+diff --git a/src/acpi/rhct/rhct.c b/src/acpi/rhct/rhct.c
 new file mode 100644
 index 00000000..a2836c89
 --- /dev/null
-+++ b/fwts-23.09.00/src/acpi/rhct/rhct.c
++++ b/src/acpi/rhct/rhct.c
 @@ -0,0 +1,277 @@
 +/*
 + * Copyright (C) 2023 Intel Corporation
@@ -305,10 +305,10 @@ index 00000000..a2836c89
 +FWTS_REGISTER("rhct", &rhct_ops, FWTS_TEST_ANYTIME, FWTS_FLAG_BATCH | FWTS_FLAG_ACPI)
 +
 +#endif
-diff --git a/fwts-23.09.00/src/lib/include/fwts_acpi.h b/fwts-23.09.00/src/lib/include/fwts_acpi.h
+diff --git a/src/lib/include/fwts_acpi.h b/src/lib/include/fwts_acpi.h
 index 1cd4aa9d..01e657cf 100644
---- a/fwts-23.09.00/src/lib/include/fwts_acpi.h
-+++ b/fwts-23.09.00/src/lib/include/fwts_acpi.h
+--- a/src/lib/include/fwts_acpi.h
++++ b/src/lib/include/fwts_acpi.h
 @@ -2679,4 +2679,50 @@ typedef struct {
      fwts_acpi_table_header	header;
  } __attribute__ ((packed)) fwts_acpi_table_mpam;

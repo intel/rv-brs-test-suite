@@ -7,10 +7,10 @@ Subject: [PATCH 6/6] acpi: acpitables: Update acpitables test for ACPI 6.5
  src/acpi/acpitables/acpitables.c | 36 ++++++++++++++++++++++++++++++++
  1 file changed, 36 insertions(+)
 
-diff --git a/fwts-23.09.00/src/acpi/acpitables/acpitables.c b/fwts-23.09.00/src/acpi/acpitables/acpitables.c
+diff --git a/src/acpi/acpitables/acpitables.c b/src/acpi/acpitables/acpitables.c
 index 1ab27edf..bd99f5bb 100644
---- a/fwts-23.09.00/src/acpi/acpitables/acpitables.c
-+++ b/fwts-23.09.00/src/acpi/acpitables/acpitables.c
+--- a/src/acpi/acpitables/acpitables.c
++++ b/src/acpi/acpitables/acpitables.c
 @@ -243,6 +243,39 @@ static const fwts_acpi_table_rev acpi_64_rev[] = {
  	{NULL, 0xff}	// end of table
  };
