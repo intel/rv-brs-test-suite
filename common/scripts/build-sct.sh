@@ -119,12 +119,7 @@ do_build()
     cp $BRS_DIR/brsi/config/EfiCompliant_BRSI.ini  uefi-sct/SctPkg/BRS/
 
     pushd uefi-sct
-    # DSC_EXTRA="ShellPkg/ShellPkg.dsc MdeModulePkg/MdeModulePkg.dsc" ./SctPkg/build.sh ${TARGET_ARCH} GCC DEBUG -n `nproc`
-    # if [[ $BUILD_PLAT = SIE ]] ; then
-    #     ./SctPkg/build.sh $TARGET_ARCH GCC $UEFI_BUILD_MODE  -n $PARALLELISM
-    # else
-        ./SctPkg/build_brs.sh $TARGET_ARCH GCC $UEFI_BUILD_MODE  -n $PARALLELISM
-    # fi
+    DSC_EXTRA="ShellPkg/ShellPkg.dsc MdeModulePkg/MdeModulePkg.dsc" ./SctPkg/build_brs.sh $TARGET_ARCH GCC ${UEFI_BUILD_MODE}  -n $PARALLELISM
 
     popd
 }

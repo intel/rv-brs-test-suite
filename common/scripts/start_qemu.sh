@@ -29,13 +29,13 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 TOP_DIR=`pwd`
-UEFI_BUILD_MODE=DEBUG
+UEFI_BUILD_MODE=RELEASE
 UEFI_TOOLCHAIN=GCC5
 QEMU_SRC_VERSION=riscv_acpi_b2_v7
 
 get_qemu_src()
 {
-    if [ ! -f "$TOP_DIR/qemu" ];then
+    if [ ! -d "$TOP_DIR/qemu" ];then
         echo "Downloading qemu. TAG : $QEMU_SRC_VERSION"
         git clone --single-branch \
         --branch riscv_acpi_b2_v7 https://github.com/vlsunil/qemu.git qemu
@@ -48,7 +48,7 @@ get_qemu_src()
 
 get_opensbi_src()
 {
-    if [ ! -f "$TOP_DIR/opensbi" ];then
+    if [ ! -d "$TOP_DIR/opensbi" ];then
         echo "Downloading opensbi."
         git clone --depth 1 --single-branch \
         --branch dev-upstream https://github.com/ventanamicro/opensbi.git
@@ -73,10 +73,10 @@ build_opensbi()
 build_edk2()
 {
     if [ -f "$TOP_DIR/Build/RiscVVirtQemu/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/FV/RISCV_VIRT_CODE.fd" ];then
-	    echo "skip build edk2."
+        echo "skip build edk2."
     else
-	    echo "build edk2..."
-	    pushd $TOP_DIR
+        echo "build edk2..."
+        pushd $TOP_DIR
         export GCC5_RISCV64_PREFIX=riscv64-linux-gnu-
         export PACKAGES_PATH=$TOP_DIR/edk2
         export EDK_TOOLS_PATH=$TOP_DIR/edk2/BaseTools
@@ -88,7 +88,7 @@ build_edk2()
         build -a RISCV64 --buildtarget ${UEFI_BUILD_MODE} -p OvmfPkg/RiscVVirt/RiscVVirtQemu.dsc -t ${UEFI_TOOLCHAIN}
         truncate -s 32M Build/RiscVVirtQemu/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/FV/RISCV_VIRT_CODE.fd
         truncate -s 32M Build/RiscVVirtQemu/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/FV/RISCV_VIRT_VARS.fd
-	    popd
+        popd
     fi
 }
 
@@ -123,7 +123,7 @@ start_qemu()
     echo "Starting rv64 qemu... press Ctrl+A, X to exit qemu"
     sleep 2
     $TOP_DIR/qemu/build/qemu-system-riscv64 -nographic \
-    -machine virt,aia=aplic,pflash0=pflash0,pflash1=pflash1 \
+    -machine virt,aia=aplic-imsic,pflash0=pflash0,pflash1=pflash1 \
     -cpu rv64 -m 4G -smp 2   \
     -bios $TOP_DIR/opensbi/build/platform/generic/firmware/fw_dynamic.bin \
     -drive file=$BRS_IMG,if=none,format=raw,id=drv1 -device virtio-blk-device,drive=drv1      \

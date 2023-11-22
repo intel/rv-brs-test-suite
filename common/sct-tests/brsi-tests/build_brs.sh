@@ -263,16 +263,19 @@ cp $EDK_TOOLS_PATH/Source/C/bin/GenBin $DEST_DIR/GenBin
 
 #
 # Build the packages needed for the SCT
+# Set $DSC_EXTRA to any extra packages needed for the build
 #
-
-build -p SctPkg/UEFI/BRS_SCT.dsc -a $SCT_TARGET_ARCH -t $TARGET_TOOLS -b $SCT_BUILD $@
-# Check if there is any error
-status=$?
-if test $status -ne 0
-then
-	echo Could not build package $DSC
-	exit -1
-fi
+for DSC in SctPkg/UEFI/UEFI_SCT.dsc $DSC_EXTRA
+do
+	build -p $DSC -a $SCT_TARGET_ARCH -t $TARGET_TOOLS -b $SCT_BUILD $@
+	# Check if there is any error
+	status=$?
+	if test $status -ne 0
+	then
+		echo Could not build package $DSC
+		exit -1
+	fi
+done
 
 #
 # If the argument is clean, then don't have to generate Sct binary.

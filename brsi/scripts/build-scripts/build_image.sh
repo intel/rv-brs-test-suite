@@ -46,7 +46,7 @@ DEBUG_CONFIG_FILE=${TOP_DIR}/../../brsi/config/debug_dump.nsh
 BLOCK_SIZE=512
 SEC_PER_MB=$((1024*2))
 GRUB_PATH=grub
-UEFI_SHELL_PATH=Build/RiscVVirtQemu/RELEASE_GCC5/RISCV64/
+UEFI_SHELL_PATH=edk2-test/uefi-sct/Build/Shell/DEBUG_GCC5/RISCV64/ShellPkg/Application/Shell/Shell/OUTPUT
 SCT_PATH=edk2-test/uefi-sct/RISCV64_SCT
 UEFI_APPS_PATH=${TOP_DIR}/edk2-test/uefi-sct/Build/MdeModule/DEBUG_GCC5/RISCV64/MdeModulePkg/Application/CapsuleApp/CapsuleApp/OUTPUT
 

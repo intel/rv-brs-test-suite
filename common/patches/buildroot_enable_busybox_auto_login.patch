@@ -25,11 +25,12 @@ diff --git a/package/busybox/inittab b/package/busybox/inittab
 index f2b4df801b..274209bd5c 100644
 --- a/package/busybox/inittab
 +++ b/package/busybox/inittab
-@@ -28,6 +28,9 @@ null::sysinit:/bin/ln -sf /proc/self/fd/2 /dev/stderr
+@@ -28,6 +28,10 @@ null::sysinit:/bin/ln -sf /proc/self/fd/2 /dev/stderr
  # now run any rc scripts
  ::sysinit:/etc/init.d/rcS
  
-+::once:/usr/bin/fwts
++::wait:/usr/bin/fwts
++::wait:/bin/cat results.log
 +::respawn:-/bin/sh -i
 +
  # Put a getty on the serial port
