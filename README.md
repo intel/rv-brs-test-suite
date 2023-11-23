@@ -18,12 +18,12 @@ To prevent potential issues, please ensure there is no whitespace (e.g., spaces,
 	This script will automatically download the required components from the following sources:
 	| repo  | source/release            |branch/tag/commit|
 	| ------------- | ------------------------------ |------------------|
-	| `edk2`  | https://github.com/tianocore/edk2.git       |branch:edk2-stable202208|
-	| `UEFI-SCT`   | https://github.com/tianocore/edk2-test     |commit:06f84debb|
+	| `edk2`  | https://github.com/tianocore/edk2.git       |branch:edk2-stable202308|
+	| `UEFI-SCT`   | https://github.com/tianocore/edk2-test     |commit:81dfa8d5|
 	| `grub`   | https://github.com/tekkamanninja/grub.git     |tag:riscv_devel_Nikita_V3|
-	| `kernel`   | https://github.com/vlsunil/linux.git     |branch:aia_plic|
+	| `kernel`   | https://github.com/vlsunil/linux.git     |tag:6.6-rc7 ac5e19d0|
 	| `buildroot`   | https://github.com/buildroot/buildroot.git     |branch:2023.02|
-	| `FWTS`   | https://fwts.ubuntu.com/release/fwts-V23.03.00.tar.gz     |version:v23.03.00|
+	| `FWTS`   | https://fwts.ubuntu.com/release/fwts-V23.03.00.tar.gz     |version:v23.09.00|
 	
 	The following packages are required for the script to run smoothly. If any of these packages are missing, they will be installed:
 	curl mtools gdisk gcc openssl automake autotools-dev libtool bison flex bc uuid-dev python3 libglib2.0-dev libssl-dev autopoint gcc-riscv64-unknown-elf gcc g++
@@ -41,7 +41,7 @@ To run the tests with QEMU and the live image, execute:
 	This script will automatically download the required components from the following sources:
 	| repo  | source            |branch|
 	| ------------- | ------------------------------ |------------------|
-	| `QEMU`  | https://github.com/vlsunil/qemu.git       |branch:aia_plic|
+	| `QEMU`  | https://github.com/vlsunil/qemu.git       |branch:riscv_acpi_b2_v7|
 This would start the live image and automatically run the UEFI SCT and FWTS tests without intervention.
 
 ## UEFI Self Certification Tests
