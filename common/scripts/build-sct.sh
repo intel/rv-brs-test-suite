@@ -118,6 +118,13 @@ do_build()
     cp $BRS_DIR/brsi/config/BRSI_extd_run.seq uefi-sct/SctPkg/BRS/
     cp $BRS_DIR/brsi/config/EfiCompliant_BRSI.ini  uefi-sct/SctPkg/BRS/
 
+    if git apply --check $BRS_DIR/common/patches/edk2-test-brs-build.patch; then
+        echo "Applying edk2-test BRS build patch..."
+        git apply --ignore-whitespace --ignore-space-change $BRS_DIR/common/patches/edk2-test-brs-build.patch
+    else
+        echo  "Error while applying edk2-test BRS build patch..."
+    fi
+
     pushd uefi-sct
     DSC_EXTRA="ShellPkg/ShellPkg.dsc MdeModulePkg/MdeModulePkg.dsc" ./SctPkg/build_brs.sh $TARGET_ARCH GCC ${UEFI_BUILD_MODE}  -n $PARALLELISM
 
