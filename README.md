@@ -23,7 +23,7 @@ To prevent potential issues, please ensure there is no whitespace (e.g., spaces,
 	| `grub`   | https://github.com/tekkamanninja/grub.git     |tag:riscv_devel_Nikita_V3|
 	| `kernel`   | https://github.com/vlsunil/linux.git     |tag:6.6-rc7 ac5e19d0|
 	| `buildroot`   | https://github.com/buildroot/buildroot.git     |branch:2023.02|
-	| `FWTS`   | https://fwts.ubuntu.com/release/fwts-V23.03.00.tar.gz     |version:v23.09.00|
+	| `FWTS`   | https://fwts.ubuntu.com/release/fwts-V23.09.00.tar.gz     |version:v23.09.00|
 	
 	The following packages are required for the script to run smoothly. If any of these packages are missing, they will be installed:
 	curl mtools gdisk gcc openssl automake autotools-dev libtool bison flex bc uuid-dev python3 libglib2.0-dev libssl-dev autopoint gcc-riscv64-unknown-elf gcc g++
@@ -34,14 +34,17 @@ To prevent potential issues, please ensure there is no whitespace (e.g., spaces,
 If everything goes well, the live image will be available at `brsi/scripts/output/brs_live_image.img.xz`
 Note: it would take around 1 hour to finish the build, if you just want to have a quick try,
 you can use the prebuilt images in `rv-brs-test-suite/brsi/prebuilt_images/`
+#### Firmware requiment to run SCT:
+Firmware must support the ability to load a UEFI application, as it is a requirement specified in section 2.1.2 of the UEFI specification version 2.10.
 
-To run the tests with QEMU and the live image, execute:
+#### To run the tests with QEMU and the live image, execute:
 - `./build-scripts/start_qemu.sh`
 
 	This script will automatically download the required components from the following sources:
 	| repo  | source            |branch|
 	| ------------- | ------------------------------ |------------------|
 	| `QEMU`  | https://github.com/vlsunil/qemu.git       |branch:riscv_acpi_b2_v7|
+The RiscVVirtQemu firmware will build for qemu virt platform.
 This would start the live image and automatically run the UEFI SCT and FWTS tests without intervention.
 
 ## UEFI Self Certification Tests
