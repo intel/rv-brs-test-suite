@@ -122,9 +122,13 @@ function check_requirements() {
   fi
 
   if [[ "$OS" == "Ubuntu" || "$OS" == "Debian GNU/Linux" ]]; then
-      sudo apt install git curl mtools gdisk gcc openssl automake autotools-dev libtool \
-                       bison flex bc uuid-dev python3 libglib2.0-dev libssl-dev autopoint libslirp-dev \
-                       make g++ gcc-riscv64-unknown-elf gettext
+    TOOLS_LIST="git curl mtools gdisk gcc openssl automake autotools-dev libtool \
+                        bison flex bc uuid-dev python3 libglib2.0-dev libssl-dev autopoint libslirp-dev \
+                        make g++ gcc-riscv64-unknown-elf gettext"
+    if ! dpkg -s $TOOLS_LIST &> /dev/null; then
+        echo "Atleast one of $TOOLS_LIST is not installed. Install..."
+        sudo apt install $TOOLS_LIST
+    fi
   fi
 
 }
