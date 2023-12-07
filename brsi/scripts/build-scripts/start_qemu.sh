@@ -72,6 +72,11 @@ build_opensbi()
 
 build_edk2()
 {
+    if [ ! -d "$TOP_DIR/edk2" ];then
+        source ./build-scripts/get_brsi_source.sh
+        source ./build-scripts/build_brsi.sh
+        source ./build-scripts/build_image.sh
+    fi
     if [ -f "$TOP_DIR/Build/RiscVVirtQemu/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/FV/RISCV_VIRT_CODE.fd" ];then
         echo "skip build edk2."
     else

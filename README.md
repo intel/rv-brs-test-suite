@@ -10,6 +10,8 @@ The BRS test suite project is based on the original BBR-ACS (Base Boot Requireme
 #### Prerequisites
 Ubuntu 22.04 or Docker environment for compatible versions, with at least 20GB of free disk space.
 To prevent potential issues, please ensure there is no whitespace (e.g., spaces, tabs, line breaks, carriage returns) in the PATH environment variable. E.g. if you're on WSL, you might want a clean environment without the Windows paths like '/mnt/c/Program Files/'.
+If you're new to the BRS GitHub repository and just want to try running the BRS test suite on a QEMU platform, here's a quick one-step script to build firmware and a live image and run it on a QEMU platform:
+- `git clone https://github.com/intel/rv-brs-test-suite.git && cd rv-brs-test-suite/brsi/scripts/  && ./build-scripts/start_qemu.sh `
 #### Steps to Build and Run RV BRS test suite live image
 - `git clone https://github.com/intel/rv-brs-test-suite.git`
 - `cd rv-brs-test-suite/brsi/scripts/`
