@@ -40,7 +40,7 @@
   matters included within this Test Suite, to which United
   EFI, Inc. makes no claim of right.
 
-  Copyright (c) 2016, ARM Ltd. All rights reserved.<BR>
+  Copyright (c) 2016, ARM Ltd. All rights reserved.
   Copyright (c) 2023 Intel Corporation
 
 --*/
@@ -52,16 +52,26 @@ Module Name:
 
 Abstract:
 
-  Definitions of GUIDs used for test progress assertions.
+  Definitions for GUIDs used in test assertions.
 
 --*/
 
-#ifndef _EFISPECVERSION_GUID_H_
-#define _EFISPECVERSION_GUID_H_
+#ifndef _BRSBOOTSERVICES_GUID_H_
+#define _BRSBOOTSERVICES_GUID_H_
 
-#define EFISPECVERLVL_ASSERTION_001_GUID \
-{0x14932290, 0x563b, 0x4d20, {0x95, 0xa7, 0xee, 0xc0, 0x2d, 0xbb, 0x1b, 0x13}}
+#define BRSBOOTSERVICES_ASSERTION_001_GUID \
+{ 0x9e212ddd, 0x1218, 0x45a3, {0x8b, 0x30, 0xaa, 0x80, 0x5e, 0xa3, 0x6f, 0x5e }}
 
-extern EFI_GUID gEfiSpecVerLvlAssertion01Guid;
+extern EFI_GUID gBrsBootServicesAssertion001Guid;
 
-#endif /* _EFISPECVERSION_GUID_H_ */
+#define BRSBOOTSERVICES_ASSERTION_002_GUID \
+{ 0xf89d0d28, 0xcd1f, 0x4557, {0x8d, 0xae, 0x32, 0xdd, 0xab, 0x7e, 0xe3, 0x92 }}
+
+extern EFI_GUID gBrsBootServicesAssertion002Guid;
+
+#define BRSBOOTSERVICES_ASSERTION_003_GUID \
+{ 0x37704acb, 0x0e42, 0x46e0, {0xa3, 0xb8, 0xb4, 0x07, 0x5d, 0xaa, 0xfa, 0x60 }}
+
+extern EFI_GUID gBrsBootServicesAssertion003Guid;
+
+#endif /* _BRSBOOTSERVICES_GUID_H_ */

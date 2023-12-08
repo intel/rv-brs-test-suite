@@ -40,7 +40,7 @@
   matters included within this Test Suite, to which United
   EFI, Inc. makes no claim of right.
 
-  Copyright (c) 2016, ARM Ltd. All rights reserved.<BR>
+  Copyright (c) 2016, ARM Ltd. All rights reserved.
   Copyright (c) 2023 Intel Corporation
 
 --*/
@@ -48,20 +48,53 @@
 
 Module Name:
 
-  Guid.h
+  BrsBootServicesBBTestMain.h
 
 Abstract:
 
-  Definitions of GUIDs used for test progress assertions.
+  Contains definitions for test information and test GUIDs.
 
 --*/
 
-#ifndef _EFISPECVERSION_GUID_H_
-#define _EFISPECVERSION_GUID_H_
+#ifndef _BRSBOOTSERVICES_TEST_MAIN_H_
+#define _BRSBOOTSERVICES_TEST_MAIN_H_
 
-#define EFISPECVERLVL_ASSERTION_001_GUID \
-{0x14932290, 0x563b, 0x4d20, {0x95, 0xa7, 0xee, 0xc0, 0x2d, 0xbb, 0x1b, 0x13}}
+#include "Efi.h"
+#include "Guid.h"
+#include <Library/EfiTestLib.h>
 
-extern EFI_GUID gEfiSpecVerLvlAssertion01Guid;
+#define BRSBOOTSERVICES_TEST_REVISION 0x00010000
 
-#endif /* _EFISPECVERSION_GUID_H_ */
+#define BRSBOOTSERVICES_TEST_GUID \
+  { 0x236da812, 0x2002, 0x4ad9, {0x88, 0x4d, 0x05, 0x8f, 0xd2, 0xdd, 0x13, 0x86 }}
+
+#define ACPI_TABLE_EXPECTED_LENGTH 36
+#define ACPI_TABLE_CHECKSUM_LENGTH 20
+#define SMBIOS30_ANCHOR_STRING "_SM3_"
+#define RSDP_SIGNATURE_STRING "RSD PTR "
+
+EFI_STATUS
+InitializeBBTestBrsBootServices (
+  IN EFI_HANDLE           ImageHandle,
+  IN EFI_SYSTEM_TABLE     *SystemTable
+  );
+
+EFI_STATUS
+BBTestBrsBootServicesUnload (
+  IN EFI_HANDLE       ImageHandle
+  );
+
+//
+// Test Case GUIDs
+//
+
+#define BRSBOOTSERVICES_MEMORYMAP_GUID \
+  { 0x1b610277, 0xcadb, 0x433d, {0xa7, 0xab, 0xa7, 0x7f, 0xe4, 0x26, 0xfb, 0xfd }}
+
+#define BRSBOOTSERVICES_ACPITABLE_GUID \
+  { 0xbfc24bf8, 0xe8f8, 0x4c80, {0xb3, 0x30, 0xe6, 0xd6, 0x29, 0xd8, 0x43, 0x24 }}
+
+#define BRSBOOTSERVICES_SMBIOSTABLE_GUID \
+  { 0x970c1d8b, 0x17c1, 0x42dd, {0x9b, 0x05, 0x2b, 0x65, 0x37, 0x49, 0x9c, 0xa2 }}
+
+#endif /* _BRSBOOTSERVICES_TEST_MAIN_H_ */

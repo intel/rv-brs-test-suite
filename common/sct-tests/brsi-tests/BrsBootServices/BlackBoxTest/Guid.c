@@ -40,7 +40,7 @@
   matters included within this Test Suite, to which United
   EFI, Inc. makes no claim of right.
 
-  Copyright (c) 2016, ARM Ltd. All rights reserved.<BR>
+  Copyright (c) 2016, ARM Ltd. All rights reserved.
   Copyright (c) 2023 Intel Corporation
 
 --*/
@@ -48,20 +48,19 @@
 
 Module Name:
 
-  Guid.h
+  Guid.c
 
 Abstract:
 
-  Definitions of GUIDs used for test progress assertions.
+  Global variable assignments for GUIDs used in test assertions.
 
 --*/
 
-#ifndef _EFISPECVERSION_GUID_H_
-#define _EFISPECVERSION_GUID_H_
+#include "Efi.h"
+#include "Guid.h"
 
-#define EFISPECVERLVL_ASSERTION_001_GUID \
-{0x14932290, 0x563b, 0x4d20, {0x95, 0xa7, 0xee, 0xc0, 0x2d, 0xbb, 0x1b, 0x13}}
+EFI_GUID gBrsBootServicesAssertion001Guid = BRSBOOTSERVICES_ASSERTION_001_GUID;
 
-extern EFI_GUID gEfiSpecVerLvlAssertion01Guid;
+EFI_GUID gBrsBootServicesAssertion002Guid = BRSBOOTSERVICES_ASSERTION_002_GUID;
 
-#endif /* _EFISPECVERSION_GUID_H_ */
+EFI_GUID gBrsBootServicesAssertion003Guid = BRSBOOTSERVICES_ASSERTION_003_GUID;

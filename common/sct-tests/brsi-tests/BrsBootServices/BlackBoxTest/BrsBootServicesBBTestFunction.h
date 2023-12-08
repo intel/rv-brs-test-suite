@@ -40,7 +40,7 @@
   matters included within this Test Suite, to which United
   EFI, Inc. makes no claim of right.
 
-  Copyright (c) 2016, ARM Ltd. All rights reserved.<BR>
+  Copyright (c) 2016, ARM Ltd. All rights reserved.
   Copyright (c) 2023 Intel Corporation
 
 --*/
@@ -48,20 +48,39 @@
 
 Module Name:
 
-  Guid.h
+  BrsBootServicesBBTestFunction.h
 
 Abstract:
 
-  Definitions of GUIDs used for test progress assertions.
+  Contains definitions and prototypes for test case functions.
 
 --*/
 
-#ifndef _EFISPECVERSION_GUID_H_
-#define _EFISPECVERSION_GUID_H_
+#ifndef _BRSBOOTSERVICES_BB_TEST_FUNCTION_H_
+#define _BRSBOOTSERVICES_BB_TEST_FUNCTION_H_
 
-#define EFISPECVERLVL_ASSERTION_001_GUID \
-{0x14932290, 0x563b, 0x4d20, {0x95, 0xa7, 0xee, 0xc0, 0x2d, 0xbb, 0x1b, 0x13}}
+EFI_STATUS
+BBTestMemoryMapTest (
+  IN EFI_BB_TEST_PROTOCOL       *This,
+  IN VOID                       *ClientInterface,
+  IN EFI_TEST_LEVEL             TestLevel,
+  IN EFI_HANDLE                 SupportHandle
+  );
 
-extern EFI_GUID gEfiSpecVerLvlAssertion01Guid;
+EFI_STATUS
+BBTestAcpiTableTest (
+  IN EFI_BB_TEST_PROTOCOL       *This,
+  IN VOID                       *ClientInterface,
+  IN EFI_TEST_LEVEL             TestLevel,
+  IN EFI_HANDLE                 SupportHandle
+  );
 
-#endif /* _EFISPECVERSION_GUID_H_ */
+EFI_STATUS
+BBTestSmbiosTableTest (
+  IN EFI_BB_TEST_PROTOCOL       *This,
+  IN VOID                       *ClientInterface,
+  IN EFI_TEST_LEVEL             TestLevel,
+  IN EFI_HANDLE                 SupportHandle
+  );
+
+#endif /* _BRSBOOTSERVICES_BB_TEST_FUNCTION_H_ */
