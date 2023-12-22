@@ -51,9 +51,9 @@ get_opensbi_src()
     if [ ! -d "$TOP_DIR/opensbi" ];then
         echo "Downloading opensbi."
         git clone --depth 1 --single-branch \
-        --branch dev-upstream https://github.com/ventanamicro/opensbi.git
+        --branch v1.3.1 https://github.com/riscv-software-src/opensbi.git
         pushd $TOP_DIR/opensbi
-        git checkout 9772fd290ad1914bc99cb8d3107c36a589d428ed
+        git checkout 057eb10b6d523540012e6947d5c9f63e95244e94
         popd
     fi
 }
