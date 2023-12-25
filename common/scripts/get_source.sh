@@ -51,11 +51,11 @@ get_sct_src()
 
 get_grub_src()
 {
-    GRUB_SRC_TAG=riscv_devel_Nikita_V3
+    GRUB_SRC_TAG=grub-2.12
     echo "Downloading grub source code,Version: ${GRUB_SRC_TAG}"
-    git clone -b $GRUB_SRC_TAG https://github.com/tekkamanninja/grub.git grub
+    git clone -b $GRUB_SRC_TAG https://git.savannah.gnu.org/git/grub.git grub
     pushd $TOP_DIR/grub
-    git checkout be9d4f1863a1fcb1cbbd2f867309457fade8be73
+    git checkout 5ca9db22e8ed0dbebb2aec53722972de0680a463
     echo "Applying Grub patch..."
     git apply $TOP_DIR/../../common/patches/grub_update_default_gunlib_url.patch
     popd
@@ -74,7 +74,7 @@ get_linux_src()
 
 get_buildroot_src()
 {
-    BUILDROOT_SRC_VERSION=master
+    BUILDROOT_SRC_VERSION=2023.11
     echo "Downloading Buildroot source code. TAG : ${BUILDROOT_SRC_VERSION}"
     git clone -b $BUILDROOT_SRC_VERSION https://github.com/buildroot/buildroot.git
     pushd $TOP_DIR/buildroot/
