@@ -1,8 +1,8 @@
 diff --git a/uefi-sct/SctPkg/CommonGenFramework.sh b/uefi-sct/SctPkg/CommonGenFramework.sh
-index fb9043b5..d9c5a264 100755
+index fb9043b5..4f9bcb18 100755
 --- a/uefi-sct/SctPkg/CommonGenFramework.sh
 +++ b/uefi-sct/SctPkg/CommonGenFramework.sh
-@@ -273,6 +273,185 @@ then
+@@ -273,6 +273,186 @@ then
      CopyDependency ConfigKeywordHandler
  fi
  
@@ -138,6 +138,7 @@ index fb9043b5..d9c5a264 100755
 +    # Check if EFI Specification Version
 +    cp $ProcessorType/EfiSpecVerLvlBBTest.efi                  $Framework/Test/ > NUL
 +    cp $ProcessorType/BrsBootServicesBBTest.efi                $Framework/Test/ > NUL
++    cp $ProcessorType/RequiredUefiProtocolsBBTest.efi          $Framework/Test/ > NUL
 +
 +    # *********************************************
 +    # Copy ENTS binary
@@ -189,10 +190,10 @@ index fb9043b5..d9c5a264 100755
  # For IHV SCT
  # *********************************************
 diff --git a/uefi-sct/SctPkg/Config/Data/Category.ini b/uefi-sct/SctPkg/Config/Data/Category.ini
-index b34d35db..7a052a6d 100644
+index b34d35db..8921c004 100644
 --- a/uefi-sct/SctPkg/Config/Data/Category.ini
 +++ b/uefi-sct/SctPkg/Config/Data/Category.ini
-@@ -88,6 +88,13 @@ InterfaceGuid = 71652D04-BF38-434A-BCB8-6547D7FD8384
+@@ -88,6 +88,20 @@ InterfaceGuid = 71652D04-BF38-434A-BCB8-6547D7FD8384
  Name          = GenericTest\FloatingPointABITest
  Description   =
  
@@ -203,10 +204,17 @@ index b34d35db..7a052a6d 100644
 +Name          = GenericTest\TestEfiSpecVerLvl
 +Description   =
 +
++[Category Data]
++Revision      = 0x00010000
++CategoryGuid  = 6b4d5d18-f55f-4fc5-8496-f10022375c04
++InterfaceGuid = 71652D04-BF38-434A-BCB8-6547D7FD8384
++Name          = GenericTest\BrsiRequiredUefiProtocols
++Description   = Checks that UEFI protocols required by BRS are present.
++
  [Category Data]
  Revision      = 0x00010000
  CategoryGuid  = E9EF7553-F833-4E56-96E8-38AE679523CC
-@@ -130,6 +137,13 @@ InterfaceGuid = E9EF7553-F833-4E56-96E8-38AE679523CC
+@@ -130,6 +144,13 @@ InterfaceGuid = E9EF7553-F833-4E56-96E8-38AE679523CC
  Name          = BootServicesTest\MiscBootServicesTest
  Description   =
  
@@ -220,7 +228,7 @@ index b34d35db..7a052a6d 100644
  [Category Data]
  Revision      = 0x00010000
  CategoryGuid  = AFF115FB-387B-4C18-8C41-6AFC7F03BB90
-@@ -1026,9 +1040,9 @@ InterfaceGuid = 8D59D32B-C655-4AE9-9B15-F25904992A43
+@@ -1026,9 +1047,9 @@ InterfaceGuid = 8D59D32B-C655-4AE9-9B15-F25904992A43
  Name          = IHV\ConsoleSupportTest\AbsolutePointerProtocolTest
  Description   = Absolute Pointer Protocol Test on IHV Drivers
  
