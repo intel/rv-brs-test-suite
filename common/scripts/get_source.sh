@@ -84,6 +84,17 @@ get_buildroot_src()
     cp $TOP_DIR/../../common/patches/fwts/*.patch $TOP_DIR/buildroot/package/fwts/
     popd
 }
+
+get_edk2_test_parser_src()
+{
+    EDK2_TEST_PARSER_VERSION=main
+    echo "Downloading edk2 test parser source code. TAG : ${EDK2_TEST_PARSER_VERSION}"
+    git clone -b $EDK2_TEST_PARSER_VERSION https://git.gitlab.arm.com/systemready/edk2-test-parser.git
+    pushd $TOP_DIR/edk2-test-parser/
+    git checkout 5082b6dedd93cd9c786455cc27aaa7b5105c5567
+    popd
+}
+
 function check_requirements() {
 
   # Check if operating system is Ubuntu and version is 22.04
@@ -139,3 +150,4 @@ get_sct_src
 get_grub_src
 get_linux_src
 get_buildroot_src
+get_edk2_test_parser_src

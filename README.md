@@ -144,6 +144,20 @@ Take the `PlatformSpecificElements` test case as an example. This particular tes
     Errors........... 4
   ------------------------------------------------------------
 ```
+### Use EDK2 SCT Results Parser
+EDK2 SCT Results Parser is an external parser script for UEFI SCT.
+If you're using this tool to analyze BRS test results, use the following command.
+```
+brsi/scripts/edk2-test-parser$ ./parser.py </path/to/sct_results/Overall/Summary.ekl> </path/to/brsi_sequence_file/BRSI.seq> \
+	--config </path/to/BRSI_comfig_file/brsi/config/BRSI.yaml>
+WARNING ident_seq: Could not identify `/home/yin/diff/BRSI.seq'...
+INFO print_summary: 64 dropped, 9 failures, 16221 pass, 54 skipped, 72 spurious, 165 warnings
+```
+The parsed report can be found in result.md. The generated result md can be easily converted to HTML using pandoc with:
+```
+$ pandoc -o result.html result.md
+```
+For the Detail usage of EDK2 SCT Results Parser please refence to https://gitlab.arm.com/systemready/edk2-test-parser
 
 ## Firmware Test Suite (FWTS)
 
