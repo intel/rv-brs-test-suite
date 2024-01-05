@@ -104,7 +104,7 @@ do_build()
     cp -r $BRSI_TEST_DIR/BrsiEfiSpecVerLvl  uefi-sct/SctPkg/TestCase/UEFI/EFI/Generic/
     cp -r $BRSI_TEST_DIR/BrsiRequiredUefiProtocols uefi-sct/SctPkg/TestCase/UEFI/EFI/Generic/
     # cp -r $BRSI_TEST_DIR/BrsiSmbios $BRSI_TEST_DIR/BrsiSysEnvConfig uefi-sct/SctPkg/TestCase/UEFI/EFI/Generic/
-    # cp -r $BRSI_TEST_DIR/BrsiRuntimeServices uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/
+    cp -r $BRSI_TEST_DIR/BrsiRuntimeServices uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/
     cp $BRSI_TEST_DIR/BRS_SCT.dsc uefi-sct/SctPkg/UEFI/
     cp $BRSI_TEST_DIR/build_brs.sh uefi-sct/SctPkg/
 

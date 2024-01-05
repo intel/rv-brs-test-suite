@@ -507,3 +507,4 @@ SctPkg/TestCase/UEFI/EFI/Generic/BrsiEfiSpecVerLvl/BlackBoxTest/EfiSpecVerLvlBBT
 #
 SctPkg/TestCase/UEFI/EFI/BootServices/BrsBootServices/BlackBoxTest/BrsBootServicesBBTest.inf
 SctPkg/TestCase/UEFI/EFI/Generic/BrsiRequiredUefiProtocols/BlackBoxTest/RequiredUefiProtocolsBBTest.inf
+SctPkg/TestCase/UEFI/EFI/RuntimeServices/BrsiRuntimeServices/BlackBoxTest/BRSIRuntimeServicesBBTest.inf
