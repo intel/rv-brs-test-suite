@@ -77,7 +77,7 @@ if [ ! -x "peinfo/peinfo" ]; then
     cd .. || { echo "Failed to change directory."; exit 1; }
 fi
 PEINFO="peinfo/peinfo"
-cat ${qemu_debug_log} | grep Loading | grep -i efi | tac | while read LINE; do
+cat ${qemu_debug_log} | grep -a Loading | grep -i efi | tac | while read LINE; do
    BASE="`echo ${LINE} | cut -d " " -f4`"
    NAME="`echo ${LINE} | cut -d " " -f6 | tr -d "[:cntrl:]"`"
    if [ -e ${edk2_build_path}/${NAME} ];then
