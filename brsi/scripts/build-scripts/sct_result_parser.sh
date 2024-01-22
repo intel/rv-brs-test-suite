@@ -22,6 +22,7 @@ usage() {
   echo "  -l LOG_PATH      Path to the log summary file."
   echo "  -s SKIP_PATH     Path to the skipped case list file."
   echo "  -o OUTPUT_PATH   Path to the output result file (optional, default: ./result.txt)."
+  echo "  -m: Use this option to output the result in Markdown format."
   echo ""
   echo "Example:"
   echo "  $0 -l FSx:/acs_results/sct_results/Overall/Summary.log \\"
@@ -63,12 +64,15 @@ process_skip_file() {
 }
 
 result_file="result.txt"
+markdown=false
+
 # Parse command-line arguments
-while getopts "l:s:o:" opt; do
+while getopts "l:s:o:m" opt; do
   case $opt in
     l) process_log_file "$OPTARG" ;;
     s) process_skip_file "$OPTARG" ;;
     o) result_file="$OPTARG" ;;
+    m) markdown=true ;;
     \?) usage ;;
     :) usage ;;
   esac
@@ -96,13 +100,27 @@ done
 # Output detailed test case list by status
 status_order=([FAILED] [NOT SUPPORTED] [SKIP] [PASSED] [PASSED WITH WARNINGS])
 
+if $markdown; then
+  echo "| Testcase Status |" >> "$result_file"
+  echo "| --------------- |" >> "$result_file"
+else
+  for status in "${status_order[@]}"; do
+    echo "$status:" >> "$result_file"
+  done
+fi
+
 for status in "${status_order[@]}"; do
-  echo "$status:" >> "$result_file"
   for testcase in "${!testcases[@]}"; do
     if [[ $testcase == *":$status" ]]; then
       # Remove the status from the testcase name and append to the file
-      echo "${testcase%:$status}" >> "$result_file"
+      if $markdown; then
+        echo "| ${testcase%:$status} |" >> "$result_file"
+      else
+        echo "${testcase%:$status}" >> "$result_file"
+      fi
     fi
   done
-  echo "" >> "$result_file"
+  if ! $markdown; then
+    echo "" >> "$result_file"
+  fi
 done
