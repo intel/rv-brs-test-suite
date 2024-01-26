@@ -95,6 +95,16 @@ get_edk2_test_parser_src()
     popd
 }
 
+get_sbi_test_src()
+{
+    SBI_TEST_VERSION=riscv/initial-port
+    echo "Downloading SBI test source code,Version: ${SBI_TEST_VERSION}"
+    git clone -b $SBI_TEST_VERSION https://gitlab.com/jones-drew/kvm-unit-tests.git
+    pushd $TOP_DIR/kvm-unit-tests/
+    git checkout bbd7e8faa2b31ebb44c54fa6e5d7ee371c56cd11
+    popd
+}
+
 function check_requirements() {
 
   # Check if operating system is Ubuntu and version is 22.04
@@ -135,7 +145,7 @@ function check_requirements() {
   if [[ "$OS" == "Ubuntu" || "$OS" == "Debian GNU/Linux" ]]; then
     TOOLS_LIST="git curl mtools gdisk gcc openssl automake autotools-dev libtool \
                         bison flex bc uuid-dev python3 libglib2.0-dev libssl-dev autopoint libslirp-dev \
-                        make g++ gcc-riscv64-unknown-elf gettext"
+                        make g++ gcc-riscv64-unknown-elf gettext dosfstools ninja-build "
     if ! dpkg -s $TOOLS_LIST &> /dev/null; then
         echo "Atleast one of $TOOLS_LIST is not installed. Install..."
         sudo apt install $TOOLS_LIST
@@ -151,3 +161,4 @@ get_grub_src
 get_linux_src
 get_buildroot_src
 get_edk2_test_parser_src
+get_sbi_test_src

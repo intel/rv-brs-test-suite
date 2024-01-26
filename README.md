@@ -26,6 +26,7 @@ If you're new to the BRS GitHub repository and just want to try running the BRS 
 	| `kernel`   | https://github.com/vlsunil/linux.git     |tag:6.6-rc7 ac5e19d0|
 	| `buildroot`   | https://github.com/buildroot/buildroot.git     |branch:2023.02|
 	| `FWTS`   | https://fwts.ubuntu.com/release/fwts-V23.09.00.tar.gz     |version:v23.09.00|
+	| `SBI-test`   | https://gitlab.com/jones-drew/kvm-unit-tests.git     |branch:riscv/initial-port|
 	
 	The following packages are required for the script to run smoothly. If any of these packages are missing, they will be installed:
 	curl mtools gdisk gcc openssl automake autotools-dev libtool bison flex bc uuid-dev python3 libglib2.0-dev libssl-dev autopoint gcc-riscv64-unknown-elf gcc g++
@@ -214,6 +215,11 @@ ACPI BERT table does not exist, skipping test
 ================================================================================
 ```
 Alternatively, you can also run specific FWTS case by `fwts [option] [test]` to get the detailed logs on the current terminal.
+
+### Run SBI Test
+This test suite uses kvm-unit-test to cover SBI testing. Use the following command to perform SBI testing:
+- `cd rv-brs-test-suite/brsi/scripts/ && ./build-scripts/start_qemu.sh --sbi-test`
+Currently, test case development is under progress. Refer to https://gitlab.com/jones-drew/kvm-unit-tests for detailed process.
 
 ## License
  

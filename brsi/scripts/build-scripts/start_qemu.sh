@@ -140,9 +140,44 @@ start_qemu()
     -device usb-mouse \
     -device usb-kbd
 }
+
+sbi_test()
+{
+    BRS_IMG=$TOP_DIR/kvm-unit-tests/riscv/sbi.flat
+    if [ ! -e $BRS_IMG ]; then
+        echo "SBI test image: $BRS_IMG does not exist!" 1>&2
+        exit 1
+    fi
+    echo "Starting rv64 qemu... press Ctrl+A, X to exit qemu"
+    sleep 2
+    $TOP_DIR/qemu/build/qemu-system-riscv64 -nographic \
+    -machine virt,aia=aplic-imsic \
+    -cpu rv64 -m 4G -smp 2   \
+    -bios $TOP_DIR/opensbi/build/platform/generic/firmware/fw_dynamic.bin \
+    -kernel $BRS_IMG
+}
 get_qemu_src
 build_qemu
 get_opensbi_src
-build_edk2
 build_opensbi
-start_qemu
+
+if [ "$#" -eq 0 ]; then
+    build_edk2
+    start_qemu
+else
+    # Process the arguments
+    for arg in "$@"
+    do
+        case $arg in
+            --sbi-test)
+            sbi_test
+            shift # Remove --test-sbi from processing
+            ;;
+            *)
+            echo "Incorrect argument provided"
+            echo "Usage: ./script.sh [--sbi-test]"
+            exit 1
+            ;;
+        esac
+    done
+fi

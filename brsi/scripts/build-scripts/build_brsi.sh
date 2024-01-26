@@ -36,6 +36,7 @@ create_scripts_link()
  ln -s $TOP_DIR/../../common/scripts/framework.sh             $TOP_DIR/build-scripts/framework.sh
  ln -s $TOP_DIR/../../common/scripts/parse_params.sh          $TOP_DIR/build-scripts/parse_params.sh
  ln -s $TOP_DIR/../../common/scripts/build-sct.sh             $TOP_DIR/build-scripts/build-sct.sh
+ ln -s $TOP_DIR/../../common/scripts/build-sbi-test.sh        $TOP_DIR/build-scripts/build-sbi-test.sh
  ln -s $TOP_DIR/../../common/scripts/build-uefi-apps.sh       $TOP_DIR/build-scripts/build-uefi-apps.sh
  ln -s $TOP_DIR/../../common/scripts/build-fwts.sh            $TOP_DIR/build-scripts/build-fwts.sh
  ln -s $TOP_DIR/../../common/scripts/start_qemu.sh            $TOP_DIR/build-scripts/start_qemu.sh
@@ -54,6 +55,7 @@ create_scripts_link
 init_dir
 
 source ./build-scripts/build-sct.sh
+source ./build-scripts/build-sbi-test.sh
 source ./build-scripts/build-grub.sh
 source ./build-scripts/build-linux.sh
 source ./build-scripts/build-buildroot.sh
