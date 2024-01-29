@@ -135,6 +135,7 @@ start_qemu()
     -blockdev node-name=pflash0,driver=file,read-only=on,filename=$TOP_DIR/Build/RiscVVirtQemu/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/FV/RISCV_VIRT_CODE.fd \
     -blockdev node-name=pflash1,driver=file,filename=$TOP_DIR/Build/RiscVVirtQemu/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/FV/RISCV_VIRT_VARS.fd \
     -device e1000,netdev=net0 \
+    -device virtio-gpu-pci \
     -netdev type=user,id=net0 \
     -device qemu-xhci \
     -device usb-mouse \
