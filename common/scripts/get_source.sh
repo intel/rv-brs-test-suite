@@ -97,7 +97,7 @@ get_edk2_test_parser_src()
 
 get_sbi_test_src()
 {
-    SBI_TEST_VERSION=riscv/initial-port
+    SBI_TEST_VERSION=riscv/x-tests
     echo "Downloading SBI test source code,Version: ${SBI_TEST_VERSION}"
     git clone -b $SBI_TEST_VERSION https://gitlab.com/jones-drew/kvm-unit-tests.git
     pushd $TOP_DIR/kvm-unit-tests/
