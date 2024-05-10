@@ -265,7 +265,7 @@ cp $EDK_TOOLS_PATH/Source/C/bin/GenBin $DEST_DIR/GenBin
 # Build the packages needed for the SCT
 # Set $DSC_EXTRA to any extra packages needed for the build
 #
-for DSC in SctPkg/UEFI/BRS_SCT.dsc $DSC_EXTRA
+for DSC in SctPkg/UEFI/UEFI_SCT.dsc $DSC_EXTRA
 do
 	build -p $DSC -a $SCT_TARGET_ARCH -t $TARGET_TOOLS -b $SCT_BUILD $@
 	# Check if there is any error
@@ -298,7 +298,7 @@ pwd
 #
 # Run a script to generate Sct binary for the target architecture
 #
-../../../SctPkg/CommonGenFramework.sh brs_sct $SCT_TARGET_ARCH Install$SCT_TARGET_ARCH.efi
+../../../SctPkg/CommonGenFramework.sh uefi_sct $SCT_TARGET_ARCH Install$SCT_TARGET_ARCH.efi
 
 status=$?
 if test $status -ne 0
