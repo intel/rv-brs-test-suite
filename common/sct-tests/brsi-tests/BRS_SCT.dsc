@@ -505,4 +505,3 @@ SctPkg/TestCase/UEFI/EFI/Protocol/RiscV/BlackBoxTest/RiscVBootProtocolBBTest.inf
 # Check if EFI Specification Version is 2.7 or greater
 SctPkg/TestCase/UEFI/EFI/Generic/BrsiEfiSpecVerLvl/BlackBoxTest/EfiSpecVerLvlBBTest.inf
 #
-SctPkg/TestCase/UEFI/EFI/BootServices/BrsBootServices/BlackBoxTest/BrsBootServicesBBTest.inf

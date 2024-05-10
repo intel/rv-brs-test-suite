@@ -41,7 +41,6 @@
   EFI, Inc. makes no claim of right.
 
   Copyright (c) 2016, ARM Ltd. All rights reserved.<BR>
-  Copyright (c) 2023 Intel Corporation
 
 --*/
 /*++
