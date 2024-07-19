@@ -2,7 +2,7 @@
 
 This guide provides instructions for developers to add user-defined test cases, update components, build single components, verify private changes, and contribute upstream.
 
-## Adding User-Defined UEF-SCT Test Cases
+## Adding User-Defined UEFI-SCT Test Cases
 To add a user-defined SCT test case in the BRS test suite, please follow the steps below:
 
 1. Create a new directory for your test under the `common/sct-tests/brsi-tests` directory.
