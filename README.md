@@ -1,3 +1,9 @@
+# PROJECT NOT UNDER ACTIVE MANAGEMENT #  
+This project will no longer be maintained by Intel.  
+Intel has ceased development and contributions including, but not limited to, maintenance, bug fixes, new releases, or updates, to this project.  
+Intel no longer accepts patches to this project.  
+ If you have an ongoing need to use this project, are interested in independently developing it, or would like to maintain patches for the open source software community, please create your own fork of this project.  
+  
 # The Boot and Runtime Services - Test Suite
 The Boot and Runtime Services (BRS) specification provides the requirements for system vendors and Operating System Vendors (OSVs) to interoperate by meeting expectations of the Operating System (OS) for device discovery, system management, and other operations in the specification.
 
